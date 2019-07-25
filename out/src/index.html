@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO Mahjong</title>
+  </head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+        var socket = io();
+
+        socket.on('update', function(gameState) {
+            console.log(gameState);
+            document.getElementById('player' + (gameState.playerID + 1)).innerHTML = gameState.playerTiles;
+        });
+
+
+
+  </script>
+  <body>
+      <center>
+            <div>
+                Player 1
+                <div id="player1">
+
+                </div>
+            </div>
+            <div>
+                Player 2
+                <div id="player2">
+
+                </div>
+            </div>
+            <div>
+                Player 3
+                <div id="player3">
+
+                </div>
+            </div>
+            <div>
+                Player 4
+                <div id="player4">
+
+                </div>
+            </div>
+      </center>
+  </body>
+</html>

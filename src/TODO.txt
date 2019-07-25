@@ -1,0 +1,8 @@
+Here's what is left to do:
+    Game.ts
+    Player.ts
+    Set.ts
+    Round.ts
+    Tenpai.ts
+
+    Complete Yaku that require gameplay
