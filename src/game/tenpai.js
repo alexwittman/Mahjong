@@ -15,6 +15,7 @@ let Hand_Partition = require('./hand_partition').Hand_Partition;
 let Meld = require('./meld').Meld;
 let Pair = require('./pair').Pair;
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
+let CopyHand = require('./hand').CopyHand;
 
 
 /**
@@ -58,18 +59,18 @@ class _Tenpai{
     GetTiles(hand) {
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
-        let handTiles = CopyTileList(hand.tiles);
+        let handCopy = CopyHand(hand);
         let tilesToComplete = [];
         for(let i = 0; i <= DRAGON_WHITE; i++){
             let tile = new Tile(i);
-            let tempTiles = handTiles.concat(tile);
-            let tempHand = new Hand(tempTiles);
-            let partitions = handPartitioner.partition(tempHand);
+            handCopy.add(tile);
+            let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
                 if(yakuEvaluator.EvaluateYaku(partition).length > 0){
                     tilesToComplete.push(tile);
                 }
             }
+            handCopy.remove(tile);
         }
         return tilesToComplete;
     }

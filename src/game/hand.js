@@ -64,7 +64,7 @@ class Hand{
      * @returns {boolean} True if the hand is open, false otherwise.
      */
     get isOpen() {
-        return _isOpen();
+        return this._isOpen();
     }
 
     /**
@@ -102,7 +102,9 @@ class Hand{
         }
         else{
             this._tiles.push(tile);
+            this._closedTiles.push(tile);
             this._tiles.sort(CompareTiles);
+            this._closedTiles.sort(CompareTiles);
         }
     }
 
@@ -119,9 +121,11 @@ class Hand{
             }
         }
         else{
-            const index = IndexTileList(this._tiles, tile);
-            if(index > -1) {
-                this._tiles.splice(index, 1);
+            const allIndex = IndexTileList(this._tiles, tile);
+            const closedIndex = IndexTileList(this._closedTiles, tile);
+            if(allIndex > -1 && closedIndex > -1) {
+                this._tiles.splice(allIndex, 1);
+                this._closedTiles.splice(closedIndex, 1);
                 return true;
             }
             else {
@@ -137,10 +141,10 @@ class Hand{
      * @returns {boolean} True if the hand is open, false otherwise.
      */
     _isOpen() {
-        if(this.melds.length == 0) return false;
+        if(this._melds.length == 0) return false;
         else {
-            for(let meld of this.melds){
-                if(meld.isOpen) return true;
+            for(let meld of this._melds){
+                if(meld.is_open) return true;
             }
             return false;
         }
@@ -162,7 +166,7 @@ class Hand{
  * @returns {Hand} A copied version of the tile.
  */
 function CopyHand(handToCopy) {
-    let tiles = CopyTileList(handToCopy.tiles);
+    let tiles = CopyTileList(handToCopy.closedTiles);
     let melds = [];
     for(let meld of handToCopy.melds){
         melds.push(new Meld(CopyTileList(meld.tiles)));

@@ -39,6 +39,7 @@ class _Player {
      */
     constructor(index) {
         this._index = index;
+        this._score = 25000;
     }
 
     /**
@@ -243,7 +244,7 @@ class _Player {
         //copy the hand add the available tile
         let handCopy = HAND.CopyHand(this._hand);
         handCopy.add(this._drawnTile);
-        let uniqueTiles = TILE.TileListRemoveDuplicates(handCopy.tiles);
+        let uniqueTiles = TILE.TileListRemoveDuplicates(handCopy.closedTiles);
         //for each tile in the hand
         for(let tile of uniqueTiles) {
             //remove it from the hand
@@ -252,7 +253,7 @@ class _Player {
             let tenpai = new Tenpai(handCopy);
             //if so add them to array and return the array
             if(tenpai.tiles.length > 0){
-                riichiTiles.push(tile);
+                riichiTiles.push(new TILE.Tile(tile.number));
             }
             //add the tile back to the hand.
             handCopy.add(tile);
@@ -266,7 +267,8 @@ class _Player {
      * @param {Tile} availableTile The tile available
      */
     CanRiichi() {
-        return this.RiichiTiles().length > 0;
+        if(this._hand.isOpen) return false;
+        else return this.RiichiTiles().length > 0;
     }
 
     /**
