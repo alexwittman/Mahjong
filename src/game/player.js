@@ -13,6 +13,7 @@ let Tenpai = require('./tenpai').Tenpai;
 //let TileListCount = require('./tile').TileListCount;
 //let TileListRemoveDuplicates = require('./tile').TileListRemoveDuplicates;
 let MeldType = require('./meld').MeldType;
+let Meld = require('./meld').Meld;
 //let CompareTiles = require('./tile').CompareTiles;
 //let CopyTileList = require('./tile').CopyTileList;
 let TILE = require('./tile');
@@ -203,9 +204,35 @@ class _Player {
     }
 
     /**
+     * Calculates the chows possible with the current available tile.
+     * 
+     * @param {TILE.Tile} availableTile The tile available to take.
+     * @returns {Meld[]} The list of possible chows.
+     */
+    ChiMelds(availableTile) {
+        let melds = [];
+        let suitTiles = this._hand.closedTiles.filter(tile => tile.type == availableTile.type);
+        let uniqueSuitTiles = TILE.TileListRemoveDuplicates(suitTiles);
+        for(let i = 0; i < uniqueSuitTiles.length - 1; i++){
+            let potentialMeld = new Meld([uniqueSuitTiles[i], uniqueSuitTiles[i + 1], availableTile].sort(TILE.CompareTiles));
+            if(potentialMeld.type == MeldType.CHOW){
+                melds.push(potentialMeld);
+            }
+        }
+        return melds;
+    }
+
+    /**
      * Determines if a player can chi given the current game state.
+     * 
+     * @param {TILE.Tile} availableTile The tile available to take.
+     * @returns {boolean} True if the player is able to chi, false otherwise.
      */
     CanChi(availableTile) {
+        //if player is the one to the left.
+            let possibleChows = ChiMelds(availableTile);
+            if(possibleChows.length > 0) return true;
+            else return false;
         return false;
     }
 
