@@ -230,7 +230,7 @@ class _Player {
      */
     CanChi(availableTile) {
         //if player is the one to the left.
-            let possibleChows = ChiMelds(availableTile);
+            let possibleChows = this.ChiMelds(availableTile);
             if(possibleChows.length > 0) return true;
             else return false;
         return false;
