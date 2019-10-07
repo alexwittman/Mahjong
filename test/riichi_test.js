@@ -82,4 +82,15 @@ describe('Riichi', () => {
     //     expect().to.eql();
     // });
 
+    it('RiichiTiles returns the correct tiles for a hand waiting on 1 tile.', () => {
+
+    });
+
+    it('RiichiTiles returns the correct tiles for a hand waiting on many tiles.', () => {
+
+    });
+
+    it('RiichiTiles returns the correct tiles for a hand not in tenpai.', () => {
+
+    });
 });

@@ -7,7 +7,19 @@ let expect = require('chai').expect;
 
 describe('Tsumo', () => {
 
-    it('', () => {
+    it('A player can tsumo if the drawn tile completes their hand with >= 1 han.', () => {
+
+    });
+
+    it('A player cannot tsumo if the drawn tile completes their hand with < 1 han.', () => {
+
+    });
+
+    it('A player cannot tsumo if the drawn tile completes their hand with >= 1 han, but the player had already discarded the tile.', () => {
+
+    });
+
+    it('A player cannot tsumo if the drawn tile does not complete their hand.', () => {
 
     });
 });

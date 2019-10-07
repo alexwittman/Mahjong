@@ -7,7 +7,19 @@ let expect = require('chai').expect;
 
 describe('Pon', () => {
 
-    it('', () => {
+    it('A player can pon with two tiles the same as the tile discarded.', () => {
+
+    });
+
+    it('A player cannot pon with one tiles the same as the tile discarded.', () => {
+
+    });
+
+    it('A player can pon with three tiles the same as the tile discarded.', () => {
+
+    });
+
+    it('A player cannot pon with two tiles the same as the tile discarded in open melds.', () => {
 
     });
 });
