@@ -7,7 +7,23 @@ let expect = require('chai').expect;
 
 describe('Kan', () => {
 
-    it('', () => {
+    it('A player can kan with three tiles the same as the tile discarded.', () => {
+
+    });
+
+    it('A player cannot kan with two tiles the same as the tile discarded.', () => {
+
+    });
+
+    it('A player can kan with an open pong and draw the fourth tile.', () => {
+
+    });
+
+    it('A player cannot kan with an open pong the same as the tile discarded.', () => {
+
+    });
+
+    it('A player cannot kan with three tiles the same as drawn but in open melds.', () => {
 
     });
 });

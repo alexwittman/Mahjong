@@ -7,7 +7,23 @@ let expect = require('chai').expect;
 
 describe('Chi', () => {
 
-    it('', () => {
+    it('A player can chi with one potential chow.', () => {
+
+    });
+
+    it('A player can chi with multiple potential chows.', () => {
+
+    });
+
+    it('A player cannot chi with zero potential chows.', () => {
+
+    });
+
+    it('A player can chi only from the person to the left of them.', () => {
+
+    });
+
+    it('A player cannot chi from a person not to the left of them.', () => {
 
     });
 });
