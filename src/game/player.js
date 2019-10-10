@@ -323,20 +323,17 @@ class _Player {
      * @returns {boolean} True if the player can tsumo, false otherwise.
      */
     CanTsumo() {
-        if(this._hand.isOpen) return false;
-        else {
-            let handPartitioner = new Hand_Partition();
-            let yakuEvaluator = new Yaku_Evaluate();
-            let handCopy = HAND.CopyHand(this._hand);
-            handCopy.add(this._drawnTile);
-            let partitions = handPartitioner.partition(handCopy);
-            for(let partition of partitions){
-                if(yakuEvaluator.EvaluateYaku(partition).length > 0){
-                    return true;
-                }
+        let handPartitioner = new Hand_Partition();
+        let yakuEvaluator = new Yaku_Evaluate();
+        let handCopy = HAND.CopyHand(this._hand);
+        handCopy.add(this._drawnTile);
+        let partitions = handPartitioner.partition(handCopy);
+        for(let partition of partitions){
+            if(yakuEvaluator.EvaluateYaku(partition).length > 0){
+                return true;
             }
-            return false;
         }
+        return false;
     }
 
     /**
