@@ -82,15 +82,36 @@ describe('Riichi', () => {
     //     expect().to.eql();
     // });
 
-    it('RiichiTiles returns the correct tiles for a hand waiting on 1 tile.', () => {
-
+    it('RiichiTiles returns the correct tiles for a hand needing to discard only 1 tile.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1115s111a111NNE');
+        let melds = [];
+        let dealtTile = TileList('E')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        let riichiTiles = TileList('p5');
+        expect(player.RiichiTiles()).to.eql(riichiTiles);
     });
 
-    it('RiichiTiles returns the correct tiles for a hand waiting on many tiles.', () => {
-
+    it('RiichiTiles returns the correct tiles for a hand needing to discard one of many tiles.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1112223334445');
+        let melds = [];
+        let dealtTile = TileList('E')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        let riichiTiles = TileList('p25E');
+        expect(player.RiichiTiles()).to.eql(riichiTiles);
     });
 
     it('RiichiTiles returns the correct tiles for a hand not in tenpai.', () => {
-
+        let player = new Player(0);
+        let tiles = TileList('p1347s1347a23578');
+        let melds = [];
+        let dealtTile = TileList('E')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        let riichiTiles = TileList('');
+        expect(player.RiichiTiles()).to.eql(riichiTiles);
     });
 });

@@ -266,6 +266,11 @@ class _Player {
         return false;
     }
     
+    /**
+     * Calculates the tiles a player can discard and declare riichi.
+     * 
+     * @returns {Tile[]} The tiles a player can discard and declare riichi.
+     */
     RiichiTiles() {
         let riichiTiles = [];
         //copy the hand add the available tile
