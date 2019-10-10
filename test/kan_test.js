@@ -52,4 +52,20 @@ describe('Kan', () => {
         player.hand = new Hand(tiles, melds);
         expect(player.CanKan(availableTile)).to.eql(false);
     });
+
+    it('A player can kan with four identical tiles.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111222333444');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanKan()).to.eql(true);
+    });
+
+    it('A player can kan with multiple sets of four identical tiles.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111222234444');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanKan()).to.eql(true);
+    });
 });
