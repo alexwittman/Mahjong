@@ -310,6 +310,8 @@ class _Player {
 
     /**
      * Determines if a player can ron given the current game state.
+     * 
+     * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
         //TODO
@@ -317,9 +319,24 @@ class _Player {
 
     /**
      * Determines if a player can tsumo given the current game state.
+     * 
+     * @returns {boolean} True if the player can tsumo, false otherwise.
      */
     CanTsumo() {
-        //TODO
+        if(this._hand.isOpen) return false;
+        else {
+            let handPartitioner = new Hand_Partition();
+            let yakuEvaluator = new Yaku_Evaluate();
+            let handCopy = CopyHand(this._hand);
+            handCopy.add(this._drawnTile);
+            let partitions = handPartitioner.partition(handCopy);
+            for(let partition of partitions){
+                if(yakuEvaluator.EvaluateYaku(partition).length > 0){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
