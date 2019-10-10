@@ -238,13 +238,18 @@ class _Player {
 
     /**
      * Determines if a player can pon given the current game state.
+     * 
+     * @returns {boolean} True if the player can pon, false otherwise.
      */
     CanPon(availableTile) {
-        return false;
+        if(TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
+        else return false;
     }
 
     /**
      * Determines if a player can kan given the current game state.
+     * 
+     * @returns {boolean} True if the player can kan, false otherwise.
      */
     CanKan(availableTile = null) {
         if(availableTile == null){
@@ -296,7 +301,7 @@ class _Player {
     /**
      * Determines if a player can riichi given the current game state.
      * 
-     * @param {Tile} availableTile The tile available
+     * @returns {boolean} True if the player can riichi, false otherwise.
      */
     CanRiichi() {
         if(this._hand.isOpen) return false;
