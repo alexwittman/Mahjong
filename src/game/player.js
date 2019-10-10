@@ -19,7 +19,7 @@ let Meld = require('./meld').Meld;
 let TILE = require('./tile');
 let HAND = require('./hand');
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
-let Hand_Partiton = require('./hand_partition').Hand_Partition;
+let Hand_Partition = require('./hand_partition').Hand_Partition;
 
 let prompt = require('prompt-sync')();
 
@@ -327,7 +327,7 @@ class _Player {
         else {
             let handPartitioner = new Hand_Partition();
             let yakuEvaluator = new Yaku_Evaluate();
-            let handCopy = CopyHand(this._hand);
+            let handCopy = HAND.CopyHand(this._hand);
             handCopy.add(this._drawnTile);
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
