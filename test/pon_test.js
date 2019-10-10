@@ -37,7 +37,7 @@ describe('Pon', () => {
     it('A player cannot pon with two tiles the same as the tile discarded in open melds.', () => {
         let player = new Player(0);
         let tiles = TileList('p4445556');
-        let melds = [new Meld(TileList('p123'), new Meld(TileList('p123')))];
+        let melds = [new Meld(TileList('p123'), true), new Meld(TileList('p123'), true)];
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
         expect(player.CanPon(availableTile)).to.eql(false);
