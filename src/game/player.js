@@ -253,7 +253,7 @@ class _Player {
      */
     CanKan(availableTile = null) {
         if(availableTile == null){
-            for(let tile of TILE.TileListRemoveDuplicates(this._hand.tiles)){
+            for(let tile of TILE.TileListRemoveDuplicates(this._hand.closedTiles)){
                 if(TILE.TileListCount(this._hand.tiles, tile) == 4) return true;
             }
             for(let meld of this._hand.melds){
@@ -266,7 +266,7 @@ class _Player {
             return false;
         }
         else {
-            if(TILE.TileListCount(this._hand.tiles, availableTile) == 3) return true;
+            if(TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) return true;
         }
         return false;
     }
