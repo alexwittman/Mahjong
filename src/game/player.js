@@ -242,7 +242,7 @@ class _Player {
      * @returns {boolean} True if the player can pon, false otherwise.
      */
     CanPon(availableTile) {
-        if(TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
+        if(TILE.TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
         else return false;
     }
 
