@@ -300,21 +300,24 @@ class _Player {
      * @returns {Meld[]} The list of possible kongs.
      */
     KanMelds(availableTile){
+        this._hand.Print();
+        console.log(this._drawnTile);
         if(availableTile == null){
             let kongs = [];
-            for(let tile of TILE.TileListRemoveDuplicates(this._hand.closedTiles)){
-                if(TILE.TileListCount(this._hand.closedTiles, tile) == 4){
+            let handTilesCopy = TILE.CopyTileList(this._hand._closedTiles);
+            if(this._drawnTile) handTilesCopy.push(this._drawnTile);
+            let uniqueTiles = TILE.TileListRemoveDuplicates(handTilesCopy);
+            for(let tile of uniqueTiles){
+                let tileCount = TILE.TileListCount(this._hand.closedTiles, tile);
+                if(this._drawnTile) if(this._drawnTile.number == tile.number) tileCount++;
+                if(tileCount == 4){
                     kongs.push(new Meld([tile, tile, tile, tile]));
                 }
-            }
-            let uniqueTiles = TILE.TileListRemoveDuplicates(this._hand.closedTiles);
-            uniqueTiles.push(this._drawnTile);
-            for(let tile of uniqueTiles){
                 for(let meld of this._hand.melds){
                     if(meld.type == MeldType.PONG){
                         if(meld.tiles[0].number == tile.number){
                             let meldTilesCopy = TILE.CopyTileList(meld.tiles);
-                            meldTilesCopy.push(this._drawnTile);
+                            meldTilesCopy.push(tile);
                             kongs.push(new Meld(meldTilesCopy, meld.is_open));
                         }
                     }
