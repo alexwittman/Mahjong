@@ -4,6 +4,7 @@ let Meld = require('../src/game/meld').Meld;
 let Tile = require('../src/game/tile').Tile;
 let Hand = require('../src/game/hand').Hand;
 let expect = require('chai').expect;
+let TileListCount = require('../src/game/tile').TileListCount;
 
 describe('Kan', () => {
 
@@ -142,5 +143,33 @@ describe('Kan', () => {
         player.hand = new Hand(tiles, melds);
         let kongs = [];
         expect(player.KanMelds(null)).to.eql(kongs);
+    });
+
+    it('When a player kans, the hand now contains a meld with the kong.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111222333444');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        let kong = new Meld(TileList('p1111'));
+        player.GetKan(null);
+        expect(player.hand.melds).to.eql([kong]);
+    });
+
+    it('When a player can only make one kong, they are not prompted for which one to make.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111222333444');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        let kong = new Meld(TileList('p1111'));
+        player.GetKan(null);
+    });
+
+    it('When a player makes a kong, the count of the kong tiles in the hand is 0.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111222333444');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        player.GetKan(null);
+        expect(TileListCount(player.hand.closedTiles, TileList('p1')[0])).to.eql(0);
     });
 });
