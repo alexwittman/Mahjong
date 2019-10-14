@@ -469,9 +469,12 @@ class _Player {
         let ronMelds = [];
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
-        let chiMelds = this.chiMelds(availableTile);
-        let ponMelds = this.ponMelds(availableTile);
-        let possibleMelds = [chiMelds].concat(ponMelds);
+        let chiMelds = this.ChiMelds(availableTile);
+        let ponMelds = [];
+        if(this.CanPon(availableTile)){
+            ponMelds.push(new Meld([availableTile, availableTile, availableTile], true));
+        }
+        let possibleMelds = chiMelds.concat(ponMelds);
         for(let possibleMeld of possibleMelds){
             let handCopy = HAND.CopyHand(this._hand);
             if(possibleMeld.type == MeldType.PONG){
@@ -483,11 +486,12 @@ class _Player {
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
                 let yakuList = yakuEvaluator.EvaluateYaku(partition);
-                if(yakuList != []){
+                if(yakuList.length > 0){
                     ronMelds.push(possibleMeld);
                 }
             }
         }
+        return ronMelds;
     }
 
     /**
