@@ -135,6 +135,21 @@ class Hand{
     }
 
     /**
+     * Adds a meld to a hand and removes tiles if necessary.
+     * 
+     * @param {Meld} meld The meld to add to the hand.
+     */
+    makeMeld(meld){
+        this.melds.push(meld);
+        if(meld.is_open) {
+            for(let tile of meld.tiles){
+                this._openTiles.push(tile);
+            }
+            this._openTiles.sort(CompareTiles);
+        }
+    }
+
+    /**
      * Calculates if a hand is open or not.
      * An open hand is a hand with one or more open melds.
      * 

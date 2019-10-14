@@ -294,6 +294,18 @@ class _Player {
     }
 
     /**
+     * Calls pon and makes the meld in the player's hand.
+     * 
+     * @param {TILE.Tile} availableTile The tile available for the player to take.
+     */
+    Pon(availableTile){
+        for(let i = 0; i < 2; i++){
+            this._hand.remove(availableTile);
+        }
+        this._hand.makeMeld(new Meld([availableTile, availableTile, availableTile], true));
+    }
+
+    /**
      * Calculates the kongs possible in the current state.
      * 
      * @param {TILE.Tile} availableTile The tile available to take.
@@ -392,14 +404,14 @@ class _Player {
                 for(let i = 0; i < 4; i++){
                     this._hand.remove(kong.tiles[0]);
                 }
-                this._hand.melds.push(kong);
+                this._hand.makeMeld(kong);
             }
         }
         else{ //Making kong with 3 tiles in closed tiles and other player's discarded tile.
             for(let i = 0; i < 3; i++){
                 this._hand.remove(availableTile);
             }
-            this._hand.melds.push(kong);
+            this._hand.makeMeld(kong);
         }
     }
     
@@ -446,6 +458,13 @@ class _Player {
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
+        let chiMelds = this.chiMelds(availableTile);
+        let ponMelds = this.ponMelds(availableTile);
+        let possibleMelds = [chiMelds].concat(ponMelds);
+        for(let possibleMeld of possibleMelds){
+            let handCopy = HAND.CopyHand(this._hand);
+            
+        }
         //If you can chi or pon the available tile
             //For each possilbe meld
                 //make the meld

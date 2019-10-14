@@ -13,8 +13,8 @@ let Player = require('./player').Player;
 let Tile = require('./tile').Tile;
 
 let _main = () => {
-    // let game = new Game();
-    // game.StartGame();
+    let game = new Game();
+    game.StartGame();
 
     // for(let i = 0; i < 4; i++){
     //     let hand = RandomHand();
