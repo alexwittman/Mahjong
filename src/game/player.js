@@ -459,23 +459,44 @@ class _Player {
     }
 
     /**
-     * Determines if a player can ron given the current game state.
+     * Calculates the available melds to make that
+     * complete the player's hand and has value.
      * 
-     * @returns {boolean} True if the player can ron, false otherwise.
+     * @param {TILE.Tile} availableTile The tile available to make the melds.
+     * @returns {Meld[]} The list of melds that a player can make to complete their hand.
      */
-    CanRon(availableTile) {
+    RonMelds(availableTile){
+        let ronMelds = [];
+        let handPartitioner = new Hand_Partition();
+        let yakuEvaluator = new Yaku_Evaluate();
         let chiMelds = this.chiMelds(availableTile);
         let ponMelds = this.ponMelds(availableTile);
         let possibleMelds = [chiMelds].concat(ponMelds);
         for(let possibleMeld of possibleMelds){
             let handCopy = HAND.CopyHand(this._hand);
-
+            if(possibleMeld.type == MeldType.PONG){
+                handCopy = this.Pon(handCopy, availableTile);
+            }
+            else if(possibleMeld.type == MeldType.CHOW){
+                handCopy = this.Chi(handCopy, possibleMeld, availableTile)
+            }
+            let partitions = handPartitioner.partition(handCopy);
+            for(let partition of partitions){
+                let yakuList = yakuEvaluator.EvaluateYaku(partition);
+                if(yakuList != []){
+                    ronMelds.push(possibleMeld);
+                }
+            }
         }
-        //If you can chi or pon the available tile
-            //For each possilbe meld
-                //make the meld
-                //test if the hand still has value
-                //return the best possible hand out of all the melds.
+    }
+
+    /**
+     * Determines if a player can ron given the current game state.
+     * 
+     * @returns {boolean} True if the player can ron, false otherwise.
+     */
+    CanRon(availableTile) {
+        return this.RonMelds(availableTile).length > 0;
     }
 
     /**
