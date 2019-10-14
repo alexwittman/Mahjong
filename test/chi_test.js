@@ -51,17 +51,8 @@ describe('Chi', () => {
         player.hand = new Hand(tiles, melds);
         let handCopy = new Hand(tiles, melds);
         let chow = new Meld(TileList('p123'), true);
-        player.GetChi(availableTile);
+        player.hand = player.Chi(player.hand, chow, availableTile);
         expect(player.hand.melds).to.eql([chow]);
-    });
-
-    it('When a player can only make one chow, they are not prompted for which one to make.', () => {
-        let player = new Player(0);
-        let tiles = TileList('p12s111222a666NN');
-        let melds = [];
-        let availableTile = TileList('p3')[0];
-        player.hand = new Hand(tiles, melds);
-        player.GetChi(availableTile);
     });
 
     it('When a player makes a chow, the count of the chi tiles in the hand are one less than before.', () => {
@@ -73,7 +64,7 @@ describe('Chi', () => {
         let handCopy = new Hand(tiles, melds);
         let chow = new Meld(TileList('p123'), true);
         let counts = [1, 1, 1];
-        player.GetChi(availableTile);
+        player.hand = player.Chi(player.hand, chow, availableTile);
         let afterCounts = [];
         for(let tile of chow.tiles){
             afterCounts.push(TileListCount(player.hand._closedTiles, tile));

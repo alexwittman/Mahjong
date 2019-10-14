@@ -4,6 +4,7 @@ let Meld = require('../src/game/meld').Meld;
 let Tile = require('../src/game/tile').Tile;
 let Hand = require('../src/game/hand').Hand;
 let expect = require('chai').expect;
+let TileListCount = require('../src/game/tile').TileListCount;
 
 describe('Pon', () => {
 
@@ -41,5 +42,25 @@ describe('Pon', () => {
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
         expect(player.CanPon(availableTile)).to.eql(false);
+    });
+
+    it('When a player pons, the meld is added to their hand.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1122233344455');
+        let melds = [];
+        let availableTile = TileList('p1')[0];
+        player.hand = new Hand(tiles, melds);
+        player.hand = player.Pon(player.hand, availableTile);
+        expect(player.hand.melds).to.eql([new Meld(TileList('p111'), true)]);
+    });
+
+    it('When a player pons, tiles are removed from the hand closed tiles.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1122233344455');
+        let melds = [];
+        let availableTile = TileList('p1')[0];
+        player.hand = new Hand(tiles, melds);
+        player.hand = player.Pon(player.hand, availableTile);
+        expect(TileListCount(player.hand.closedTiles, TileList('p1')[0])).to.eql(0);
     });
 });
