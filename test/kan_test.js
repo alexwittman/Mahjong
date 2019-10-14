@@ -125,11 +125,11 @@ describe('Kan', () => {
     it('KanMelds returns the correct value for a player who can form three kongs.', () => {
         let player = new Player(0);
         let tiles = TileList('p1112222334');
-        let melds = [new Meld(TileList('p444'))];
+        let melds = [new Meld(TileList('p444'), true)];
         let drawnTile = TileList('p1')[0];
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
-        let kongs = [new Meld(TileList('p1111')), new Meld(TileList('p2222')), new Meld(TileList('p4444'))];
+        let kongs = [new Meld(TileList('p1111')), new Meld(TileList('p2222')), new Meld(TileList('p4444'), true)];
         expect(player.KanMelds(null)).to.eql(kongs);
     });
 
