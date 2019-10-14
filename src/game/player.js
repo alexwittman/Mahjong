@@ -202,22 +202,25 @@ class _Player {
         else{
             chow = possibleChows[0];
         }
-        this.Chi(chow, availableTile);
+        this._hand = this.Chi(this._hand, chow, availableTile);
     }
 
     /**
      * Calls chi and makes the meld in the player's hand.
      * 
+     * @param {HAND.Hand} hand The hand to add the chow to.
      * @param {Meld} chow The chow to make when calling chi.
      * @param {Tile} availableTile The tile available for the player to call chi on.
+     * @returns {HAND.Hand} The hand with the chow added to it.
      */
-    Chi(chow, availableTile){
+    Chi(hand, chow, availableTile){
         let chowTiles = TILE.CopyTileList(chow.tiles);
         chowTiles = TILE.RemoveFromTileList(chowTiles, availableTile);
         for(let tile of chowTiles) {
-            this._hand._closedTiles = TILE.RemoveFromTileList(this._hand._closedTiles, tile);
+            hand._closedTiles = TILE.RemoveFromTileList(hand._closedTiles, tile);
         }
-        this._hand._melds.push(new Meld(chow.tiles, true));
+        hand._melds.push(new Meld(chow.tiles, true));
+        return hand;
     }
 
     /**
@@ -296,13 +299,16 @@ class _Player {
     /**
      * Calls pon and makes the meld in the player's hand.
      * 
+     * @param {HAND.Hand} hand The hand to add the pong to.
      * @param {TILE.Tile} availableTile The tile available for the player to take.
+     * @returns {HAND.Hand} The hand with the pong added to it.
      */
-    Pon(availableTile){
+    Pon(hand, availableTile){
         for(let i = 0; i < 2; i++){
-            this._hand.remove(availableTile);
+            hand.remove(availableTile);
         }
-        this._hand.makeMeld(new Meld([availableTile, availableTile, availableTile], true));
+        hand.makeMeld(new Meld([availableTile, availableTile, availableTile], true));
+        return hand;
     }
 
     /**
@@ -463,7 +469,7 @@ class _Player {
         let possibleMelds = [chiMelds].concat(ponMelds);
         for(let possibleMeld of possibleMelds){
             let handCopy = HAND.CopyHand(this._hand);
-            
+
         }
         //If you can chi or pon the available tile
             //For each possilbe meld
