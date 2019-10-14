@@ -18,6 +18,7 @@ let Meld = require('./meld').Meld;
 //let CopyTileList = require('./tile').CopyTileList;
 let TILE = require('./tile');
 let HAND = require('./hand');
+let Hand = require('./hand').Hand;
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
 let Hand_Partition = require('./hand_partition').Hand_Partition;
 
@@ -32,7 +33,6 @@ let rl = readline.createInterface({
  * Class to hold player information.
  */
 class _Player {
-
     /**
      * Constructor for player class.
      * 
@@ -202,6 +202,16 @@ class _Player {
         else{
             chow = possibleChows[0];
         }
+        this.Chi(chow, availableTile);
+    }
+
+    /**
+     * Calls chi and makes the meld in the player's hand.
+     * 
+     * @param {Meld} chow The chow to make when calling chi.
+     * @param {Tile} availableTile The tile available for the player to call chi on.
+     */
+    Chi(chow, availableTile){
         let chowTiles = TILE.CopyTileList(chow.tiles);
         chowTiles = TILE.RemoveFromTileList(chowTiles, availableTile);
         for(let tile of chowTiles) {
@@ -284,28 +294,112 @@ class _Player {
     }
 
     /**
+     * Calculates the kongs possible in the current state.
+     * 
+     * @param {TILE.Tile} availableTile The tile available to take.
+     * @returns {Meld[]} The list of possible kongs.
+     */
+    KanMelds(availableTile){
+        if(availableTile == null){
+            let kongs = [];
+            for(let tile of TILE.TileListRemoveDuplicates(this._hand.closedTiles)){
+                if(TILE.TileListCount(this._hand.closedTiles, tile) == 4){
+                    kongs.push(new Meld([tile, tile, tile, tile]));
+                }
+            }
+            let uniqueTiles = TILE.TileListRemoveDuplicates(this._hand.closedTiles);
+            uniqueTiles.push(this._drawnTile);
+            for(let tile of uniqueTiles){
+                for(let meld of this._hand.melds){
+                    if(meld.type == MeldType.PONG){
+                        if(meld.tiles[0].number == tile.number){
+                            let meldTilesCopy = TILE.CopyTileList(meld.tiles);
+                            meldTilesCopy.push(this._drawnTile);
+                            kongs.push(new Meld(meldTilesCopy, meld.is_open));
+                        }
+                    }
+                }
+            }
+            return kongs;
+        }
+        else {
+            let kongs = [];
+            if(TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) {
+                kongs.push(new Meld([availableTile, availableTile, availableTile, availableTile], true));
+            }
+            return kongs;
+        }
+    }
+
+    /**
      * Determines if a player can kan given the current game state.
      * 
      * @returns {boolean} True if the player can kan, false otherwise.
      */
     CanKan(availableTile = null) {
-        if(availableTile == null){
-            for(let tile of TILE.TileListRemoveDuplicates(this._hand.closedTiles)){
-                if(TILE.TileListCount(this._hand.tiles, tile) == 4) return true;
+        return this.KanMelds(availableTile).length > 0;
+    }
+
+    /**
+     * Prompts the player for which kong they want to make
+     * if there is more than one, otherwise kan the only
+     * possible kong.
+     * 
+     * @param {Tile} availableTile The tile available for the player to take.
+     */
+    GetKan(availableTile){
+        let possibleKongs = this.KanMelds(availableTile);
+        let kong;
+        if(possibleChows.length > 1){
+            let kongPrompt = '';
+            for(let possibleKong of possibleKongs){
+                for(let kongTile of possibleKong.tiles){
+                    kongPrompt.push(kongTile.unicode);
+                    kongPrompt.push('|');
+                }
+                kongPrompt.push('  ');
             }
-            for(let meld of this._hand.melds){
-                if(meld.type == MeldType.PONG){
-                    if(meld.tiles[0].number == this._drawnTile.number){
-                        return true;
+            console.log('Possible Kongs:');
+            console.log(kongPrompt);
+            let pickedKong = prompt('>> ');
+            chow = possibleKongs[pickedKong];
+        }
+        else{
+            kong = possibleKongs[0];
+        }
+        this.Kan(kong, availableTile);
+    }
+
+    /**
+     * Calls kan and makes the meld in the player's hand.
+     * 
+     * @param {Meld} kong The kong to make in the player's hand.
+     * @param {*} availableTile The tile to take to make the meld.
+     */
+    Kan(kong, availableTile = null){
+        if(availableTile == null){
+            if(kong.is_open){ //Making kong with tile in closed tiles and open pong.
+                for(let meld of this._hand.melds){
+                    if(meld.type = MeldType.PONG){
+                        if(meld.tiles[0].number == kong.tiles[0].number){
+                            meld = kong;
+                        }
                     }
                 }
             }
-            return false;
+            else{ //Making kong with 4 tiles in closed tiles.
+                for(let i = 0; i < 4; i++){
+                    this._hand.remove(kong.tiles[0]);
+                }
+                this._hand.melds.push(kong);
+            }
         }
-        else {
-            if(TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) return true;
+        else{ //Making kong with 3 tiles in closed tiles and other player's discarded tile.
+            for(let i = 0; i < 3; i++){
+                this._hand.remove(availableTile);
+            }
+            this._hand.melds.push(kong);
         }
-        return false;
     }
     
     /**
