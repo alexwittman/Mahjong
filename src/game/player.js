@@ -132,7 +132,7 @@ class _Player {
         let action = prompt(">> ");
         switch(action){
             case '1': { //Chi
-                //TODO
+                this.GetChi();
                 return ActionType.Chi;
             }
             case '2': { //Pon
@@ -154,6 +154,8 @@ class _Player {
      * Gets the tile the player wants to discard.
      * Adds the drawn tile to the player's hand.
      * Removes that tile from the player's hand.
+     * 
+     * @returns {Tile} The tile the player discarded.
      */
     GetDiscard() {
         TILE.PrintTileList(this._hand.tiles, this._drawnTile);
@@ -171,6 +173,41 @@ class _Player {
         }
         TILE.PrintTileList(this._hand.tiles);
         return discard; 
+    }
+    
+    /**
+     * Prompts the player for which chow they want to make
+     * if there is more than one, otherwise chi the only
+     * possible chow.
+     * 
+     * @param {Tile} availableTile The tile available for the player to take.
+     */
+    GetChi(availableTile){
+        let possibleChows = this.ChiMelds(availableTile);
+        let chow;
+        if(possibleChows.length > 1){
+            let chowPrompt = '';
+            for(let possibleChow of possibleChows){
+                for(let chowTile of possibleChow.tiles){
+                    chowPrompt.push(chowTile.unicode);
+                    chowPrompt.push('|');
+                }
+                chowPrompt.push('  ');
+            }
+            console.log('Possible Chows:');
+            console.log(chowPrompt);
+            let pickedChow = prompt('>> ');
+            chow = possibleChows[pickedChow];
+        }
+        else{
+            chow = possibleChows[0];
+        }
+        let chowTiles = TILE.CopyTileList(chow.tiles);
+        chowTiles = TILE.RemoveFromTileList(chowTiles, availableTile);
+        for(let tile of chowTiles) {
+            this._hand._closedTiles = TILE.RemoveFromTileList(this._hand._closedTiles, tile);
+        }
+        this._hand._melds.push(new Meld(chow.tiles, true));
     }
 
     /**
@@ -314,7 +351,11 @@ class _Player {
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
-        //TODO
+        //If you can chi or pon the available tile
+            //For each possilbe meld
+                //make the meld
+                //test if the hand still has value
+                //return the best possible hand out of all the melds.
     }
 
     /**
