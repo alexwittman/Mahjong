@@ -300,8 +300,6 @@ class _Player {
      * @returns {Meld[]} The list of possible kongs.
      */
     KanMelds(availableTile){
-        this._hand.Print();
-        console.log(this._drawnTile);
         if(availableTile == null){
             let kongs = [];
             let handTilesCopy = TILE.CopyTileList(this._hand._closedTiles);
@@ -353,7 +351,7 @@ class _Player {
     GetKan(availableTile){
         let possibleKongs = this.KanMelds(availableTile);
         let kong;
-        if(possibleChows.length > 1){
+        if(possibleKongs.length > 1){
             let kongPrompt = '';
             for(let possibleKong of possibleKongs){
                 for(let kongTile of possibleKong.tiles){
