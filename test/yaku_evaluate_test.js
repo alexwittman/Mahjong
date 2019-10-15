@@ -1046,7 +1046,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('www')),
                                             new Pair(TileList('a99'))];
         let hand = new Hand(TileList('p111gggrrrwwwa99'));
-        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(yaku.DoubleFourConcealedTriplets);
+        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(new yaku.DoubleFourConcealedTriplets());
     });
 
     it('DoubleFourConcealedTriplets() returns correct for hand with DoubleFourConcealedTriplets open meld', () => {
@@ -1066,7 +1066,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('www')),
                                             new Pair(TileList('a99'))];
         let hand = new Hand(TileList('p111ggggrrrwwwa99'));
-        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(yaku.DoubleFourConcealedTriplets);
+        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(new yaku.DoubleFourConcealedTriplets());
     });
 
     it('DoubleFourConcealedTriplets() returns correct for hand with DoubleFourConcealedTriplets all kongs', () => {
@@ -1076,7 +1076,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('wwww')),
                                             new Pair(TileList('a99'))];
         let hand = new Hand(TileList('p1111ggggrrrrwwwwa99'));
-        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(yaku.DoubleFourConcealedTriplets);
+        expect(yakuEvaluate.DoubleFourConcealedTriplets(partition, hand, new Tile(WAN_NINE))).to.eql(new yaku.DoubleFourConcealedTriplets());
     });
 
     it('BigThreeDragons() returns correct for hand with BigThreeDragons', () => {
@@ -1468,7 +1468,8 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('s234')),
                                             new Meld(TileList('a789')),
                                             new Pair(TileList('ww'))];
-        expect(yakuEvaluate.EvaluateYaku(partition)).to.eql(yakuList);
+        let hand = new Hand(TileList('p123345s234a789ww'));
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('s4')[0])).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with 3 yaku', () => {
@@ -1478,35 +1479,39 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('s333')),
                                             new Meld(TileList('s444')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.EvaluateYaku(partition)).to.eql(yakuList);
+        let hand = new Hand(TileList('s222233334444gg'));
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0])).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with many yaku', () => {
-        let yakuList = [  new yaku.NorthWind,
-                                        new yaku.EastWind,
-                                        new yaku.SouthWind,
-                                        new yaku.WestWind,
-                                        new yaku.MixedOutsideHand,
-                                        new yaku.PureOutsideHand,
-                                        new yaku.BigFourWinds,
-                                        new yaku.AllHonors,
-                                        new yaku.FourQuads];
+        let yakuList = [  new yaku.NorthWind(),
+                                        new yaku.EastWind(),
+                                        new yaku.SouthWind(),
+                                        new yaku.WestWind(),
+                                        new yaku.MixedOutsideHand(),
+                                        new yaku.PureOutsideHand(),
+                                        new yaku.DoubleFourConcealedTriplets(),
+                                        new yaku.BigFourWinds(),
+                                        new yaku.AllHonors(),
+                                        new yaku.FourQuads()];
         let partition = [ new Meld(TileList('NNNN')),
                                             new Meld(TileList('EEEE')),
                                             new Meld(TileList('SSSS')),
                                             new Meld(TileList('WWWW')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.EvaluateYaku(partition)).to.eql(yakuList);
+        let hand = new Hand(TileList('NNNNEEEESSSSWWWWgg'));
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0])).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with no yaku', () => {
         let yakuList = [];
-        let partition = [ new Meld(TileList('p123')),
+        let partition = [ new Meld(TileList('p123'), true),
                                             new Meld(TileList('p345')),
                                             new Meld(TileList('s222')),
                                             new Meld(TileList('a789')),
                                             new Pair(TileList('ww'))];
-        expect(yakuEvaluate.EvaluateYaku(partition)).to.eql(yakuList);
+        let hand = new Hand(TileList('p123345s222a789ww'));
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('w')[0])).to.eql(yakuList);
     });
 
     //need to add EvaluateYaku for functions that need parameter other than partition.

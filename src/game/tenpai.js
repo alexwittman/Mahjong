@@ -66,7 +66,7 @@ class _Tenpai{
             handCopy.add(tile);
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
-                if(yakuEvaluator.EvaluateYaku(partition).length > 0){
+                if(yakuEvaluator.EvaluateYaku(partition, handCopy, tile).length > 0){
                     tilesToComplete.push(tile);
                 }
             }

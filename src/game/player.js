@@ -489,7 +489,7 @@ class _Player {
             }
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
-                let yakuList = yakuEvaluator.EvaluateYaku(partition);
+                let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
                 if(yakuList.length > 0){
                     ronMelds.push(possibleMeld);
                 }
@@ -499,7 +499,7 @@ class _Player {
         handCopy.add(availableTile);
         let partitions = handPartitioner.partition(handCopy);
         for(let partition of partitions){
-            let yakuList = yakuEvaluator.EvaluateYaku(partition);
+            let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
                 if(yakuList.length > 0){
                     for(let part of partition){
                         if(part instanceof Pair){
@@ -534,7 +534,7 @@ class _Player {
         handCopy.add(this._drawnTile);
         let partitions = handPartitioner.partition(handCopy);
         for(let partition of partitions){
-            if(yakuEvaluator.EvaluateYaku(partition).length > 0){
+            if(yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0){
                 return true;
             }
         }
