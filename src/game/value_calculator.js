@@ -26,6 +26,8 @@ class Value_Calculator {
                 }
             }
         }
+        if(han > 13 && han < 26) han = 13;
+        if(han > 26) han = 26;
         return han;
     }
 }
