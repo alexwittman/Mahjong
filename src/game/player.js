@@ -22,6 +22,7 @@ let Hand = require('./hand').Hand;
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
 let Hand_Partition = require('./hand_partition').Hand_Partition;
 let Pair = require('./pair').Pair;
+let Value_Calculator = require('./value_calculator').Value_Calculator;
 
 let prompt = require('prompt-sync')();
 
@@ -266,7 +267,7 @@ class _Player {
         let suitTiles = this._hand.closedTiles.filter(tile => tile.type == availableTile.type);
         let uniqueSuitTiles = TILE.TileListRemoveDuplicates(suitTiles);
         for(let i = 0; i < uniqueSuitTiles.length - 1; i++){
-            let potentialMeld = new Meld([uniqueSuitTiles[i], uniqueSuitTiles[i + 1], availableTile].sort(TILE.CompareTiles));
+            let potentialMeld = new Meld([uniqueSuitTiles[i], uniqueSuitTiles[i + 1], availableTile].sort(TILE.CompareTiles), true);
             if(potentialMeld.type == MeldType.CHOW){
                 melds.push(potentialMeld);
             }
@@ -482,10 +483,10 @@ class _Player {
         for(let possibleMeld of possibleMelds){
             let handCopy = HAND.CopyHand(this._hand);
             if(possibleMeld.type == MeldType.PONG){
-                handCopy = this.Pon(handCopy, availableTile);
+                handCopy = this.Pon(handCopy, availableTile, false);
             }
             else if(possibleMeld.type == MeldType.CHOW){
-                handCopy = this.Chi(handCopy, possibleMeld, availableTile)
+                handCopy = this.Chi(handCopy, possibleMeld, availableTile, false)
             }
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
@@ -520,6 +521,33 @@ class _Player {
      */
     CanRon(availableTile) {
         return this.RonMelds(availableTile).length > 0;
+    }
+
+    /**
+     * Calls ron and takes the discard available to complete the player's hand.
+     * 
+     * @param {TILE.Tile} availableTile The tile available for the player to take.
+     */
+    Ron(availableTile){
+        let handPartitioner = new Hand_Partition();
+        let yakuEvaluator = new Yaku_Evaluate();
+        let valueCalculator = new Value_Calculator();
+        let ronMelds = this.RonMelds(availableTile);
+        let highestValue = {'han': 0, 'partition': null, 'yakuList': []};
+        this._hand.add(availableTile);
+        for(let meld of ronMelds){
+            let handCopy = HAND.CopyHand(this._hand);
+            handCopy.makeMeld(meld);
+            let partitions = handPartitioner.partition(handCopy);
+            for(let partition of partitions){
+                let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
+                let partitionHan = valueCalculator.CalculateHan(yakuList, handCopy.isOpen);
+                if(partitionHan > highestValue['han']){
+                    highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
+                }
+            }
+        }
+        return highestValue;
     }
 
     /**
