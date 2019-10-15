@@ -184,7 +184,7 @@ function CopyHand(handToCopy) {
     let tiles = CopyTileList(handToCopy.closedTiles);
     let melds = [];
     for(let meld of handToCopy.melds){
-        melds.push(new Meld(CopyTileList(meld.tiles)));
+        melds.push(new Meld(CopyTileList(meld.tiles), meld.is_open));
     }
     return new Hand(tiles, melds, handToCopy.isOpen);
 }
