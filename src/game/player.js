@@ -21,6 +21,7 @@ let HAND = require('./hand');
 let Hand = require('./hand').Hand;
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
 let Hand_Partition = require('./hand_partition').Hand_Partition;
+let Pair = require('./pair').Pair;
 
 let prompt = require('prompt-sync')();
 
@@ -494,6 +495,21 @@ class _Player {
                 }
             }
         }
+        let handCopy = HAND.CopyHand(this._hand);
+        handCopy.add(availableTile);
+        let partitions = handPartitioner.partition(handCopy);
+        for(let partition of partitions){
+            let yakuList = yakuEvaluator.EvaluateYaku(partition);
+                if(yakuList.length > 0){
+                    for(let part of partition){
+                        if(part instanceof Pair){
+                            if(part.tiles[0].number == availableTile.number){
+                                ronMelds.push(part);
+                            }
+                        }
+                    }
+                }
+        }
         return ronMelds;
     }
 
@@ -503,9 +519,7 @@ class _Player {
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
-        let ronMelds = this.RonMelds(availableTile);
-
-        //return this.RonMelds(availableTile).length > 0;
+        return this.RonMelds(availableTile).length > 0;
     }
 
     /**
