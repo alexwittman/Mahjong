@@ -53,10 +53,33 @@ describe('Ron', () => {
     });
 
     it('A player can ron if the tile discarded makes their hand complete with a pair.', () => {
-
+        let player = new Player(0);
+        let tiles = TileList('p123s123a123555E');
+        let melds = [];
+        let availableTile = TileList('E')[0];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRon(availableTile)).to.eql(true);
     });
 
-    it('A player cannot if the drawn tile completes their hand with >= 1 han, but the player had already discarded the tile.', () => {
-
+    it('A player can ron if the tile discarded makes their hand complete with seven pairs.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1144s1144a1144E');
+        let melds = [];
+        let availableTile = TileList('E')[0];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRon(availableTile)).to.eql(true);
     });
+
+    it('A player can ron if the tile discarded makes their hand complete with thirteen orphans.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p19s19a19NESWgrw');
+        let melds = [];
+        let availableTile = TileList('w')[0];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRon(availableTile)).to.eql(true);
+    });
+
+    // it('A player cannot if the drawn tile completes their hand with >= 1 han, but the player had already discarded the tile.', () => {
+
+    // });
 });
