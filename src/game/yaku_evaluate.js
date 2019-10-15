@@ -86,9 +86,11 @@ class _Yaku_Evaluate {
      * Evaluates the yaku of a partition of a hand.
      * 
      * @param {(Meld | Pair)[]} partition Partition to evaluate for yaku.
+     * @param {Hand} hand The hand to evaluate for yaku.
+     * @param {Tile} winningTile The tile used to complete the hand.
      * @returns {Yaku.Yaku[]} List of yaku the partition satisfies.
      */
-    EvaluateYaku(partition) {
+    EvaluateYaku(partition, hand, winningTile) {
         let yakuList = [];
         yakuList.push(this.NoPointsHand(partition));
         yakuList.push(this.IdenticalSequences(partition));
@@ -112,12 +114,18 @@ class _Yaku_Evaluate {
         yakuList.push(this.LittleThreeDragons(partition));
         yakuList.push(this.HalfFlush(partition));
         yakuList.push(this.Flush(partition));
+        yakuList.push(this.ThirteenOrphans(hand, winningTile));
+        yakuList.push(this.DoubleThirteenOrphans(hand, winningTile));
+        yakuList.push(this.FourConcealedTriplets(partition, hand, winningTile));
+        yakuList.push(this.DoubleFourConcealedTriplets(partition, hand, winningTile));
         yakuList.push(this.BigThreeDragons(partition));
         yakuList.push(this.LittleFourWinds(partition));
         yakuList.push(this.BigFourWinds(partition));
         yakuList.push(this.AllHonors(partition));
         yakuList.push(this.AllTerminals(partition));
         yakuList.push(this.AllGreen(partition));
+        yakuList.push(this.NineGates(partition, hand, winningTile));
+        yakuList.push(this.DoubleNineGates(partition, hand, winningTile));
         yakuList.push(this.FourQuads(partition));
 
         yakuList = yakuList.filter(elem => elem != null);
@@ -728,7 +736,7 @@ class _Yaku_Evaluate {
             tileCounts.push(TileListCount(tilesWithoutWinningTile, uniqueTile));
         }
         if(tileCounts.filter((count) => count == 1).length == 1){
-            return Yaku.DoubleFourConcealedTriplets;
+            return new Yaku.DoubleFourConcealedTriplets;
         }
         else{
             return null;
