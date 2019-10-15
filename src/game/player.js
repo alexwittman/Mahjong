@@ -213,13 +213,14 @@ class _Player {
      * @param {Tile} availableTile The tile available for the player to call chi on.
      * @returns {HAND.Hand} The hand with the chow added to it.
      */
-    Chi(hand, chow, availableTile){
+    Chi(hand, chow, availableTile, makeHandOpen = true){
         let chowTiles = TILE.CopyTileList(chow.tiles);
         chowTiles = TILE.RemoveFromTileList(chowTiles, availableTile);
         for(let tile of chowTiles) {
             hand._closedTiles = TILE.RemoveFromTileList(hand._closedTiles, tile);
         }
         hand._melds.push(new Meld(chow.tiles, true));
+        if(makeHandOpen) hand.isOpen = true;
         return hand;
     }
 
@@ -303,11 +304,12 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available for the player to take.
      * @returns {HAND.Hand} The hand with the pong added to it.
      */
-    Pon(hand, availableTile){
+    Pon(hand, availableTile, makeHandOpen = true){
         for(let i = 0; i < 2; i++){
             hand.remove(availableTile);
         }
         hand.makeMeld(new Meld([availableTile, availableTile, availableTile], true));
+        if(makeHandOpen) hand.isOpen = true;
         return hand;
     }
 
@@ -395,7 +397,7 @@ class _Player {
      * @param {Meld} kong The kong to make in the player's hand.
      * @param {*} availableTile The tile to take to make the meld.
      */
-    Kan(kong, availableTile = null){
+    Kan(kong, availableTile = null, makeHandOpen = true){
         if(availableTile == null){
             if(kong.is_open){ //Making kong with tile in closed tiles and open pong.
                 for(let meld of this._hand.melds){
@@ -418,6 +420,7 @@ class _Player {
                 this._hand.remove(availableTile);
             }
             this._hand.makeMeld(kong);
+            if(makeHandOpen) this._hand.isOpen = true;
         }
     }
     
@@ -500,7 +503,9 @@ class _Player {
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
-        return this.RonMelds(availableTile).length > 0;
+        let ronMelds = this.RonMelds(availableTile);
+
+        //return this.RonMelds(availableTile).length > 0;
     }
 
     /**

@@ -64,7 +64,16 @@ class Hand{
      * @returns {boolean} True if the hand is open, false otherwise.
      */
     get isOpen() {
-        return this._isOpen();
+        return this._isOpen;
+    }
+
+    /**
+     * Setter method for if the hand is concealed or open.
+     * 
+     * @param {boolean} isOpen Whether or not the hand is open.
+     */
+    set isOpen(isOpen) {
+        this._isOpen = isOpen;
     }
 
     /**
@@ -73,7 +82,7 @@ class Hand{
      * @param {Tile[]} tiles The tiles to go in the hand.
      * @param {Meld[]} melds The melds in the hand.
      */
-    constructor(tiles = [], melds = []) {
+    constructor(tiles = [], melds = [], isOpen = false) {
         this._tiles = CopyTileList(tiles);
         this._closedTiles = CopyTileList(tiles);
         this._openTiles = [];
@@ -87,6 +96,7 @@ class Hand{
         this._closedTiles.sort(CompareTiles);
         this._openTiles.sort(CompareTiles);
         this._tiles.sort(CompareTiles);
+        this._isOpen = isOpen;
     }
 
     /**
@@ -150,21 +160,8 @@ class Hand{
     }
 
     /**
-     * Calculates if a hand is open or not.
-     * An open hand is a hand with one or more open melds.
-     * 
-     * @returns {boolean} True if the hand is open, false otherwise.
+     * Prints a hand to the console.
      */
-    _isOpen() {
-        if(this._melds.length == 0) return false;
-        else {
-            for(let meld of this._melds){
-                if(meld.is_open) return true;
-            }
-            return false;
-        }
-    }
-
     Print() {
         console.log('Hand:');
         PrintTileList(this._closedTiles);
@@ -186,7 +183,7 @@ function CopyHand(handToCopy) {
     for(let meld of handToCopy.melds){
         melds.push(new Meld(CopyTileList(meld.tiles)));
     }
-    return new Hand(tiles, melds);
+    return new Hand(tiles, melds, handToCopy.isOpen);
 }
 
 module.exports = {
