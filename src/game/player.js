@@ -538,6 +538,9 @@ class _Player {
         this._hand.add(availableTile);
         for(let meld of ronMelds){
             let handCopy = HAND.CopyHand(this._hand);
+            for(let tile of meld.tiles){
+                handCopy.remove(tile);
+            }
             handCopy.makeMeld(meld);
             let partitions = handPartitioner.partition(handCopy);
             for(let partition of partitions){
@@ -564,8 +567,8 @@ class _Player {
         this._hand.add(this._drawnTile);
         let partitions = handPartitioner.partition(this._hand);
         for(let partition of partitions){
-            let yakuList = yakuEvaluator.EvaluateYaku(partition, this._hand, availableTile);
-            let partitionHan = valueCalculator.CalculateHan(yakuList, handCopy.isOpen);
+            let yakuList = yakuEvaluator.EvaluateYaku(partition, this._hand, this._drawnTile);
+            let partitionHan = valueCalculator.CalculateHan(yakuList, this._hand.isOpen);
             if(partitionHan > highestValue['han']){
                 highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
             }
