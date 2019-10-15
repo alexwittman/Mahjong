@@ -394,7 +394,8 @@ function RemoveFromTileList(tiles, tileToRemove) {
     for(let tile of tiles){
         tileNumbers.push(tile.number);
     }
-    tiles.splice(tileNumbers.indexOf(tileToRemove.number), 1);
+    let index = tileNumbers.indexOf(tileToRemove.number);
+    if(index >= 0) tiles.splice(tileNumbers.indexOf(tileToRemove.number), 1);
     return tiles;
 }
 
