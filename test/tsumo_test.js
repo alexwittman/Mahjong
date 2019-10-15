@@ -63,12 +63,12 @@ describe('Tsumo', () => {
 
     it('A player rons and Tsumo returns the correct highest valued partition for a hand with many partitions.', () => {
         let player = new Player(0);
-        let tiles = TileList('p11122233344EE');
-        let melds = [];
-        let drawnTile = TileList('p4')[0];
+        let tiles = TileList('p11122233EE');
+        let melds = [new Meld(TileList('p444'), true)];
+        let drawnTile = TileList('p3')[0];
         player._drawnTile = drawnTile;
-        player.hand = new Hand(tiles, melds, false);
-        let value = {'han': 4,
+        player.hand = new Hand(tiles, melds, true);
+        let value = {'han': 6,
                      'partition': [new Meld(TileList('p111')),
                                    new Meld(TileList('p222')),
                                    new Meld(TileList('p333')),
