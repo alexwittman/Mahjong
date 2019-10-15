@@ -7,6 +7,7 @@ let IndexTileList = require('./tile').IndexTileList;
 let Meld = require('./meld').Meld;
 let CopyTileList = require('./tile').CopyTileList;
 let PrintTileList = require('./tile').PrintTileList;
+let Pair = require('./pair').Pair;
 
 /**
  * Class to hold information of a hand.
@@ -147,15 +148,17 @@ class Hand{
     /**
      * Adds a meld to a hand and removes tiles if necessary.
      * 
-     * @param {Meld} meld The meld to add to the hand.
+     * @param {Meld | Pair} meld The meld to add to the hand.
      */
     makeMeld(meld){
         this.melds.push(meld);
-        if(meld.is_open) {
-            for(let tile of meld.tiles){
-                this._openTiles.push(tile);
+        if(meld instanceof Pair){
+            if(meld.is_open) {
+                for(let tile of meld.tiles){
+                    this._openTiles.push(tile);
+                }
+                this._openTiles.sort(CompareTiles);
             }
-            this._openTiles.sort(CompareTiles);
         }
     }
 
