@@ -527,6 +527,7 @@ class _Player {
      * Calls ron and takes the discard available to complete the player's hand.
      * 
      * @param {TILE.Tile} availableTile The tile available for the player to take.
+     * @returns {{han: number, partition: (Meld | Pair)[], yakuList: Yaku[]}} The highest value of all possible winning hands.
      */
     Ron(availableTile){
         let handPartitioner = new Hand_Partition();
@@ -545,6 +546,28 @@ class _Player {
                 if(partitionHan > highestValue['han']){
                     highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
                 }
+            }
+        }
+        return highestValue;
+    }
+
+    /**
+     * Calls tsumo and uses drawn tile to complete the player's hand.
+     * 
+     * @returns {{han: number, partition: (Meld | Pair)[], yakuList: Yaku[]}} The highest value of all possible winning hands.
+     */
+    Tsumo() {
+        let handPartitioner = new Hand_Partition();
+        let yakuEvaluator = new Yaku_Evaluate();
+        let valueCalculator = new Value_Calculator();
+        let highestValue = {'han': 0, 'partition': null, 'yakuList': []};
+        this._hand.add(this._drawnTile);
+        let partitions = handPartitioner.partition(this._hand);
+        for(let partition of partitions){
+            let yakuList = yakuEvaluator.EvaluateYaku(partition, this._hand, availableTile);
+            let partitionHan = valueCalculator.CalculateHan(yakuList, handCopy.isOpen);
+            if(partitionHan > highestValue['han']){
+                highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
             }
         }
         return highestValue;
