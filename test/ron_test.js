@@ -4,6 +4,8 @@ let Meld = require('../src/game/meld').Meld;
 let Tile = require('../src/game/tile').Tile;
 let Hand = require('../src/game/hand').Hand;
 let expect = require('chai').expect;
+let Pair = require('../src/game/pair').Pair;
+let yaku = require('../src/game/yaku');
 
 describe('Ron', () => {
 
@@ -82,4 +84,36 @@ describe('Ron', () => {
     // it('A player cannot if the drawn tile completes their hand with >= 1 han, but the player had already discarded the tile.', () => {
 
     // });
+
+    it('A player rons and Ron returns the correct highest valued partition for a hand with only one partition.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p111333555E');
+        let melds = [new Meld(TileList('s888'), true)];
+        let availableTile = TileList('E')[0];
+        player.hand = new Hand(tiles, melds, true);
+        let value = {'han': 4,
+                     'partition': [new Meld(TileList('p111')),
+                                   new Meld(TileList('p333')),
+                                   new Meld(TileList('p555')),
+                                   new Meld(TileList('s888'), true),
+                                   new Pair(TileList('EE'))],
+                     'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets]};
+        expect(player.Ron(availableTile)).to.eql(value);
+    });
+
+    it('A player rons and Ron returns the correct highest valued partition for a hand with only many partitions.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p11122233344EE');
+        let melds = [];
+        let availableTile = TileList('p4')[0];
+        player.hand = new Hand(tiles, melds, false);
+        let value = {'han': 5,
+                     'partition': [new Meld(TileList('p111')),
+                                   new Meld(TileList('p222')),
+                                   new Meld(TileList('p333')),
+                                   new Meld(TileList('p444'), true),
+                                   new Pair(TileList('EE'))],
+                     'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush]};
+        expect(player.Ron(availableTile)).to.eql(value);
+    });
 });
