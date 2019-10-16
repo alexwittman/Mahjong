@@ -137,7 +137,10 @@ class _Player {
     GetInterject(availableTile) {
         let actions = this.CalculateInterject(availableTile);
         console.log(this.GetActionStrings(actions));
-        let action = prompt(">> ");
+        let action = '0';
+        if(actions.length > 0){
+            action = prompt(">> ");
+        }
         switch(action){
             case '1': { //Chi
                 this.GetChi(availableTile);
@@ -178,7 +181,7 @@ class _Player {
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
         this._hand.Print();
-        TILE.PrintTileList([this._drawnTile]);
+        if(this._drawnTile) TILE.PrintTileList([this._drawnTile]);
         let input = Number(prompt("Enter the tile to discard: "));
         let discard;
         if(input == -1){
@@ -186,12 +189,13 @@ class _Player {
             this._drawnTile = null;
         }
         else{
-            discard = this._hand.tiles[input];
-            this._hand.remove(this._hand.tiles[input]);
-            this._hand.add(this._drawnTile);
+            discard = this._hand.closedTiles[input];
+            this._hand.remove(this._hand.closedTiles[input]);
+            if(this._drawnTile) this._hand.add(this._drawnTile);
             this._drawnTile = null;
         }
-        TILE.PrintTileList(this._hand.tiles);
+        //TILE.PrintTileList(this._hand.tiles);
+        this._hand.Print();
         return discard; 
     }
     
@@ -209,10 +213,10 @@ class _Player {
             let chowPrompt = '';
             for(let possibleChow of possibleChows){
                 for(let chowTile of possibleChow.tiles){
-                    chowPrompt.push(chowTile.unicode);
-                    chowPrompt.push('|');
+                    chowPrompt += (chowTile.unicode);
+                    chowPrompt += '|';
                 }
-                chowPrompt.push('  ');
+                chowPrompt += '  ';
             }
             console.log('Possible Chows:');
             console.log(chowPrompt);
@@ -252,7 +256,7 @@ class _Player {
      */
     CalculateActions() {
         let actions = [ActionType.Discard];
-        if(this.CanKan())          actions.push(ActionType.Kan);
+        if(this.CanKan())    actions.push(ActionType.Kan);
         if(this.CanRiichi()) actions.push(ActionType.Riichi);
         if(this.CanTsumo())  actions.push(ActionType.Tsumo);
         return actions;
@@ -599,14 +603,16 @@ class _Player {
      * @returns {boolean} True if the player can tsumo, false otherwise.
      */
     CanTsumo() {
-        let handPartitioner = new Hand_Partition();
-        let yakuEvaluator = new Yaku_Evaluate();
-        let handCopy = HAND.CopyHand(this._hand);
-        handCopy.add(this._drawnTile);
-        let partitions = handPartitioner.partition(handCopy);
-        for(let partition of partitions){
-            if(yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0){
-                return true;
+        if(this._drawnTile){
+            let handPartitioner = new Hand_Partition();
+            let yakuEvaluator = new Yaku_Evaluate();
+            let handCopy = HAND.CopyHand(this._hand);
+            handCopy.add(this._drawnTile);
+            let partitions = handPartitioner.partition(handCopy);
+            for(let partition of partitions){
+                if(yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0){
+                    return true;
+                }
             }
         }
         return false;
