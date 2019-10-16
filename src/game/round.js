@@ -55,12 +55,13 @@ class _Round {
         if(!didPlayerWin){
             let newIndex = -1;
             for(let i = 1; i <= 3; i++){
-                newIndex = this.PlayerInterject((playerIndex + 1) % 4);
+                newIndex = this.PlayerInterject((playerIndex + i) % 4);
                 if(newIndex != -1) break;
             }
             if(newIndex != -2){
-                playerIndex = (newIndex == -1) ? (playerIndex + 1) % 4 : newIndex;
-                this.PlayerTurn(playerIndex);
+                if(newIndex == -1) this.PlayerTurn((playerIndex + 1) % 4);
+                else didPlayerWin = this.PlayerAction(newIndex);
+                if(!didPlayerWin) this.PlayerTurn((newIndex + 1) % 4);
             }
         }
     }
@@ -94,6 +95,9 @@ class _Round {
     }
 
     PlayerInterject(playerIndex) {
+        console.log('\n\nPlayer ', playerIndex, '\'s interject:');
+        console.log("Available Tile: ", this._availableTile.number);
+        this._players[playerIndex].hand.Print();
         let playerAction = this._players[playerIndex].GetInterject(this._availableTile);
         if(playerAction != null){
             switch(playerAction["action"]){
