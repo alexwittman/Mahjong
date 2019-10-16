@@ -48,48 +48,40 @@ class _Round {
      * 
      * @param {number} playerIndex The player index of whose turn it is.
      */
-    async PlayerTurn(playerIndex){
-        //if set is not empty
-        console.log('Player ' + playerIndex + '\'s turn:');
+    PlayerTurn(playerIndex){
+        console.log('\n\n\n\n\n\n\nPlayer ' + playerIndex + '\'s turn:');
         this._set.DealTile(this._players[playerIndex]); //deal tile to first player
-        // console.log(this._players);
-        // console.log(playerIndex);
-        // console.log(this._players[playerIndex].GetAction());
-        let playerAction = this._players[playerIndex].GetAction(this._availableTile);
-        switch(playerAction["action"]){
-            case ActionType.Discard: {
-                this.PostPlayerAction(playerIndex, playerAction["discard"]);
+        let didPlayerWin = this.PlayerAction(playerIndex);
+        if(!didPlayerWin){
+            let newIndex = -1;
+            for(let i = 1; i <= 3; i++){
+                newIndex = this.PlayerInterject((playerIndex + 1) % 4);
+                if(newIndex != -1) break;
             }
-            case ActionType.Chi: {
-                //not possible
-            }
-            case ActionType.Pon: {
-                //not possible
-            }
-            case ActionType.Kan: {
-                //declare kan
-                //see if any other player can rob the kong
-                //if they take an action start their turn
-                //draw from dead wall
-
-                this.PostPlayerAction(playerIndex);
-            }
-            case ActionType.Riichi: {
-                //declare riichi
-
-                this.PostPlayerAction(playerIndex);
-            }
-            case ActionType.Ron: {
-                // not possible
-            }
-            case ActionType.Tsumo: {
-                //declare tsumo
-                //end round
+            if(newIndex != -2){
+                playerIndex = (newIndex == -1) ? (playerIndex + 1) % 4 : newIndex;
+                this.PlayerTurn(playerIndex);
             }
         }
-        //start next player's turn
-        playerIndex = (playerIndex + 1) % 4;
-        this.PlayerTurn(playerIndex);
+    }
+
+    PlayerAction(playerIndex) {
+        let playerAction = this._players[playerIndex].GetAction();
+        switch(playerAction["action"]){
+            case ActionType.Discard: break;
+            case ActionType.Kan: {
+                //draw tile from dead wall
+                this._set.DealTile(this._players[playerIndex]); //TODO: change this to draw from dead wall.
+                this.PlayerAction(playerIndex);
+            }
+            case ActionType.Riichi: break;
+            case ActionType.Tsumo: {
+                this.EndRound(playerAction['value']);
+                return true;
+            }
+        }
+        this.PostPlayerAction(playerAction["discard"]);
+        return false;
     }
 
     /**
@@ -97,15 +89,32 @@ class _Round {
      * 
      * @param {*} playerIndex 
      */
-    PostPlayerAction(playerIndex, availableTile) {
+    PostPlayerAction(availableTile) {
         this._availableTile = availableTile;
-        this.PlayerInterject(playerIndex);
     }
 
     PlayerInterject(playerIndex) {
-        //calculate all other player actions besides playerIndex's
-        //present each player with possible actions
-        //if they take an action, start their turn
+        let playerAction = this._players[playerIndex].GetInterject(this._availableTile);
+        if(playerAction != null){
+            switch(playerAction["action"]){
+                case ActionType.Chi:
+                case ActionType.Pon:
+                case ActionType.Kan: {
+                    //draw tile from dead wall
+                    return playerIndex;
+                }
+                case ActionType.Ron: {
+                    this.EndRound(playerAction['value']);
+                    return -2;
+                }
+            }
+        }
+        return -1;
+    }
+
+    EndRound(WinningHand){
+        console.log("CONGRATULATIONS!!!!!!!")
+        console.log(WinningHand);
     }
 }
 
