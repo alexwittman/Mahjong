@@ -99,7 +99,6 @@ class _Player {
         let action = prompt(">> ");
         switch(action){
             case '0': { //Discard
-                console.log("Discard");
                 let discard = this.GetDiscard();
                 return {
                     "action": ActionType.Discard,
@@ -107,16 +106,21 @@ class _Player {
                 };
             }
             case '3': { //Kan
-                //TODO
-                return ActionType.Kan;
+                this.GetKan();
+                return {
+                    "action": ActionType.Kan
+                };
             }
             case '4': { //Riichi
                 //TODO
                 return ActionType.Riichi;
             }
             case '6': { //Tsumo
-                //TODO
-                return ActionType.Tsumo;
+                let value = this.Tsumo();
+                return {
+                    'action': ActionType.Tsumo,
+                    'value': value
+                }
             }
         }
     }
@@ -128,26 +132,34 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available on the table.
      */
     GetInterject(availableTile) {
-        //TODO
-        let actions = this.CalculateActions(availableTile);
+        let actions = this.CalculateInterject(availableTile);
         console.log(this.GetActionStrings(actions));
         let action = prompt(">> ");
         switch(action){
             case '1': { //Chi
-                this.GetChi();
-                return ActionType.Chi;
+                this.GetChi(availableTile);
+                return {
+                    'action': ActionType.Chi
+                }
             }
             case '2': { //Pon
-                //TODO
-                return ActionType.Pon;
+                this._hand = this.Pon(this._hand, availableTile);
+                return {
+                    'action': ActionType.Pon
+                };
             }
             case '3': { //Kan
-                //TODO
-                return ActionType.Kan;
+                this.GetKan(availableTile);
+                return {
+                    'action': ActionType.Kan
+                }
             }
             case '5': { //Ron
-                //TODO
-                return ActionType.Ron;
+                let value = this.Ron(availableTile);
+                return {
+                    'action': ActionType.Ron,
+                    'value': value
+                }
             }
         }
     }
@@ -232,7 +244,7 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available on the table.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
-    CalculateActions(availableTile) {
+    CalculateActions() {
         let actions = [ActionType.Discard];
         if(this.CanKan())          actions.push(ActionType.Kan);
         if(this.CanRiichi()) actions.push(ActionType.Riichi);
@@ -370,7 +382,7 @@ class _Player {
      * 
      * @param {Tile} availableTile The tile available for the player to take.
      */
-    GetKan(availableTile){
+    GetKan(availableTile = null){
         let possibleKongs = this.KanMelds(availableTile);
         let kong;
         if(possibleKongs.length > 1){
