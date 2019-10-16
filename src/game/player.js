@@ -95,16 +95,12 @@ class _Player {
      */
     GetAction() {
         let actions = this.CalculateActions();
-        console.log(this.GetActionStrings(actions));
-        let action = prompt(">> ");
+        let action = '0';
+        if(actions.length > 1){
+            console.log(this.GetActionStrings(actions));
+            action = prompt(">> ");
+        }
         switch(action){
-            case '0': { //Discard
-                let discard = this.GetDiscard();
-                return {
-                    "action": ActionType.Discard,
-                    "discard": discard
-                };
-            }
             case '3': { //Kan
                 this.GetKan();
                 return {
@@ -121,6 +117,13 @@ class _Player {
                     'action': ActionType.Tsumo,
                     'value': value
                 }
+            }
+            default: { //Discard
+                let discard = this.GetDiscard();
+                return {
+                    "action": ActionType.Discard,
+                    "discard": discard
+                };
             }
         }
     }
@@ -162,6 +165,7 @@ class _Player {
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -169,10 +173,12 @@ class _Player {
      * Adds the drawn tile to the player's hand.
      * Removes that tile from the player's hand.
      * 
-     * @returns {Tile} The tile the player discarded.
+     * @returns {TILE.Tile} The tile the player discarded.
      */
     GetDiscard() {
-        TILE.PrintTileList(this._hand.tiles, this._drawnTile);
+        //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
+        this._hand.Print();
+        TILE.PrintTileList([this._drawnTile]);
         let input = Number(prompt("Enter the tile to discard: "));
         let discard;
         if(input == -1){
@@ -259,12 +265,11 @@ class _Player {
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
     CalculateInterject(availableTile) {
-        let tenpai = new Tenpai(this._hand);
         let actions = [];
-        if(CanChi(availableTile)) actions.push(ActionType.Chi);
-        if(CanPon(availableTile)) actions.push(ActionType.Pon);
-        if(CanKan(availableTile)) actions.push(ActionType.Kan);
-        if(CanRon(tenpai))        actions.push(ActionType.Ron);
+        if(this.CanChi(availableTile)) actions.push(ActionType.Chi);
+        if(this.CanPon(availableTile)) actions.push(ActionType.Pon);
+        if(this.CanKan(availableTile)) actions.push(ActionType.Kan);
+        if(this.CanRon(availableTile)) actions.push(ActionType.Ron);
         return actions;
     }
 
