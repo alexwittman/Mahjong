@@ -34,7 +34,9 @@ describe('Hand Partition', () => {
     it('partition() works on a hand of tiles and melds', () => {
         const pair = [new Tile(32), new Tile(32)];
         const hand = new Hand(pair, [new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Meld(CopyTileList(CHOW_PIN234))]);
-        const partition = [[new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Pair(pair)]];
+        const partition = [
+            [new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Pair(pair)]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -47,14 +49,18 @@ describe('Hand Partition', () => {
     it('partition() works for hand composed of all chows and a pair', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(CHOW_PIN234)).concat(CopyTileList(CHOW_PIN789)).concat(CopyTileList(CHOW_SOU234)).concat(CopyTileList(CHOW_WAN234));
         const hand = new Hand(tiles);
-        const partition = [[new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(CHOW_SOU234)), new Meld(CopyTileList(CHOW_WAN234)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(CHOW_SOU234)), new Meld(CopyTileList(CHOW_WAN234)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
     it('partition() works for hand composed of all pongs and a pair', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(PONG_PIN_ONE)).concat(CopyTileList(PONG_SOU_ONE)).concat(CopyTileList(PONG_WAN_ONE)).concat(CopyTileList(PONG_EAST));
         const hand = new Hand(tiles);
-        const partition = [[new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Meld(CopyTileList(PONG_EAST)), new Pair([new Tile(32), new Tile(32)])]];        
+        const partition = [
+            [new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Meld(CopyTileList(PONG_EAST)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -62,14 +68,18 @@ describe('Hand Partition', () => {
         const tiles = [new Tile(32), new Tile(32)];
         const melds = [new Meld(CopyTileList(KONG_PIN_FIVE)), new Meld(CopyTileList(KONG_SOU_FIVE)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN))];
         const hand = new Hand(tiles, melds);
-        const partition = [[new Meld(CopyTileList(KONG_PIN_FIVE)), new Meld(CopyTileList(KONG_SOU_FIVE)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(KONG_PIN_FIVE)), new Meld(CopyTileList(KONG_SOU_FIVE)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
     it('partition() works for hand composed of all chows and pongs and a pair', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(CHOW_PIN234)).concat(CopyTileList(CHOW_PIN789)).concat(CopyTileList(PONG_SOU_ONE)).concat(CopyTileList(PONG_WAN_ONE));
         const hand = new Hand(tiles);
-        const partition = [[new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(PONG_WAN_ONE)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -77,7 +87,9 @@ describe('Hand Partition', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(CHOW_PIN234)).concat(CopyTileList(CHOW_PIN789));
         const melds = [new Meld(CopyTileList(KONG_GREEN)), new Meld(CopyTileList(KONG_WAN_FIVE))];
         const hand = new Hand(tiles, melds);
-        const partition = [[new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(CHOW_PIN234)), new Meld(CopyTileList(CHOW_PIN789)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -85,7 +97,9 @@ describe('Hand Partition', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(PONG_PIN_ONE)).concat(CopyTileList(PONG_SOU_ONE));
         const melds = [new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN))];
         const hand = new Hand(tiles, melds);
-        const partition = [[new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Meld(CopyTileList(KONG_GREEN)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -93,21 +107,28 @@ describe('Hand Partition', () => {
         const tiles = [new Tile(32), new Tile(32)].concat(CopyTileList(PONG_PIN_ONE)).concat(CopyTileList(PONG_SOU_ONE)).concat(CopyTileList(CHOW_SOU234));
         const melds = [new Meld(CopyTileList(KONG_WAN_FIVE))];
         const hand = new Hand(tiles, melds);
-        const partition = [[new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(CHOW_SOU234)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Pair([new Tile(32), new Tile(32)])]];
+        const partition = [
+            [new Meld(CopyTileList(PONG_PIN_ONE)), new Meld(CopyTileList(PONG_SOU_ONE)), new Meld(CopyTileList(CHOW_SOU234)), new Meld(CopyTileList(KONG_WAN_FIVE)), new Pair([new Tile(32), new Tile(32)])]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
     it('partition() works for border case with chow and pong', () => {
         const tiles = TileList('s11123333WWWwww');
         const hand = new Hand(tiles);
-        const partition = [[new Meld(TileList('s123')), new Meld(TileList('s333')), new Meld(TileList('WWW')), new Meld(TileList('www')), new Pair(TileList('s11'))]];
+        const partition = [
+            [new Meld(TileList('s123')), new Meld(TileList('s333')), new Meld(TileList('WWW')), new Meld(TileList('www')), new Pair(TileList('s11'))]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
     it('partition() works for sequential pongs', () => {
         const tiles = TileList('s111222333WWWgg');
         const hand = new Hand(tiles);
-        const partition = [[new Meld(TileList('s111')), new Meld(TileList('s222')), new Meld(TileList('s333')), new Meld(TileList('WWW')), new Pair(TileList('gg'))], [new Meld(TileList('s123')), new Meld(TileList('s123')), new Meld(TileList('s123')), new Meld(TileList('WWW')), new Pair(TileList('gg'))]];
+        const partition = [
+            [new Meld(TileList('s111')), new Meld(TileList('s222')), new Meld(TileList('s333')), new Meld(TileList('WWW')), new Pair(TileList('gg'))],
+            [new Meld(TileList('s123')), new Meld(TileList('s123')), new Meld(TileList('s123')), new Meld(TileList('WWW')), new Pair(TileList('gg'))]
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 
@@ -115,28 +136,28 @@ describe('Hand Partition', () => {
         const tiles = TileList('s111222333444WW');
         const hand = new Hand(tiles);
         const partition = [
-                            [
-                                new Meld(TileList('s111')), 
-                                new Meld(TileList('s222')), 
-                                new Meld(TileList('s333')), 
-                                new Meld(TileList('s444')),
-                                new Pair(TileList('WW')) 
-                            ],
-                            [
-                                new Meld(TileList('s111')), 
-                                new Meld(TileList('s234')), 
-                                new Meld(TileList('s234')), 
-                                new Meld(TileList('s234')), 
-                                new Pair(TileList('WW')) 
-                            ],
-                            [
-                                new Meld(TileList('s123')), 
-                                new Meld(TileList('s123')), 
-                                new Meld(TileList('s123')), 
-                                new Meld(TileList('s444')), 
-                                new Pair(TileList('WW')) 
-                            ],
-                        ];
+            [
+                new Meld(TileList('s111')),
+                new Meld(TileList('s222')),
+                new Meld(TileList('s333')),
+                new Meld(TileList('s444')),
+                new Pair(TileList('WW'))
+            ],
+            [
+                new Meld(TileList('s111')),
+                new Meld(TileList('s234')),
+                new Meld(TileList('s234')),
+                new Meld(TileList('s234')),
+                new Pair(TileList('WW'))
+            ],
+            [
+                new Meld(TileList('s123')),
+                new Meld(TileList('s123')),
+                new Meld(TileList('s123')),
+                new Meld(TileList('s444')),
+                new Pair(TileList('WW'))
+            ],
+        ];
         expect(handPartition.partition(hand)).to.eql(partition);
     });
 

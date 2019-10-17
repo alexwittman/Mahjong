@@ -66,7 +66,7 @@ describe('Chi', () => {
         let counts = [1, 1, 1];
         player.hand = player.Chi(player.hand, chow, availableTile);
         let afterCounts = [];
-        for(let tile of chow.tiles){
+        for (let tile of chow.tiles) {
             afterCounts.push(TileListCount(player.hand._closedTiles, tile));
         }
         expect(afterCounts).to.eql(counts);

@@ -78,7 +78,7 @@ describe('Riichi', () => {
     });
 
     // it('A player cannot riichi if they don\'t have enough points', () => {
-        
+
     //     expect().to.eql();
     // });
 

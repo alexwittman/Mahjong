@@ -50,13 +50,16 @@ describe('Tsumo', () => {
         let drawnTile = TileList('E')[0];
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds, true);
-        let value = {'han': 4,
-                     'partition': [new Meld(TileList('p111')),
-                                   new Meld(TileList('p333')),
-                                   new Meld(TileList('p555')),
-                                   new Meld(TileList('s888'), true),
-                                   new Pair(TileList('EE'))],
-                     'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets]};
+        let value = {
+            'han': 4,
+            'partition': [new Meld(TileList('p111')),
+                new Meld(TileList('p333')),
+                new Meld(TileList('p555')),
+                new Meld(TileList('s888'), true),
+                new Pair(TileList('EE'))
+            ],
+            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets]
+        };
         expect(player.Tsumo()).to.eql(value);
     });
 
@@ -68,13 +71,16 @@ describe('Tsumo', () => {
         let drawnTile = TileList('p3')[0];
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds, true);
-        let value = {'han': 6,
-                     'partition': [new Meld(TileList('p111')),
-                                   new Meld(TileList('p222')),
-                                   new Meld(TileList('p333')),
-                                   new Meld(TileList('p444'), true),
-                                   new Pair(TileList('EE'))],
-                     'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush]};
+        let value = {
+            'han': 6,
+            'partition': [new Meld(TileList('p111')),
+                new Meld(TileList('p222')),
+                new Meld(TileList('p333')),
+                new Meld(TileList('p444'), true),
+                new Pair(TileList('EE'))
+            ],
+            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush]
+        };
         expect(player.Tsumo()).to.eql(value);
     });
 });

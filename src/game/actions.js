@@ -1,12 +1,12 @@
 /**
  * Host class for an action type.
  */
-class _Action{
+class Action {
 
     /**
      * Constructor for Action class.
      * 
-     * @param {_ActionType} type The type of action to be represented by this class.
+     * @param {ActionType} type The type of action to be represented by this class.
      */
     constructor(type) {
         this._type = type;
@@ -15,7 +15,7 @@ class _Action{
     /**
      * Getter method for Action class.
      * 
-     * @returns {_ActionType} The type of action.
+     * @returns {ActionType} The type of action.
      */
     get type() {
         return this._type;
@@ -25,7 +25,7 @@ class _Action{
 /**
  * Types of actions a player can perform.
  */
-let _ActionType = {
+let ActionType = {
     Discard: 0,
     Chi: 1,
     Pon: 2,
@@ -36,6 +36,6 @@ let _ActionType = {
 }
 
 module.exports = {
-    Action: _Action,
-    ActionType: _ActionType
+    Action: Action,
+    ActionType: ActionType
 }

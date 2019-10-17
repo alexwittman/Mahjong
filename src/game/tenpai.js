@@ -21,14 +21,14 @@ let CopyHand = require('./hand').CopyHand;
 /**
  * Class to see if a hand is in tenpai.
  */
-class _Tenpai{
+class Tenpai {
 
     /**
      * Constructor to create tenpai class for a hand.
      * 
      * @param {Hand} hand The hand to evaluate.
      */
-    constructor(hand){
+    constructor(hand) {
         this._tiles = this.GetTiles(hand);
     }
 
@@ -61,12 +61,12 @@ class _Tenpai{
         let yakuEvaluator = new Yaku_Evaluate();
         let handCopy = CopyHand(hand);
         let tilesToComplete = [];
-        for(let i = 0; i <= DRAGON_WHITE; i++){
+        for (let i = 0; i <= DRAGON_WHITE; i++) {
             let tile = new Tile(i);
             handCopy.add(tile);
             let partitions = handPartitioner.partition(handCopy);
-            for(let partition of partitions){
-                if(yakuEvaluator.EvaluateYaku(partition, handCopy, tile).length > 0){
+            for (let partition of partitions) {
+                if (yakuEvaluator.EvaluateYaku(partition, handCopy, tile).length > 0) {
                     tilesToComplete.push(tile);
                 }
             }
@@ -78,19 +78,14 @@ class _Tenpai{
     /**
      * Prints the tiles that complete the hand.
      */
-    PrintTiles(){
+    PrintTiles() {
         console.log('Tenpai Tiles:');
-        if(this.isTenpai){
+        if (this.isTenpai) {
             PrintTileList(this._tiles);
-        }
-        else{
+        } else {
             console.log('NONE');
         }
     }
 }
 
-// module.exports = {
-//     Tenpai: _Tenpai
-// }
-
-module.exports.Tenpai = _Tenpai;
+module.exports.Tenpai = Tenpai;

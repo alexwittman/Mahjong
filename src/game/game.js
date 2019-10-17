@@ -15,7 +15,7 @@ class _Game {
      */
     constructor() {
         this._players = [];
-        for(let i = 0; i < 4; i++){
+        for (let i = 0; i < 4; i++) {
             this._players.push(new Player(i));
         }
     }

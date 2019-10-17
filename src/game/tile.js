@@ -12,7 +12,7 @@ class Tile {
      * 
      * @param {number} number The number of the tile to indicate its value.
      */
-    constructor(number){
+    constructor(number) {
         this._number = number;
         this._type = this.getType(number);
         this._value = this.getValue(number);
@@ -62,19 +62,15 @@ class Tile {
      * @returns {TileType} The type of the tile.
      */
     getType(num) {
-        if(num <= 8) {
+        if (num <= 8) {
             return TileType.PIN;
-        }
-        else if(num <= 17) {
+        } else if (num <= 17) {
             return TileType.SOU;
-        }
-        else if(num <= 26) {
+        } else if (num <= 26) {
             return TileType.WAN;
-        }
-        else if(num <= 30) {
+        } else if (num <= 30) {
             return TileType.WIND;
-        }
-        else if(num <= 33) {
+        } else if (num <= 33) {
             return TileType.DRAGON;
         }
     }
@@ -86,52 +82,37 @@ class Tile {
      * @returns {TileValue} The value of the tile.
      */
     getValue(num) {
-        if(CONST.ONES.indexOf(num) > -1){
+        if (CONST.ONES.indexOf(num) > -1) {
             return TileValue.ONE;
-        }
-        else if(CONST.TWOS.indexOf(num) > -1){
+        } else if (CONST.TWOS.indexOf(num) > -1) {
             return TileValue.TWO;
-        }
-        else if(CONST.THREES.indexOf(num) > -1){
+        } else if (CONST.THREES.indexOf(num) > -1) {
             return TileValue.THREE;
-        }
-        else if(CONST.FOURS.indexOf(num) > -1){
+        } else if (CONST.FOURS.indexOf(num) > -1) {
             return TileValue.FOUR;
-        }
-        else if(CONST.FIVES.indexOf(num) > -1){
+        } else if (CONST.FIVES.indexOf(num) > -1) {
             return TileValue.FIVE;
-        }
-        else if(CONST.SIXES.indexOf(num) > -1){
+        } else if (CONST.SIXES.indexOf(num) > -1) {
             return TileValue.SIX;
-        }
-        else if(CONST.SEVENS.indexOf(num) > -1){
+        } else if (CONST.SEVENS.indexOf(num) > -1) {
             return TileValue.SEVEN;
-        }
-        else if(CONST.EIGHTS.indexOf(num) > -1){
+        } else if (CONST.EIGHTS.indexOf(num) > -1) {
             return TileValue.EIGHT;
-        }
-        else if(CONST.NINES.indexOf(num) > -1){
+        } else if (CONST.NINES.indexOf(num) > -1) {
             return TileValue.NINE;
-        }
-        else if(num == CONST.EAST){
+        } else if (num == CONST.EAST) {
             return TileValue.EAST;
-        }
-        else if(num == CONST.SOUTH){
+        } else if (num == CONST.SOUTH) {
             return TileValue.SOUTH;
-        }
-        else if(num == CONST.WEST){
+        } else if (num == CONST.WEST) {
             return TileValue.WEST;
-        }
-        else if(num == CONST.NORTH){
+        } else if (num == CONST.NORTH) {
             return TileValue.NORTH;
-        }
-        else if(num == CONST.DRAGON_GREEN){
+        } else if (num == CONST.DRAGON_GREEN) {
             return TileValue.GREEN;
-        }
-        else if(num == CONST.DRAGON_RED){
+        } else if (num == CONST.DRAGON_RED) {
             return TileValue.RED;
-        }
-        else if(num == CONST.DRAGON_WHITE){
+        } else if (num == CONST.DRAGON_WHITE) {
             return TileValue.WHITE;
         }
     }
@@ -143,43 +124,77 @@ class Tile {
      * @returns {string} The unicode character of the tile.
      */
     getUnicode(num) {
-        return num; 
+        return num;
         //Doesn't work for console output.
-        switch(num) {
-            case 0: return String.fromCodePoint(0x1F019);
-            case 1: return String.fromCodePoint(0x1F01A);
-            case 2: return String.fromCodePoint(0x1F01B);
-            case 3: return String.fromCodePoint(0x1F01C);
-            case 4: return String.fromCodePoint(0x1F01D);
-            case 5: return String.fromCodePoint(0x1F01E);
-            case 6: return String.fromCodePoint(0x1F01F);
-            case 7: return String.fromCodePoint(0x1F020);
-            case 8: return String.fromCodePoint(0x1F021);
-            case 9: return String.fromCodePoint(0x1F010);
-            case 10: return String.fromCodePoint(0x1F011);
-            case 11: return String.fromCodePoint(0x1F012);
-            case 12: return String.fromCodePoint(0x1F013);
-            case 13: return String.fromCodePoint(0x1F014);
-            case 14: return String.fromCodePoint(0x1F015);
-            case 15: return String.fromCodePoint(0x1F016);
-            case 16: return String.fromCodePoint(0x1F017);
-            case 17: return String.fromCodePoint(0x1F018);
-            case 18: return String.fromCodePoint(0x1F007);
-            case 19: return String.fromCodePoint(0x1F008);
-            case 20: return String.fromCodePoint(0x1F009);
-            case 21: return String.fromCodePoint(0x1F00A);
-            case 22: return String.fromCodePoint(0x1F00B);
-            case 23: return String.fromCodePoint(0x1F00C);
-            case 24: return String.fromCodePoint(0x1F00D);
-            case 25: return String.fromCodePoint(0x1F00E);
-            case 26: return String.fromCodePoint(0x1F00F);
-            case 27: return String.fromCodePoint(0x1F000);
-            case 28: return String.fromCodePoint(0x1F001);
-            case 29: return String.fromCodePoint(0x1F002);
-            case 30: return String.fromCodePoint(0x1F003);
-            case 31: return String.fromCodePoint(0x1F005);
-            case 32: return String.fromCodePoint(0x1F004);
-            case 33: return String.fromCodePoint(0x1F006);
+        switch (num) {
+            case 0:
+                return String.fromCodePoint(0x1F019);
+            case 1:
+                return String.fromCodePoint(0x1F01A);
+            case 2:
+                return String.fromCodePoint(0x1F01B);
+            case 3:
+                return String.fromCodePoint(0x1F01C);
+            case 4:
+                return String.fromCodePoint(0x1F01D);
+            case 5:
+                return String.fromCodePoint(0x1F01E);
+            case 6:
+                return String.fromCodePoint(0x1F01F);
+            case 7:
+                return String.fromCodePoint(0x1F020);
+            case 8:
+                return String.fromCodePoint(0x1F021);
+            case 9:
+                return String.fromCodePoint(0x1F010);
+            case 10:
+                return String.fromCodePoint(0x1F011);
+            case 11:
+                return String.fromCodePoint(0x1F012);
+            case 12:
+                return String.fromCodePoint(0x1F013);
+            case 13:
+                return String.fromCodePoint(0x1F014);
+            case 14:
+                return String.fromCodePoint(0x1F015);
+            case 15:
+                return String.fromCodePoint(0x1F016);
+            case 16:
+                return String.fromCodePoint(0x1F017);
+            case 17:
+                return String.fromCodePoint(0x1F018);
+            case 18:
+                return String.fromCodePoint(0x1F007);
+            case 19:
+                return String.fromCodePoint(0x1F008);
+            case 20:
+                return String.fromCodePoint(0x1F009);
+            case 21:
+                return String.fromCodePoint(0x1F00A);
+            case 22:
+                return String.fromCodePoint(0x1F00B);
+            case 23:
+                return String.fromCodePoint(0x1F00C);
+            case 24:
+                return String.fromCodePoint(0x1F00D);
+            case 25:
+                return String.fromCodePoint(0x1F00E);
+            case 26:
+                return String.fromCodePoint(0x1F00F);
+            case 27:
+                return String.fromCodePoint(0x1F000);
+            case 28:
+                return String.fromCodePoint(0x1F001);
+            case 29:
+                return String.fromCodePoint(0x1F002);
+            case 30:
+                return String.fromCodePoint(0x1F003);
+            case 31:
+                return String.fromCodePoint(0x1F005);
+            case 32:
+                return String.fromCodePoint(0x1F004);
+            case 33:
+                return String.fromCodePoint(0x1F006);
         }
     }
 }
@@ -192,8 +207,8 @@ class Tile {
  * @returns {number} -1 if tile1 < tile2. 1 if tile1 > tile2.
  */
 function CompareTiles(tile1, tile2) {
-    if(tile1.number < tile2.number) return -1;
-    if(tile1.number > tile2.number) return 1;
+    if (tile1.number < tile2.number) return -1;
+    if (tile1.number > tile2.number) return 1;
     return 0;
 }
 
@@ -205,7 +220,7 @@ function CompareTiles(tile1, tile2) {
  */
 function CopyTileList(tiles) {
     let copy = [];
-    for(let tile of tiles){
+    for (let tile of tiles) {
         copy.push(new Tile(tile.number));
     }
     return copy;
@@ -219,11 +234,11 @@ function CopyTileList(tiles) {
  */
 function PrintTileList(tiles, drawnTile = null) {
     let unicodes = '';
-    for(let tile of tiles) {
+    for (let tile of tiles) {
         unicodes += tile.unicode;
         unicodes += '|';
     }
-    if(drawnTile){
+    if (drawnTile) {
         unicodes += " " + drawnTile.unicode;
     }
     console.log(unicodes);
@@ -238,8 +253,8 @@ function PrintTileList(tiles, drawnTile = null) {
  */
 function TileListCount(tiles, tileToCount) {
     let count = 0;
-    for(let tile of tiles){
-        if(tile.number == tileToCount.number){
+    for (let tile of tiles) {
+        if (tile.number == tileToCount.number) {
             count++;
         }
     }
@@ -254,8 +269,8 @@ function TileListCount(tiles, tileToCount) {
  * @returns {number} The first location of the given tile or -1 if not found.
  */
 function IndexTileList(tiles, tileToMatch) {
-    for(let i = 0; i < tiles.length; i++){
-        if(tiles[i].number == tileToMatch.number){
+    for (let i = 0; i < tiles.length; i++) {
+        if (tiles[i].number == tileToMatch.number) {
             return i;
         }
     }
@@ -280,11 +295,11 @@ function IndexTileList(tiles, tileToMatch) {
  */
 function TileList(str) {
     let tiles = [];
-    while(str != ''){
-        switch(str[0]) {
+    while (str != '') {
+        switch (str[0]) {
             case 'p': {
                 str = str.substr(1);
-                while('0123456789'.indexOf(str[0]) > -1){
+                while ('0123456789'.indexOf(str[0]) > -1) {
                     tiles.push(new Tile(-1 + parseInt(str[0])));
                     str = str.substr(1);
                 }
@@ -292,7 +307,7 @@ function TileList(str) {
             }
             case 's': {
                 str = str.substr(1);
-                while('0123456789'.indexOf(str[0]) > -1){
+                while ('0123456789'.indexOf(str[0]) > -1) {
                     tiles.push(new Tile(8 + parseInt(str[0])));
                     str = str.substr(1);
                 }
@@ -300,7 +315,7 @@ function TileList(str) {
             }
             case 'a': {
                 str = str.substr(1);
-                while('0123456789'.indexOf(str[0]) > -1){
+                while ('0123456789'.indexOf(str[0]) > -1) {
                     tiles.push(new Tile(17 + parseInt(str[0])));
                     str = str.substr(1);
                 }
@@ -341,7 +356,8 @@ function TileList(str) {
                 str = str.substr(1);
                 break;
             }
-            default: return [];
+            default:
+                return [];
         }
     }
     return tiles;
@@ -355,8 +371,8 @@ function TileList(str) {
  * @returns {boolean} True if the tile is in the list, false otherwise.
  */
 function TileListContains(tileList, tileToMatch) {
-    for(let tile of tileList){
-        if(tile.number == tileToMatch.number){
+    for (let tile of tileList) {
+        if (tile.number == tileToMatch.number) {
             return true;
         }
     }
@@ -372,10 +388,10 @@ function TileListContains(tileList, tileToMatch) {
  * @returns {boolean} True if the lists are equal, false otherwise.
  */
 function TileListEqual(list1, list2) {
-    if(list1.length != list2.length) return false;
+    if (list1.length != list2.length) return false;
     let equal = true;
-    for(let i = 0; i < list1.length; i++){
-        if(list1[i].number != list2[i].number){
+    for (let i = 0; i < list1.length; i++) {
+        if (list1[i].number != list2[i].number) {
             return false;
         }
     }
@@ -391,11 +407,11 @@ function TileListEqual(list1, list2) {
  */
 function RemoveFromTileList(tiles, tileToRemove) {
     let tileNumbers = [];
-    for(let tile of tiles){
+    for (let tile of tiles) {
         tileNumbers.push(tile.number);
     }
     let index = tileNumbers.indexOf(tileToRemove.number);
-    if(index >= 0) tiles.splice(tileNumbers.indexOf(tileToRemove.number), 1);
+    if (index >= 0) tiles.splice(tileNumbers.indexOf(tileToRemove.number), 1);
     return tiles;
 }
 
@@ -407,7 +423,7 @@ function RemoveFromTileList(tiles, tileToRemove) {
  */
 function TileListToString(tiles) {
     let string = "";
-    for(let tile of tiles){
+    for (let tile of tiles) {
         string += tile.unicode;
     }
     return string;
@@ -421,22 +437,12 @@ function TileListToString(tiles) {
  */
 function TileListRemoveDuplicates(tiles) {
     let uniqueTiles = [];
-    for(let tile of tiles){
-        if(uniqueTiles.map((t) => t.number).indexOf(tile.number) < 0){
+    for (let tile of tiles) {
+        if (uniqueTiles.map((t) => t.number).indexOf(tile.number) < 0) {
             uniqueTiles.push(new Tile(tile.number));
         }
     }
     return uniqueTiles;
-}
-
-/**
- * Checks if a list of tiles contains another list of tiles.
- * 
- * @param {*} tiles1 
- * @param {*} tiles2 
- */
-function TileListContainsList(tiles1, tiles2) {
-
 }
 
 /**

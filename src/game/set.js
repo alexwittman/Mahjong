@@ -12,15 +12,15 @@ let Hand = require('./hand').Hand;
 /**
  * Class to hold a set of tiles.
  */
-class _TileSet{
+class TileSet {
 
     /**
      * Constructs a tile set of 136 tiles.
      */
-    constructor(){
+    constructor() {
         this._set = this.ConstructSet();
     }
-    
+
     /**
      * Getter method for retrieving the set.
      * 
@@ -37,8 +37,8 @@ class _TileSet{
      */
     ConstructSet() {
         let tiles = [];
-        for(let i = 0; i < 4; i++){
-            for(let j = 0; j < _DRAGON_WHITE; j++){
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < _DRAGON_WHITE; j++) {
                 tiles.push(new Tile(j));
             }
         }
@@ -56,7 +56,7 @@ class _TileSet{
         for (let i = tiles.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
-          }
+        }
     }
 
     /**
@@ -76,15 +76,15 @@ class _TileSet{
     DealHands(players) {
         console.log("Dealing Hands.")
         let TileLists = [];
-        for(let i = 0; i < 4; i++){
+        for (let i = 0; i < 4; i++) {
             TileLists[i] = [];
         }
-        for(let i = 0; i < 13; i++){
-            for(let j = 0; j < 4; j++){
+        for (let i = 0; i < 13; i++) {
+            for (let j = 0; j < 4; j++) {
                 TileLists[j].push(this.FirstTile());
             }
         }
-        for(let i = 0; i < 4; i++){
+        for (let i = 0; i < 4; i++) {
             players[i].hand = new Hand(TileLists[i]);
         }
     }
@@ -104,9 +104,9 @@ class _TileSet{
  * 
  * @returns {Tile[]} The set of 34 tiles.
  */
-let _MinimalTileSet = () => {
+let MinimalTileSet = () => {
     let tiles = [];
-    for(let j = 0; j <= _DRAGON_WHITE; j++){
+    for (let j = 0; j <= _DRAGON_WHITE; j++) {
         let tile = new Tile(j);
         console.log(j, tile, tile.unicode);
         tiles.push(tile);
@@ -115,6 +115,6 @@ let _MinimalTileSet = () => {
 }
 
 module.exports = {
-    TileSet: _TileSet,
-    MinimalTileSet: _MinimalTileSet
+    TileSet: TileSet,
+    MinimalTileSet: MinimalTileSet
 }

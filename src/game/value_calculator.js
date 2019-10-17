@@ -12,22 +12,21 @@ class Value_Calculator {
      * @param {boolean} handOpen True if the hand is open, false otherwise.
      * @returns {number} The total han value of all yaku in the list.
      */
-    CalculateHan(yakuList, handOpen){
+    CalculateHan(yakuList, handOpen) {
         let han = 0;
-        for(let yaku of yakuList){
-            if(handOpen){
-                if(!isNaN(yaku.hanOpen)){
+        for (let yaku of yakuList) {
+            if (handOpen) {
+                if (!isNaN(yaku.hanOpen)) {
                     han += yaku.hanOpen;
                 }
-            }
-            else{
-                if(!isNaN(yaku.hanClosed)){
+            } else {
+                if (!isNaN(yaku.hanClosed)) {
                     han += yaku.hanClosed;
                 }
             }
         }
-        if(han > 13 && han < 26) han = 13;
-        if(han > 26) han = 26;
+        if (han > 13 && han < 26) han = 13;
+        if (han > 26) han = 26;
         return han;
     }
 }

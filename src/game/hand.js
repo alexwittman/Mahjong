@@ -12,8 +12,8 @@ let Pair = require('./pair').Pair;
 /**
  * Class to hold information of a hand.
  */
-class Hand{
-    
+class Hand {
+
     /**
      * Getter method for the hand's tiles.
      * 
@@ -22,7 +22,7 @@ class Hand{
     get tiles() {
         return this._tiles;
     }
-    
+
     /**
      * Getter method for the hand's closed tiles.
      * 
@@ -88,9 +88,9 @@ class Hand{
         this._closedTiles = CopyTileList(tiles);
         this._openTiles = [];
         this._melds = melds;
-        for(let meld of melds) {
+        for (let meld of melds) {
             this._tiles = this._tiles.concat(CopyTileList(meld.tiles));
-            if(meld.is_open){
+            if (meld.is_open) {
                 this._openTiles.concat(CopyTileList(meld.tiles));
             }
         }
@@ -106,12 +106,11 @@ class Hand{
      * @param {Tile} tile The tile to add to the hand.
      */
     add(tile) {
-        if(Array.isArray(tile)){
-            for(let t of tile){
+        if (Array.isArray(tile)) {
+            for (let t of tile) {
                 this.add(t);
             }
-        }
-        else{
+        } else {
             this._tiles.push(tile);
             this._closedTiles.push(tile);
             this._tiles.sort(CompareTiles);
@@ -126,20 +125,18 @@ class Hand{
      * @returns {boolean} True if the tile was removed from the hand, false otherwise.
      */
     remove(tile) {
-        if(Array.isArray(tile)){
-            for(let t of tile){
+        if (Array.isArray(tile)) {
+            for (let t of tile) {
                 this.remove(t);
             }
-        }
-        else{
+        } else {
             const allIndex = IndexTileList(this._tiles, tile);
             const closedIndex = IndexTileList(this._closedTiles, tile);
-            if(allIndex > -1 && closedIndex > -1) {
+            if (allIndex > -1 && closedIndex > -1) {
                 this._tiles.splice(allIndex, 1);
                 this._closedTiles.splice(closedIndex, 1);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -150,11 +147,11 @@ class Hand{
      * 
      * @param {Meld | Pair} meld The meld to add to the hand.
      */
-    makeMeld(meld){
+    makeMeld(meld) {
         this.melds.push(meld);
-        if(meld instanceof Pair){
-            if(meld.is_open) {
-                for(let tile of meld.tiles){
+        if (meld instanceof Pair) {
+            if (meld.is_open) {
+                for (let tile of meld.tiles) {
                     this._openTiles.push(tile);
                 }
                 this._openTiles.sort(CompareTiles);
@@ -168,7 +165,7 @@ class Hand{
     Print() {
         console.log('Hand:');
         PrintTileList(this._closedTiles);
-        for(let meld of this._melds){
+        for (let meld of this._melds) {
             PrintTileList(meld.tiles);
         }
     }
@@ -183,7 +180,7 @@ class Hand{
 function CopyHand(handToCopy) {
     let tiles = CopyTileList(handToCopy.closedTiles);
     let melds = [];
-    for(let meld of handToCopy.melds){
+    for (let meld of handToCopy.melds) {
         melds.push(new Meld(CopyTileList(meld.tiles), meld.is_open));
     }
     return new Hand(tiles, melds, handToCopy.isOpen);

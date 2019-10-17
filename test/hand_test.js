@@ -121,7 +121,7 @@ describe('Hand', () => {
     it('.length returns the length of the tiles in the hand', () => {
         const tile = new Tile(0);
         const hand = new Hand([tile, tile, tile, tile]);
-        
+
         expect(hand.length).to.equal(4);
     });
 

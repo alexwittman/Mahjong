@@ -38,7 +38,8 @@ describe('Value Calculator', () => {
 
     it('CalculateHan returns the correct value for yakuman open.', () => {
         let yakuList = [new yaku.BigThreeDragons(), new yaku.GreenDragon(),
-                        new yaku.RedDragon(), new yaku.WhiteDragon()];
+            new yaku.RedDragon(), new yaku.WhiteDragon()
+        ];
         let handOpen = true;
         expect(valueCalculator.CalculateHan(yakuList, handOpen)).to.eql(13);
     });

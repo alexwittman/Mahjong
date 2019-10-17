@@ -110,7 +110,7 @@ describe('Tile', () => {
     });
 
     it('CopyTileList returns correct value for list of many tiles', () => {
-        let tiles  = [new Tile(0), new Tile(1), new Tile(2), new Tile(3), new Tile(4)];
+        let tiles = [new Tile(0), new Tile(1), new Tile(2), new Tile(3), new Tile(4)];
         expect(CopyTileList(tiles)).to.eql(tiles);
     });
 

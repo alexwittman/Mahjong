@@ -7,7 +7,7 @@ let TileValue = require('./tile').TileValue;
 /**
  * Class to hold meld information.
  */
-class _Meld {
+class Meld {
 
     /**
      * Meld constructor when a player declares a meld.
@@ -33,12 +33,12 @@ class _Meld {
     /**
      * Getter method for the meld's type.
      * 
-     * @returns {_MeldType} The type of the meld.
+     * @returns {MeldType} The type of the meld.
      */
     get type() {
         return this._type;
     }
-    
+
     /**
      * Getter method for if the meld is open or not.
      * 
@@ -61,35 +61,29 @@ class _Meld {
      * Sets the type of the meld. Types: None, Chow, Pong, Kong.
      * 
      * @param {Tile[]} tiles The tiles in the meld.
-     * @returns {_MeldType} The type of the meld.
+     * @returns {MeldType} The type of the meld.
      */
     getType(tiles) {
-        if(this.AreSameType(tiles)) {
-            if(tiles.length == 3) {
-                if(this.isPong(tiles)) {
-                    return _MeldType.PONG;
+        if (this.AreSameType(tiles)) {
+            if (tiles.length == 3) {
+                if (this.isPong(tiles)) {
+                    return MeldType.PONG;
+                } else if (this.isChow(tiles)) {
+                    return MeldType.CHOW;
+                } else {
+                    return MeldType.NONE;
                 }
-                else if(this.isChow(tiles)) {
-                    return _MeldType.CHOW;
+            } else if (tiles.length == 4) {
+                if (this.isKong(tiles)) {
+                    return MeldType.KONG;
+                } else {
+                    return MeldType.NONE;
                 }
-                else{
-                    return _MeldType.NONE;
-                }
+            } else {
+                return MeldType.NONE;
             }
-            else if(tiles.length == 4) {
-                if(this.isKong(tiles)){
-                    return _MeldType.KONG;
-                }
-                else{
-                    return _MeldType.NONE;
-                }
-            }
-            else{
-                return _MeldType.NONE;
-            }
-        }
-        else {
-            return _MeldType.NONE
+        } else {
+            return MeldType.NONE
         }
     }
 
@@ -101,9 +95,8 @@ class _Meld {
      */
     AreSameType(tiles) {
         const type = tiles[0].type;
-        for(let tile of tiles) {
-            if(tile.type != type)
-            {
+        for (let tile of tiles) {
+            if (tile.type != type) {
                 return false;
             }
         }
@@ -118,9 +111,8 @@ class _Meld {
      */
     isPong(tiles) {
         const value = tiles[0].value;
-        for(let tile of tiles) {
-            if(tile.value != value)
-            {
+        for (let tile of tiles) {
+            if (tile.value != value) {
                 return false;
             }
         }
@@ -136,14 +128,12 @@ class _Meld {
     isChow(tiles) {
         const type = tiles[0].type;
         const StartValue = tiles[0].value;
-        if(type == TileType.DRAGON || type == TileType.WIND){
+        if (type == TileType.DRAGON || type == TileType.WIND) {
             return false;
-        }
-        else{
-            if(tiles[1].value == StartValue + 1 && tiles[2].value == StartValue + 2){
+        } else {
+            if (tiles[1].value == StartValue + 1 && tiles[2].value == StartValue + 2) {
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
         }
@@ -157,9 +147,8 @@ class _Meld {
      */
     isKong(tiles) {
         const value = tiles[0].value;
-        for(let tile of tiles) {
-            if(tile.value != value)
-            {
+        for (let tile of tiles) {
+            if (tile.value != value) {
                 return false;
             }
         }
@@ -170,7 +159,7 @@ class _Meld {
 /**
  * The types a meld can be.
  */
-let _MeldType = {
+let MeldType = {
     PONG: 0,
     KONG: 1,
     CHOW: 2,
@@ -178,6 +167,6 @@ let _MeldType = {
 }
 
 module.exports = {
-    Meld: _Meld,
-    MeldType: _MeldType
+    Meld: Meld,
+    MeldType: MeldType
 }

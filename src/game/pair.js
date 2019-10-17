@@ -7,7 +7,7 @@ let TileValue = require('./tile').TileValue;
 /**
  * Class to hold a pair.
  */
-class _Pair {
+class Pair {
 
     /**
      * Constructor to construct a pair.
@@ -59,5 +59,5 @@ class _Pair {
 }
 
 module.exports = {
-    Pair: _Pair
+    Pair: Pair
 }

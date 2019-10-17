@@ -14,11 +14,11 @@ class Yaku {
      * @param {boolean} IsYakuman Whether the yaku is worth yakuman.
      */
     constructor(YakuID,
-                NameENG,
-                NameJAP,
-                HanOpen,
-                HanClosed,
-                IsYakuman) {
+        NameENG,
+        NameJAP,
+        HanOpen,
+        HanClosed,
+        IsYakuman) {
         this._yakuID = YakuID;
         this._nameENG = NameENG;
         this._nameJAP = NameJAP;
@@ -91,8 +91,8 @@ class Yaku {
  * the tsumo yaku and award the extra 2 fu, since it will
  * be worth more points.
  */
-class NoPointsHand extends Yaku{
-    constructor(){
+class NoPointsHand extends Yaku {
+    constructor() {
         super(1, 'No Points Hand', 'Pinfu', NaN, 1, false);
     }
 }
@@ -101,8 +101,8 @@ class NoPointsHand extends Yaku{
  * One set of two sequences of the same
  * numbers in the same suit.
  */
-class IdenticalSequences extends Yaku{
-    constructor(){
+class IdenticalSequences extends Yaku {
+    constructor() {
         super(2, 'Identical Sequences', 'Iipeikou', NaN, 1, false);
     }
 }
@@ -111,8 +111,8 @@ class IdenticalSequences extends Yaku{
  * Three sequences of the same numbers
  * in all three suits.
  */
-class ThreeColorStraight extends Yaku{
-    constructor(){
+class ThreeColorStraight extends Yaku {
+    constructor() {
         super(3, 'Three Color Straight', 'Sanshoku', 1, 2, false);
     }
 }
@@ -121,8 +121,8 @@ class ThreeColorStraight extends Yaku{
  * A straight from number 1 - 9 of one
  * suit, namely, three sequences of 123, 456, and 789.
  */
-class Straight extends Yaku{
-    constructor(){
+class Straight extends Yaku {
+    constructor() {
         super(4, 'Straight', 'Ittsuu', 1, 2, false);
     }
 }
@@ -134,8 +134,8 @@ class Straight extends Yaku{
  * The seven pairs yaku is not counted in this case
  * because the yaku is composed of sequences instead of pairs.
  */
-class DoubleIdenticalSequences extends Yaku{
-    constructor(){
+class DoubleIdenticalSequences extends Yaku {
+    constructor() {
         super(5, 'Double Identical Sequences', 'Ryanpeikou', NaN, 3, false);
     }
 }
@@ -146,8 +146,8 @@ class DoubleIdenticalSequences extends Yaku{
  * If all four triplets/quads are closed this hand will become
  * four closed triplets worth yakuman.
  */
-class AllTripletHand extends Yaku{
-    constructor(){
+class AllTripletHand extends Yaku {
+    constructor() {
         super(6, 'All Triplet Hand', 'Toitoi', 2, NaN, false);
     }
 }
@@ -158,8 +158,8 @@ class AllTripletHand extends Yaku{
  * be self-drawn in order to count. The fourth set can be an
  * open triplet/quad or sequence.
  */
-class ThreeClosedTriplets extends Yaku{
-    constructor(){
+class ThreeClosedTriplets extends Yaku {
+    constructor() {
         super(7, 'Three Closed Triplets', 'Sanankou', 2, 2, false);
     }
 }
@@ -168,8 +168,8 @@ class ThreeClosedTriplets extends Yaku{
  * Three triplets or quads consisting of the same numbers in all
  * three suits.
  */
-class ThreeColorTriplets extends Yaku{
-    constructor(){
+class ThreeColorTriplets extends Yaku {
+    constructor() {
         super(8, 'Three Color Triplets', 'Sanshoku Doukou', 2, 2, false);
     }
 }
@@ -177,8 +177,8 @@ class ThreeColorTriplets extends Yaku{
 /**
  * Three quads in one hand, which can be open or closed.
  */
-class ThreeQuads extends Yaku{
-    constructor(){
+class ThreeQuads extends Yaku {
+    constructor() {
         super(9, 'Three Quads', 'San Kantsu', 2, 2, false);
     }
 }
@@ -187,8 +187,8 @@ class ThreeQuads extends Yaku{
  * No 1s or 9s. Only numbered tiles from 2 through 8 are
  * used, eliminating terminals and honors.
  */
-class AllSimples extends Yaku{
-    constructor(){
+class AllSimples extends Yaku {
+    constructor() {
         super(10, 'All Simples', 'Tan\'yao', 1, 1, false);
     }
 }
@@ -196,8 +196,8 @@ class AllSimples extends Yaku{
 /**
  * A triplet or quad composed of red dragon tiles.
  */
-class RedDragon extends Yaku{
-    constructor(){
+class RedDragon extends Yaku {
+    constructor() {
         super(11, 'Red Dragon', '', 1, 1, false);
     }
 }
@@ -205,8 +205,8 @@ class RedDragon extends Yaku{
 /**
  * A triplet or quad composed of green dragon tiles.
  */
-class GreenDragon extends Yaku{
-    constructor(){
+class GreenDragon extends Yaku {
+    constructor() {
         super(12, 'Green Dragon', '', 1, 1, false);
     }
 }
@@ -214,8 +214,8 @@ class GreenDragon extends Yaku{
 /**
  * A triplet or quad composed of white dragon tiles.
  */
-class WhiteDragon extends Yaku{
-    constructor(){
+class WhiteDragon extends Yaku {
+    constructor() {
         super(13, 'White Dragon', '', 1, 1, false);
     }
 }
@@ -224,8 +224,8 @@ class WhiteDragon extends Yaku{
  * A triplet or quad composed of north wind tiles if
  * north is the round wind or the player's seat wind.
  */
-class NorthWind extends Yaku{
-    constructor(){
+class NorthWind extends Yaku {
+    constructor() {
         super(14, 'North Wind', '', 1, 1, false);
     }
 }
@@ -234,8 +234,8 @@ class NorthWind extends Yaku{
  * A triplet or quad composed of east wind tiles if
  * east is the round wind or the player's seat wind.
  */
-class EastWind extends Yaku{
-    constructor(){
+class EastWind extends Yaku {
+    constructor() {
         super(15, 'East Wind', '', 1, 1, false);
     }
 }
@@ -244,8 +244,8 @@ class EastWind extends Yaku{
  * A triplet or quad composed of south wind tiles if
  * south is the round wind or the player's seat wind.
  */
-class SouthWind extends Yaku{
-    constructor(){
+class SouthWind extends Yaku {
+    constructor() {
         super(16, 'South Wind', '', 1, 1, false);
     }
 }
@@ -254,8 +254,8 @@ class SouthWind extends Yaku{
  * A triplet or quad composed of west wind tiles if
  * west is the round wind or the player's seat wind.
  */
-class WestWind extends Yaku{
-    constructor(){
+class WestWind extends Yaku {
+    constructor() {
         super(17, 'West Wind', '', 1, 1, false);
     }
 }
@@ -265,8 +265,8 @@ class WestWind extends Yaku{
  * or quads and the pair must be terminals or honor tiles.
  * The hand must contain at least one sequence.
  */
-class MixedOutsideHand extends Yaku{
-    constructor(){
+class MixedOutsideHand extends Yaku {
+    constructor() {
         super(18, 'Mixed Outside Hand', 'Chanta', 1, 2, false);
     }
 }
@@ -277,8 +277,8 @@ class MixedOutsideHand extends Yaku{
  * contain an honor tile. The hand must contain at least one
  * sequence.
  */
-class PureOutsideHand extends Yaku{
-    constructor(){
+class PureOutsideHand extends Yaku {
+    constructor() {
         super(19, 'Pure Outside Hand', 'Junchan', 2, 3, false);
     }
 }
@@ -286,8 +286,8 @@ class PureOutsideHand extends Yaku{
 /**
  * Two triplets or quads of dragons plus a pair of the third.
  */
-class LittleThreeDragons extends Yaku{
-    constructor(){
+class LittleThreeDragons extends Yaku {
+    constructor() {
         super(20, 'Little Three Dragons', 'Shousangen', 2, 2, false);
     }
 }
@@ -296,8 +296,8 @@ class LittleThreeDragons extends Yaku{
  * The hand contains tiles from one suit and honors. The 
  * honors can be two or more sets. The hand can be seven pairs.
  */
-class HalfFlush extends Yaku{
-    constructor(){
+class HalfFlush extends Yaku {
+    constructor() {
         super(21, 'Half Flush', 'Hon\'itsu', 2, 3, false);
     }
 }
@@ -306,8 +306,8 @@ class HalfFlush extends Yaku{
  * All tiles in the hand are exclusively of one suit with
  * no honor tiles.
  */
-class Flush extends Yaku{
-    constructor(){
+class Flush extends Yaku {
+    constructor() {
         super(22, 'Flush', 'Chin\'itsu', 5, 6, false);
     }
 }
@@ -319,8 +319,8 @@ class Flush extends Yaku{
  * 
  * Must not be in a 13 tile wait.
  */
-class ThirteenOrphans extends Yaku{
-    constructor(){
+class ThirteenOrphans extends Yaku {
+    constructor() {
         super(23, 'Thirteen Orphans', 'Kokushi Musou', NaN, 13, true);
     }
 }
@@ -332,8 +332,8 @@ class ThirteenOrphans extends Yaku{
  * 
  * Must be in a 13 tile wait.
  */
-class DoubleThirteenOrphans extends Yaku{
-    constructor(){
+class DoubleThirteenOrphans extends Yaku {
+    constructor() {
         super(24, 'Double Thirteen Orphans', 'Daburu Kokushi Musou', NaN, 26, true);
     }
 }
@@ -344,8 +344,8 @@ class DoubleThirteenOrphans extends Yaku{
  * Must be in a two tile wait and must draw winning tile, otherwise
  * it is only three closed triplets.
  */
-class FourConcealedTriplets extends Yaku{
-    constructor(){
+class FourConcealedTriplets extends Yaku {
+    constructor() {
         super(25, 'Four Concealed Triplets', 'Suu Ankou', NaN, 13, true);
     }
 }
@@ -355,8 +355,8 @@ class FourConcealedTriplets extends Yaku{
  * 
  * Must be in a one tile wait and can draw or steal winning tile.
  */
-class DoubleFourConcealedTriplets extends Yaku{
-    constructor(){
+class DoubleFourConcealedTriplets extends Yaku {
+    constructor() {
         super(26, 'Double Four Concealed Triplets', 'Daburu Suu Ankou', NaN, 26, true);
     }
 }
@@ -364,8 +364,8 @@ class DoubleFourConcealedTriplets extends Yaku{
 /**
  * A triplet or quad of each type of dragon tile.
  */
-class BigThreeDragons extends Yaku{
-    constructor(){
+class BigThreeDragons extends Yaku {
+    constructor() {
         super(27, 'Big Three Dragons', 'Daisangen', 13, 13, true);
     }
 }
@@ -374,8 +374,8 @@ class BigThreeDragons extends Yaku{
  * A hand consisting of three triplets/quads of winds and
  * a pair of the fourth wind.
  */
-class LittleFourWinds extends Yaku{
-    constructor(){
+class LittleFourWinds extends Yaku {
+    constructor() {
         super(28, 'Little Four Winds', 'Shousuushii', 13, 13, true);
     }
 }
@@ -383,8 +383,8 @@ class LittleFourWinds extends Yaku{
 /**
  * A hand consisting of four triplets/quads of winds.
  */
-class BigFourWinds extends Yaku{
-    constructor(){
+class BigFourWinds extends Yaku {
+    constructor() {
         super(29, 'Big Four Winds', 'Daisuushii', 26, 26, true);
     }
 }
@@ -392,8 +392,8 @@ class BigFourWinds extends Yaku{
 /**
  * A hand composed of only honor tiles.
  */
-class AllHonors extends Yaku{
-    constructor(){
+class AllHonors extends Yaku {
+    constructor() {
         super(30, 'All Honors', 'Tsuuiisou', 13, 13, true);
     }
 }
@@ -401,8 +401,8 @@ class AllHonors extends Yaku{
 /**
  * A hand composed of only 1s and 9s.
  */
-class AllTerminals extends Yaku{
-    constructor(){
+class AllTerminals extends Yaku {
+    constructor() {
         super(31, 'All Terminals', 'Chinroutou', 13, 13, true);
     }
 }
@@ -411,8 +411,8 @@ class AllTerminals extends Yaku{
  * A hand consisting of only green tiles. Green tiles include
  * 23468 of bamboo and green dragon tiles.
  */
-class AllGreen extends Yaku{
-    constructor(){
+class AllGreen extends Yaku {
+    constructor() {
         super(32, 'All Green', 'Ryuuiisou', 13, 13, true);
     }
 }
@@ -423,8 +423,8 @@ class AllGreen extends Yaku{
  * 
  * Must not be in a 9 tile wait.
  */
-class NineGates extends Yaku{
-    constructor(){
+class NineGates extends Yaku {
+    constructor() {
         super(33, 'Nine Gates', 'Chuuren Poutou', NaN, 13, true);
     }
 }
@@ -435,8 +435,8 @@ class NineGates extends Yaku{
  * 
  * Must be in a 9 tile wait.
  */
-class DoubleNineGates extends Yaku{
-    constructor(){
+class DoubleNineGates extends Yaku {
+    constructor() {
         super(34, 'Double Nine Gates', 'Daburu Chuuren Poutou', NaN, 26, true);
     }
 }
@@ -448,8 +448,8 @@ class DoubleNineGates extends Yaku{
  * continues until the player claims a win or a fifth quad is made
  * by another player.
  */
-class FourQuads extends Yaku{
-    constructor(){
+class FourQuads extends Yaku {
+    constructor() {
         super(35, 'Four Quads', 'Suu Kantsu', 13, 13, true);
     }
 }
@@ -467,8 +467,8 @@ class FourQuads extends Yaku{
  * any drawn tile that does not allow them to win. Also, they may
  * not change the content of their hand under any circumstances
  */
-class ReadyHand extends Yaku{
-    constructor(){
+class ReadyHand extends Yaku {
+    constructor() {
         super(36, 'Ready Hand', 'Riichi', NaN, 1, false);
     }
 }
@@ -478,8 +478,8 @@ class ReadyHand extends Yaku{
  * None of the player's discards have been called.
  * The player's discards are all terminals and honors.
  */
-class DiscardOnlyHonorsAndTerminals extends Yaku{
-    constructor(){
+class DiscardOnlyHonorsAndTerminals extends Yaku {
+    constructor() {
         super(37, 'DiscardOnlyHonorsAndTerminals', 'Nagashi Mangan', 5, 5, false);
     }
 }
@@ -490,8 +490,8 @@ class DiscardOnlyHonorsAndTerminals extends Yaku{
  * when the hand previously had no yaku.
  * Open hands are not applicable.
  */
-class SelfDraw extends Yaku{
-    constructor(){
+class SelfDraw extends Yaku {
+    constructor() {
         super(38, 'Self Draw', 'Tsumo', NaN, 1, false);
     }
 }
@@ -503,8 +503,8 @@ class SelfDraw extends Yaku{
  * drawn tile. One shot no longer applies when another player 
  * makes an open meld, including closed quads.
  */
-class OneShot extends Yaku{
-    constructor(){
+class OneShot extends Yaku {
+    constructor() {
         super(39, 'One Shot', 'Ippatsu', NaN, 1, false);
     }
 }
@@ -514,8 +514,8 @@ class OneShot extends Yaku{
  * reaching the dead wall completes that player's hand, the hand's
  * value increases by one han.
  */
-class LastTile extends Yaku{
-    constructor(){
+class LastTile extends Yaku {
+    constructor() {
         super(40, 'Last Tile', 'Haitei', 1, 1, false);
     }
 }
@@ -525,8 +525,8 @@ class LastTile extends Yaku{
  * the tile discarded by the last player that drew the last tile
  * from the wall.
  */
-class LastDiscard extends Yaku{
-    constructor(){
+class LastDiscard extends Yaku {
+    constructor() {
         super(41, 'Last Discard', 'Houtei', 1, 1, false);
     }
 }
@@ -537,8 +537,8 @@ class LastDiscard extends Yaku{
  * hand consistent. If that tile completes the hand, it adds
  * one han to the hand's value.
  */
-class DeadWallDraw extends Yaku{
-    constructor(){
+class DeadWallDraw extends Yaku {
+    constructor() {
         super(42, 'Dead Wall Draw', 'Rinshan', 1, 1, false);
     }
 }
@@ -549,8 +549,8 @@ class DeadWallDraw extends Yaku{
  * another player player can win on the tile, namely, they can
  * "rob" that tile.
  */
-class RobbingAQuad extends Yaku{
-    constructor(){
+class RobbingAQuad extends Yaku {
+    constructor() {
         super(43, 'Robbing a Quad', 'Chankan', 1, 1, false);
     }
 }
@@ -560,8 +560,8 @@ class RobbingAQuad extends Yaku{
  * a hand, they can call "double riichi" to declare riichi for 
  * two han instead of one. 
  */
-class DoubleReady extends Yaku{
-    constructor(){
+class DoubleReady extends Yaku {
+    constructor() {
         super(44, 'Double Ready', 'Daburii', NaN, 2, false);
     }
 }
@@ -572,8 +572,8 @@ class DoubleReady extends Yaku{
  * requirement is satisfied with the self-pick yaku because the
  * hand is closed and the 14th tile is considered a drawn tile.
  */
-class HeavenlyHand extends Yaku{
-    constructor(){
+class HeavenlyHand extends Yaku {
+    constructor() {
         super(45, 'Heavenly Hand', 'Tenhou', NaN, 13, true);
     }
 }
@@ -586,8 +586,8 @@ class HeavenlyHand extends Yaku{
  * minimum requirement is satisfied with the self-pick yaku because
  * the hand is closed and the 14th tile is considered a drawn tile.
  */
-class HandOfEarth extends Yaku{
-    constructor(){
+class HandOfEarth extends Yaku {
+    constructor() {
         super(46, 'Hand of Earth', 'Chiihou', NaN, 13, true);
     }
 }
@@ -597,8 +597,8 @@ class HandOfEarth extends Yaku{
  * player draws its first tile when no one has declared open
  * melds, then the yaku is awarded.
  */
-class HandOfMan extends Yaku{
-    constructor(){
+class HandOfMan extends Yaku {
+    constructor() {
         super(47, 'Hand of Man', 'Renhou', NaN, 13, true);
     }
 }

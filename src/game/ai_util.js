@@ -11,7 +11,7 @@ let fs = require('fs');
 /**
  * Utility class for AI implementation.
  */
-class _AI_Util {
+class AI_Util {
 
     /**
      * Removes combinations of tiles from the hand and evaluates possible
@@ -22,13 +22,13 @@ class _AI_Util {
      */
     TilesToTenpai(hand, depth) {
         PrintTileList(hand.tiles);
-        for(let i = 0; i <= depth; i++){
+        for (let i = 0; i <= depth; i++) {
             let handPartitioner = new Hand_Partition();
             // console.log("Hand:");
             // PrintTileList(hand.tiles);
             let combinations = this.TileCombinations(hand.tiles, i)
             //console.log(combinations);
-            for(let combination of combinations){
+            for (let combination of combinations) {
                 // console.log('Combination:', combination);
                 let tempHand = new Hand(CopyTileList(hand.tiles));
                 //remove every combination of k tiles from the hand
@@ -40,16 +40,16 @@ class _AI_Util {
                 // PrintTileList(tempHand.tiles);
                 // console.log(tempHand);
                 //replace every removed tile with every combination of k tiles from the set
-                for(let setCombination of this.TileCombinations(MinimalTileSet(), i)){
+                for (let setCombination of this.TileCombinations(MinimalTileSet(), i)) {
                     // console.log('Tiles to add:');
                     // PrintTileList(setCombination);
                     tempHand.add(setCombination);
                     // console.log("tempHand after add:");
                     // PrintTileList(tempHand.tiles);
-                    for(let tile of MinimalTileSet()){
+                    for (let tile of MinimalTileSet()) {
                         tempHand.add(tile);
                         let partitions = handPartitioner.partition(tempHand);
-                        if(partitions.length){
+                        if (partitions.length) {
                             console.log('Remove: ');
                             PrintTileList(combination);
                             console.log('Add: ');
@@ -114,17 +114,17 @@ class _AI_Util {
      */
     All9Vectors() {
         let vectors = [];
-        for(let a = 0; a <= 4; a++){
-            for(let b = 0; b <= 4; b++){
-                for(let c = 0; c <= 4; c++){
-                    for(let d = 0; d <= 4; d++){
-                        for(let e = 0; e <= 4; e++){
-                            for(let f = 0; f <= 4; f++){
-                                for(let g = 0; g <= 4; g++){
-                                    for(let h = 0; h <= 4; h++){
-                                        for(let i = 0; i <= 4; i++){
-                                            if(a + b + c + d + e + f + g + h + i <= 13){
-                                                vectors.push([a,b,c,d,e,f,g,h,i]);
+        for (let a = 0; a <= 4; a++) {
+            for (let b = 0; b <= 4; b++) {
+                for (let c = 0; c <= 4; c++) {
+                    for (let d = 0; d <= 4; d++) {
+                        for (let e = 0; e <= 4; e++) {
+                            for (let f = 0; f <= 4; f++) {
+                                for (let g = 0; g <= 4; g++) {
+                                    for (let h = 0; h <= 4; h++) {
+                                        for (let i = 0; i <= 4; i++) {
+                                            if (a + b + c + d + e + f + g + h + i <= 13) {
+                                                vectors.push([a, b, c, d, e, f, g, h, i]);
                                             }
                                         }
                                     }
@@ -137,7 +137,7 @@ class _AI_Util {
         }
         let shantenTiles = [];
         //for(let vector of vectors){
-            shantenTiles.push(this.CalculateShantenTiles(this.NineVectorToHand(vectors[94])));
+        shantenTiles.push(this.CalculateShantenTiles(this.NineVectorToHand(vectors[94])));
         //}
         console.log(vectors.length);
         return vectors;
@@ -149,10 +149,10 @@ class _AI_Util {
      * @param {[number]} vector The 9-vector of tiles to convert into a hand.
      * @returns {Hand} The hand containing the tiles represented in the 9-vector.
      */
-    NineVectorToHand(vector){
+    NineVectorToHand(vector) {
         let hand = new Hand();
-        for(let tile = 0; tile < 9; tile++){
-            for(let i = 0; i < vector[tile]; i++){
+        for (let tile = 0; tile < 9; tile++) {
+            for (let i = 0; i < vector[tile]; i++) {
                 hand.add(new Tile(tile));
             }
         }
@@ -164,7 +164,7 @@ class _AI_Util {
      * 
      * @param {Hand} hand 
      */
-    CalculateShantenTiles(hand){
+    CalculateShantenTiles(hand) {
         let handPartitioner = new Hand_Partition();
         handPartitioner.PrintPartitions(handPartitioner.recurPartition(hand.tiles));
         return [];
@@ -173,5 +173,5 @@ class _AI_Util {
 }
 
 module.exports = {
-    AI_Util: _AI_Util
+    AI_Util: AI_Util
 }

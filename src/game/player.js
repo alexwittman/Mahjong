@@ -29,12 +29,12 @@ let prompt = require('prompt-sync')();
 let rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
-  });
+});
 
 /**
  * Class to hold player information.
  */
-class _Player {
+class Player {
     /**
      * Constructor for player class.
      * 
@@ -96,11 +96,11 @@ class _Player {
     GetAction() {
         let actions = this.CalculateActions();
         let action = '0';
-        if(actions.length > 1){
+        if (actions.length > 1) {
             console.log(this.GetActionStrings(actions));
             action = prompt(">> ");
         }
-        switch(action){
+        switch (action) {
             case '3': { //Kan
                 this.GetKan();
                 return {
@@ -138,10 +138,10 @@ class _Player {
         let actions = this.CalculateInterject(availableTile);
         console.log(this.GetActionStrings(actions));
         let action = '0';
-        if(actions.length > 0){
+        if (actions.length > 0) {
             action = prompt(">> ");
         }
-        switch(action){
+        switch (action) {
             case '1': { //Chi
                 this.GetChi(availableTile);
                 return {
@@ -180,24 +180,23 @@ class _Player {
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
-        if(this._drawnTile) TILE.PrintTileList([this._drawnTile]);
+        if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
         let input = Number(prompt("Enter the tile to discard: "));
         let discard;
-        if(input == -1){
+        if (input == -1) {
             discard = this._drawnTile;
             this._drawnTile = null;
-        }
-        else{
+        } else {
             discard = this._hand.closedTiles[input];
             this._hand.remove(this._hand.closedTiles[input]);
-            if(this._drawnTile) this._hand.add(this._drawnTile);
+            if (this._drawnTile) this._hand.add(this._drawnTile);
             this._drawnTile = null;
         }
         //TILE.PrintTileList(this._hand.tiles);
         this._hand.Print();
-        return discard; 
+        return discard;
     }
-    
+
     /**
      * Prompts the player for which chow they want to make
      * if there is more than one, otherwise chi the only
@@ -205,13 +204,13 @@ class _Player {
      * 
      * @param {Tile} availableTile The tile available for the player to take.
      */
-    GetChi(availableTile){
+    GetChi(availableTile) {
         let possibleChows = this.ChiMelds(availableTile);
         let chow;
-        if(possibleChows.length > 1){
+        if (possibleChows.length > 1) {
             let chowPrompt = '';
-            for(let possibleChow of possibleChows){
-                for(let chowTile of possibleChow.tiles){
+            for (let possibleChow of possibleChows) {
+                for (let chowTile of possibleChow.tiles) {
                     chowPrompt += (chowTile.unicode);
                     chowPrompt += '|';
                 }
@@ -221,8 +220,7 @@ class _Player {
             console.log(chowPrompt);
             let pickedChow = prompt('>> ');
             chow = possibleChows[pickedChow];
-        }
-        else{
+        } else {
             chow = possibleChows[0];
         }
         this._hand = this.Chi(this._hand, chow, availableTile);
@@ -236,14 +234,14 @@ class _Player {
      * @param {Tile} availableTile The tile available for the player to call chi on.
      * @returns {HAND.Hand} The hand with the chow added to it.
      */
-    Chi(hand, chow, availableTile, makeHandOpen = true){
+    Chi(hand, chow, availableTile, makeHandOpen = true) {
         let chowTiles = TILE.CopyTileList(chow.tiles);
         chowTiles = TILE.RemoveFromTileList(chowTiles, availableTile);
-        for(let tile of chowTiles) {
+        for (let tile of chowTiles) {
             hand._closedTiles = TILE.RemoveFromTileList(hand._closedTiles, tile);
         }
         hand._melds.push(new Meld(chow.tiles, true));
-        if(makeHandOpen) hand.isOpen = true;
+        if (makeHandOpen) hand.isOpen = true;
         return hand;
     }
 
@@ -255,9 +253,9 @@ class _Player {
      */
     CalculateActions() {
         let actions = [ActionType.Discard];
-        if(this.CanKan())    actions.push(ActionType.Kan);
-        if(this.CanRiichi()) actions.push(ActionType.Riichi);
-        if(this.CanTsumo())  actions.push(ActionType.Tsumo);
+        if (this.CanKan()) actions.push(ActionType.Kan);
+        if (this.CanRiichi()) actions.push(ActionType.Riichi);
+        if (this.CanTsumo()) actions.push(ActionType.Tsumo);
         return actions;
     }
 
@@ -269,10 +267,10 @@ class _Player {
      */
     CalculateInterject(availableTile) {
         let actions = [];
-        if(this.CanChi(availableTile)) actions.push(ActionType.Chi);
-        if(this.CanPon(availableTile)) actions.push(ActionType.Pon);
-        if(this.CanKan(availableTile)) actions.push(ActionType.Kan);
-        if(this.CanRon(availableTile)) actions.push(ActionType.Ron);
+        if (this.CanChi(availableTile)) actions.push(ActionType.Chi);
+        if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
+        if (this.CanKan(availableTile)) actions.push(ActionType.Kan);
+        if (this.CanRon(availableTile)) actions.push(ActionType.Ron);
         return actions;
     }
 
@@ -286,9 +284,9 @@ class _Player {
         let melds = [];
         let suitTiles = this._hand.closedTiles.filter(tile => tile.type == availableTile.type);
         let uniqueSuitTiles = TILE.TileListRemoveDuplicates(suitTiles);
-        for(let i = 0; i < uniqueSuitTiles.length - 1; i++){
+        for (let i = 0; i < uniqueSuitTiles.length - 1; i++) {
             let potentialMeld = new Meld([uniqueSuitTiles[i], uniqueSuitTiles[i + 1], availableTile].sort(TILE.CompareTiles), true);
-            if(potentialMeld.type == MeldType.CHOW){
+            if (potentialMeld.type == MeldType.CHOW) {
                 melds.push(potentialMeld);
             }
         }
@@ -303,9 +301,9 @@ class _Player {
      */
     CanChi(availableTile) {
         //if player is the one to the left.
-            let possibleChows = this.ChiMelds(availableTile);
-            if(possibleChows.length > 0) return true;
-            else return false;
+        let possibleChows = this.ChiMelds(availableTile);
+        if (possibleChows.length > 0) return true;
+        else return false;
         return false;
     }
 
@@ -315,7 +313,7 @@ class _Player {
      * @returns {boolean} True if the player can pon, false otherwise.
      */
     CanPon(availableTile) {
-        if(TILE.TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
+        if (TILE.TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
         else return false;
     }
 
@@ -326,12 +324,12 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available for the player to take.
      * @returns {HAND.Hand} The hand with the pong added to it.
      */
-    Pon(hand, availableTile, makeHandOpen = true){
-        for(let i = 0; i < 2; i++){
+    Pon(hand, availableTile, makeHandOpen = true) {
+        for (let i = 0; i < 2; i++) {
             hand.remove(availableTile);
         }
         hand.makeMeld(new Meld([availableTile, availableTile, availableTile], true));
-        if(makeHandOpen) hand.isOpen = true;
+        if (makeHandOpen) hand.isOpen = true;
         return hand;
     }
 
@@ -341,21 +339,22 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available to take.
      * @returns {Meld[]} The list of possible kongs.
      */
-    KanMelds(availableTile){
-        if(availableTile == null){
+    KanMelds(availableTile) {
+        if (availableTile == null) {
             let kongs = [];
             let handTilesCopy = TILE.CopyTileList(this._hand._closedTiles);
-            if(this._drawnTile) handTilesCopy.push(this._drawnTile);
+            if (this._drawnTile) handTilesCopy.push(this._drawnTile);
             let uniqueTiles = TILE.TileListRemoveDuplicates(handTilesCopy);
-            for(let tile of uniqueTiles){
+            for (let tile of uniqueTiles) {
                 let tileCount = TILE.TileListCount(this._hand.closedTiles, tile);
-                if(this._drawnTile) if(this._drawnTile.number == tile.number) tileCount++;
-                if(tileCount == 4){
+                if (this._drawnTile)
+                    if (this._drawnTile.number == tile.number) tileCount++;
+                if (tileCount == 4) {
                     kongs.push(new Meld([tile, tile, tile, tile]));
                 }
-                for(let meld of this._hand.melds){
-                    if(meld.type == MeldType.PONG){
-                        if(meld.tiles[0].number == tile.number){
+                for (let meld of this._hand.melds) {
+                    if (meld.type == MeldType.PONG) {
+                        if (meld.tiles[0].number == tile.number) {
                             let meldTilesCopy = TILE.CopyTileList(meld.tiles);
                             meldTilesCopy.push(tile);
                             kongs.push(new Meld(meldTilesCopy, meld.is_open));
@@ -364,10 +363,9 @@ class _Player {
                 }
             }
             return kongs;
-        }
-        else {
+        } else {
             let kongs = [];
-            if(TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) {
+            if (TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) {
                 kongs.push(new Meld([availableTile, availableTile, availableTile, availableTile], true));
             }
             return kongs;
@@ -390,13 +388,13 @@ class _Player {
      * 
      * @param {Tile} availableTile The tile available for the player to take.
      */
-    GetKan(availableTile = null){
+    GetKan(availableTile = null) {
         let possibleKongs = this.KanMelds(availableTile);
         let kong;
-        if(possibleKongs.length > 1){
+        if (possibleKongs.length > 1) {
             let kongPrompt = '';
-            for(let possibleKong of possibleKongs){
-                for(let kongTile of possibleKong.tiles){
+            for (let possibleKong of possibleKongs) {
+                for (let kongTile of possibleKong.tiles) {
                     kongPrompt.push(kongTile.unicode);
                     kongPrompt.push('|');
                 }
@@ -406,8 +404,7 @@ class _Player {
             console.log(kongPrompt);
             let pickedKong = prompt('>> ');
             chow = possibleKongs[pickedKong];
-        }
-        else{
+        } else {
             kong = possibleKongs[0];
         }
         this.Kan(kong, availableTile);
@@ -419,33 +416,31 @@ class _Player {
      * @param {Meld} kong The kong to make in the player's hand.
      * @param {*} availableTile The tile to take to make the meld.
      */
-    Kan(kong, availableTile = null, makeHandOpen = true){
-        if(availableTile == null){
-            if(kong.is_open){ //Making kong with tile in closed tiles and open pong.
-                for(let meld of this._hand.melds){
-                    if(meld.type == MeldType.PONG){
-                        if(meld.tiles[0].number == kong.tiles[0].number){
+    Kan(kong, availableTile = null, makeHandOpen = true) {
+        if (availableTile == null) {
+            if (kong.is_open) { //Making kong with tile in closed tiles and open pong.
+                for (let meld of this._hand.melds) {
+                    if (meld.type == MeldType.PONG) {
+                        if (meld.tiles[0].number == kong.tiles[0].number) {
                             meld = kong;
                         }
                     }
                 }
-            }
-            else{ //Making kong with 4 tiles in closed tiles.
-                for(let i = 0; i < 4; i++){
+            } else { //Making kong with 4 tiles in closed tiles.
+                for (let i = 0; i < 4; i++) {
                     this._hand.remove(kong.tiles[0]);
                 }
                 this._hand.makeMeld(kong);
             }
-        }
-        else{ //Making kong with 3 tiles in closed tiles and other player's discarded tile.
-            for(let i = 0; i < 3; i++){
+        } else { //Making kong with 3 tiles in closed tiles and other player's discarded tile.
+            for (let i = 0; i < 3; i++) {
                 this._hand.remove(availableTile);
             }
             this._hand.makeMeld(kong);
-            if(makeHandOpen) this._hand.isOpen = true;
+            if (makeHandOpen) this._hand.isOpen = true;
         }
     }
-    
+
     /**
      * Calculates the tiles a player can discard and declare riichi.
      * 
@@ -458,13 +453,13 @@ class _Player {
         handCopy.add(this._drawnTile);
         let uniqueTiles = TILE.TileListRemoveDuplicates(handCopy.closedTiles);
         //for each tile in the hand
-        for(let tile of uniqueTiles) {
+        for (let tile of uniqueTiles) {
             //remove it from the hand
             handCopy.remove(tile);
             //test if there are any tenpai tiles
             let tenpai = new Tenpai(handCopy);
             //if so add them to array and return the array
-            if(tenpai.tiles.length > 0){
+            if (tenpai.tiles.length > 0) {
                 riichiTiles.push(new TILE.Tile(tile.number));
             }
             //add the tile back to the hand.
@@ -479,7 +474,7 @@ class _Player {
      * @returns {boolean} True if the player can riichi, false otherwise.
      */
     CanRiichi() {
-        if(this._hand.isOpen) return false;
+        if (this._hand.isOpen) return false;
         else return this.RiichiTiles().length > 0;
     }
 
@@ -490,28 +485,27 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available to make the melds.
      * @returns {Meld[]} The list of melds that a player can make to complete their hand.
      */
-    RonMelds(availableTile){
+    RonMelds(availableTile) {
         let ronMelds = [];
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
         let chiMelds = this.ChiMelds(availableTile);
         let ponMelds = [];
-        if(this.CanPon(availableTile)){
+        if (this.CanPon(availableTile)) {
             ponMelds.push(new Meld([availableTile, availableTile, availableTile], true));
         }
         let possibleMelds = chiMelds.concat(ponMelds);
-        for(let possibleMeld of possibleMelds){
+        for (let possibleMeld of possibleMelds) {
             let handCopy = HAND.CopyHand(this._hand);
-            if(possibleMeld.type == MeldType.PONG){
+            if (possibleMeld.type == MeldType.PONG) {
                 handCopy = this.Pon(handCopy, availableTile, false);
-            }
-            else if(possibleMeld.type == MeldType.CHOW){
+            } else if (possibleMeld.type == MeldType.CHOW) {
                 handCopy = this.Chi(handCopy, possibleMeld, availableTile, false)
             }
             let partitions = handPartitioner.partition(handCopy);
-            for(let partition of partitions){
+            for (let partition of partitions) {
                 let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
-                if(yakuList.length > 0){
+                if (yakuList.length > 0) {
                     ronMelds.push(possibleMeld);
                 }
             }
@@ -519,17 +513,17 @@ class _Player {
         let handCopy = HAND.CopyHand(this._hand);
         handCopy.add(availableTile);
         let partitions = handPartitioner.partition(handCopy);
-        for(let partition of partitions){
+        for (let partition of partitions) {
             let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
-                if(yakuList.length > 0){
-                    for(let part of partition){
-                        if(part instanceof Pair){
-                            if(part.tiles[0].number == availableTile.number){
-                                ronMelds.push(part);
-                            }
+            if (yakuList.length > 0) {
+                for (let part of partition) {
+                    if (part instanceof Pair) {
+                        if (part.tiles[0].number == availableTile.number) {
+                            ronMelds.push(part);
                         }
                     }
                 }
+            }
         }
         return ronMelds;
     }
@@ -549,25 +543,33 @@ class _Player {
      * @param {TILE.Tile} availableTile The tile available for the player to take.
      * @returns {{han: number, partition: (Meld | Pair)[], yakuList: Yaku[]}} The highest value of all possible winning hands.
      */
-    Ron(availableTile){
+    Ron(availableTile) {
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
         let valueCalculator = new Value_Calculator();
         let ronMelds = this.RonMelds(availableTile);
-        let highestValue = {'han': 0, 'partition': null, 'yakuList': []};
+        let highestValue = {
+            'han': 0,
+            'partition': null,
+            'yakuList': []
+        };
         this._hand.add(availableTile);
-        for(let meld of ronMelds){
+        for (let meld of ronMelds) {
             let handCopy = HAND.CopyHand(this._hand);
-            for(let tile of meld.tiles){
+            for (let tile of meld.tiles) {
                 handCopy.remove(tile);
             }
             handCopy.makeMeld(meld);
             let partitions = handPartitioner.partition(handCopy);
-            for(let partition of partitions){
+            for (let partition of partitions) {
                 let yakuList = yakuEvaluator.EvaluateYaku(partition, handCopy, availableTile);
                 let partitionHan = valueCalculator.CalculateHan(yakuList, handCopy.isOpen);
-                if(partitionHan > highestValue['han']){
-                    highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
+                if (partitionHan > highestValue['han']) {
+                    highestValue = {
+                        'han': partitionHan,
+                        'partition': partition,
+                        'yakuList': yakuList
+                    };
                 }
             }
         }
@@ -583,14 +585,22 @@ class _Player {
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
         let valueCalculator = new Value_Calculator();
-        let highestValue = {'han': 0, 'partition': null, 'yakuList': []};
+        let highestValue = {
+            'han': 0,
+            'partition': null,
+            'yakuList': []
+        };
         this._hand.add(this._drawnTile);
         let partitions = handPartitioner.partition(this._hand);
-        for(let partition of partitions){
+        for (let partition of partitions) {
             let yakuList = yakuEvaluator.EvaluateYaku(partition, this._hand, this._drawnTile);
             let partitionHan = valueCalculator.CalculateHan(yakuList, this._hand.isOpen);
-            if(partitionHan > highestValue['han']){
-                highestValue = {'han': partitionHan, 'partition': partition, 'yakuList': yakuList};
+            if (partitionHan > highestValue['han']) {
+                highestValue = {
+                    'han': partitionHan,
+                    'partition': partition,
+                    'yakuList': yakuList
+                };
             }
         }
         return highestValue;
@@ -602,14 +612,14 @@ class _Player {
      * @returns {boolean} True if the player can tsumo, false otherwise.
      */
     CanTsumo() {
-        if(this._drawnTile){
+        if (this._drawnTile) {
             let handPartitioner = new Hand_Partition();
             let yakuEvaluator = new Yaku_Evaluate();
             let handCopy = HAND.CopyHand(this._hand);
             handCopy.add(this._drawnTile);
             let partitions = handPartitioner.partition(handCopy);
-            for(let partition of partitions){
-                if(yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0){
+            for (let partition of partitions) {
+                if (yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0) {
                     return true;
                 }
             }
@@ -625,8 +635,8 @@ class _Player {
      */
     GetActionStrings(actions) {
         let actionString = '';
-        for(let action of actions){
-            switch(action){
+        for (let action of actions) {
+            switch (action) {
                 case ActionType.Discard: {
                     actionString += 'Discard - 0 \n';
                     break;
@@ -663,5 +673,5 @@ class _Player {
 }
 
 module.exports = {
-    Player: _Player
+    Player: Player
 }

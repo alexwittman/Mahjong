@@ -18,7 +18,7 @@ let MeldType = require('./meld').MeldType;
 /**
  * Class to compute a partition of a hand.
  */
-class _Hand_Partition {
+class Hand_Partition {
 
     /**
      * Removes invalid partitions from the list of partitions.
@@ -31,26 +31,26 @@ class _Hand_Partition {
     cleanUpPartitions(partitions) {
         let cleanPartitions = [];
         //remove bad partitions
-        for(let partition of partitions){
+        for (let partition of partitions) {
             let MeldCount = 0;
             let PairCount = 0;
-            for(let meld of partition){
-                if(meld instanceof Meld) MeldCount++;
-                if(meld instanceof Pair) PairCount++;
+            for (let meld of partition) {
+                if (meld instanceof Meld) MeldCount++;
+                if (meld instanceof Pair) PairCount++;
             }
-            if(PairCount == 1 && MeldCount == 4){
+            if (PairCount == 1 && MeldCount == 4) {
                 cleanPartitions.push(partition);
             }
         }
 
         //sort each partition
-        for(let partition of cleanPartitions){
+        for (let partition of cleanPartitions) {
             partition = this.SortPartition(partition);
         }
 
         let uniquePartitions = [];
-        for(let partition of cleanPartitions){
-            if(!this.PartitionInList(uniquePartitions, partition)){
+        for (let partition of cleanPartitions) {
+            if (!this.PartitionInList(uniquePartitions, partition)) {
                 uniquePartitions.push(partition);
             }
         }
@@ -65,12 +65,12 @@ class _Hand_Partition {
      * @returns {boolean} Whether or not the partition was in the list.
      */
     PartitionInList(partitions, partitionToCheck) {
-        for(let partition of partitions){
-            if(JSON.stringify(partition) == JSON.stringify(partitionToCheck)) return true;
+        for (let partition of partitions) {
+            if (JSON.stringify(partition) == JSON.stringify(partitionToCheck)) return true;
         }
         return false;
     }
-    
+
     /**
      * Adds the declared melds of a hand to the partitions of
      * the closed tiles.
@@ -79,9 +79,9 @@ class _Hand_Partition {
      * @param {Meld[]} handMelds The declared melds of the hand.
      * @returns {(Meld | Pair)[][]} The complete partitions of the hand.
      */
-    AddHandMelds(partitions, handMelds){
-        for(let partition of partitions){
-            for(let meld of handMelds){
+    AddHandMelds(partitions, handMelds) {
+        for (let partition of partitions) {
+            for (let meld of handMelds) {
                 partition.push(meld);
             }
         }
@@ -118,28 +118,28 @@ class _Hand_Partition {
         //         }
         //     }
         // }
-        if(tiles.length >= 3){
+        if (tiles.length >= 3) {
             let pongTiles = CopyTileList(tiles);
             let pongPartition = this.PongPartition(pongTiles);
-            if(pongPartition != null) {
-                if(pongPartition.length > 0){
+            if (pongPartition != null) {
+                if (pongPartition.length > 0) {
                     partition = partition.concat(pongPartition);
                 }
             }
 
             let chowTiles = CopyTileList(tiles);
             let chowPartition = this.ChowPartition(chowTiles);
-            if(chowPartition != null) {
-                if(chowPartition.length > 0){
+            if (chowPartition != null) {
+                if (chowPartition.length > 0) {
                     partition = partition.concat(chowPartition);
                 }
             }
         }
-        if(tiles.length >= 2){
+        if (tiles.length >= 2) {
             let pairTiles = CopyTileList(tiles);
             let pairPartition = this.PairPartition(pairTiles);
-            if(pairPartition != null) {
-                if(pairPartition.length > 0){
+            if (pairPartition != null) {
+                if (pairPartition.length > 0) {
                     partition = partition.concat(pairPartition);
                 }
             }
@@ -160,10 +160,10 @@ class _Hand_Partition {
         restOfPartition = restOfPartition.filter((part) => part != null);
         let numberOfPartitions = restOfPartition.length;
         let partitions = [];
-        for(let i = 0; i < numberOfPartitions; i++){
+        for (let i = 0; i < numberOfPartitions; i++) {
             partitions.push(firstElement);
         }
-        for(let i = 0; i < numberOfPartitions; i++){
+        for (let i = 0; i < numberOfPartitions; i++) {
             partitions[i] = partitions[i].concat(restOfPartition[i]);
         }
         return partitions;
@@ -178,25 +178,25 @@ class _Hand_Partition {
      */
     KongPartition(tiles) {
         let kong = [];
-        for(let tile of tiles){
-            if(TileListCount(tiles, tile) >= 4){
+        for (let tile of tiles) {
+            if (TileListCount(tiles, tile) >= 4) {
                 kong = [new Tile(tile.number), new Tile(tile.number), new Tile(tile.number), new Tile(tile.number)];
                 break;
             }
         }
-        if(kong.length > 0){
+        if (kong.length > 0) {
             const NumOfTilesToRemove = 4;
-            for(let i = 0; i < NumOfTilesToRemove; i++){
+            for (let i = 0; i < NumOfTilesToRemove; i++) {
                 tiles.splice(IndexTileList(tiles, kong[0]), 1);
             }
-            if(tiles.length > 0){
+            if (tiles.length > 0) {
                 return this.CombinePartitions([new Meld(kong)], this.recurPartition(tiles));
+            } else {
+                return [
+                    [new Meld(kong)]
+                ];
             }
-            else {
-                return [[new Meld(kong)]];
-            }
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -210,25 +210,25 @@ class _Hand_Partition {
      */
     PongPartition(tiles) {
         let pong = [];
-        for(let tile of tiles){
-            if(TileListCount(tiles, tile) >= 3){
+        for (let tile of tiles) {
+            if (TileListCount(tiles, tile) >= 3) {
                 pong = [new Tile(tile.number), new Tile(tile.number), new Tile(tile.number)];
                 break;
             }
         }
-        if(pong.length > 0){
+        if (pong.length > 0) {
             const NumOfTilesToRemove = 3;
-            for(let i = 0; i < NumOfTilesToRemove; i++){
+            for (let i = 0; i < NumOfTilesToRemove; i++) {
                 tiles.splice(IndexTileList(tiles, pong[0]), 1);
             }
-            if(tiles.length > 0){
+            if (tiles.length > 0) {
                 return this.CombinePartitions([new Meld(pong)], this.recurPartition(tiles));
+            } else {
+                return [
+                    [new Meld(pong)]
+                ];
             }
-            else {
-                return [[new Meld(pong)]];
-            }
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -244,29 +244,30 @@ class _Hand_Partition {
         let chow = [];
 
         let tempTiles = [];
-        for(let tile of tiles) {
-            if(!TileListContains(tempTiles, tile)){
+        for (let tile of tiles) {
+            if (!TileListContains(tempTiles, tile)) {
                 tempTiles.push(new Tile(tile.number));
             }
         }
 
-        for(let i = 0; i < tempTiles.length - 2; i++){
-            if((new Meld(tempTiles.slice(i, i + 3)).type == MeldType.CHOW)){
+        for (let i = 0; i < tempTiles.length - 2; i++) {
+            if ((new Meld(tempTiles.slice(i, i + 3)).type == MeldType.CHOW)) {
                 chow = tempTiles.slice(i, i + 3);
-                if(chow.length > 0){
-                    for(let tile of chow){
+                if (chow.length > 0) {
+                    for (let tile of chow) {
                         tiles.splice(IndexTileList(tiles, tile), 1);
                     }
-                    if(tiles.length > 0){
+                    if (tiles.length > 0) {
                         return this.CombinePartitions([new Meld(chow)], this.recurPartition(tiles));
-                    }
-                    else{
-                        return [[new Meld(chow)]];
+                    } else {
+                        return [
+                            [new Meld(chow)]
+                        ];
                     }
                 }
             }
         }
-        if(chow.length == 0){
+        if (chow.length == 0) {
             return null;
         }
 
@@ -281,25 +282,25 @@ class _Hand_Partition {
      */
     PairPartition(tiles) {
         let pair = [];
-        for(let tile of tiles){
-            if(TileListCount(tiles, tile) >= 2){
+        for (let tile of tiles) {
+            if (TileListCount(tiles, tile) >= 2) {
                 pair = [new Tile(tile.number), new Tile(tile.number)];
                 break;
             }
         }
-        if(pair.length > 0){
+        if (pair.length > 0) {
             const NumOfTilesToRemove = 2;
-            for(let i = 0; i < NumOfTilesToRemove; i++){
+            for (let i = 0; i < NumOfTilesToRemove; i++) {
                 tiles.splice(IndexTileList(tiles, pair[0]), 1);
             }
-            if(tiles.length > 0){
+            if (tiles.length > 0) {
                 return this.CombinePartitions([new Pair(pair)], this.recurPartition(tiles));
+            } else {
+                return [
+                    [new Pair(pair)]
+                ];
             }
-            else {
-                return [[new Pair(pair)]];
-            }
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -316,32 +317,30 @@ class _Hand_Partition {
      */
     SortPartition(partition) {
         let swaps = true;
-        while(swaps){
+        while (swaps) {
             swaps = false;
-            for(let i = 0; i < partition.length - 1; i++){
+            for (let i = 0; i < partition.length - 1; i++) {
                 let a = partition[i];
                 let b = partition[i + 1];
-                if(a instanceof Pair){
+                if (a instanceof Pair) {
                     let temp = partition[i];
                     partition[i] = partition[i + 1];
                     partition[i + 1] = temp;
                     swaps = true;
                 }
-                if(b instanceof Pair){
+                if (b instanceof Pair) {
                     continue;
                 }
-                if(a instanceof Meld && b instanceof Meld){
-                    if(a.tiles[0].number > b.tiles[0].number){
+                if (a instanceof Meld && b instanceof Meld) {
+                    if (a.tiles[0].number > b.tiles[0].number) {
                         let temp = partition[i];
                         partition[i] = partition[i + 1];
                         partition[i + 1] = temp;
                         swaps = true;
-                    }
-                    else if(a.tiles[0].number < b.tiles[0].number) {
+                    } else if (a.tiles[0].number < b.tiles[0].number) {
                         continue;
-                    }
-                    else{
-                        if((a.type == MeldType.CHOW || a.type == MeldType.KONG) && b.type == MeldType.PONG){
+                    } else {
+                        if ((a.type == MeldType.CHOW || a.type == MeldType.KONG) && b.type == MeldType.PONG) {
                             let temp = partition[i];
                             partition[i] = partition[i + 1];
                             partition[i + 1] = temp;
@@ -361,10 +360,10 @@ class _Hand_Partition {
      */
     PrintPartitions(partitions) {
         console.log('PARTITIONS');
-        for(let partition of partitions){
+        for (let partition of partitions) {
             let tiles = '';
-            for(let meld of partition){
-                for(let tile of meld.tiles){
+            for (let meld of partition) {
+                for (let tile of meld.tiles) {
                     tiles += tile.unicode;
                     tiles += ' ';
                 }
@@ -376,5 +375,5 @@ class _Hand_Partition {
 }
 
 module.exports = {
-    Hand_Partition: _Hand_Partition
+    Hand_Partition: Hand_Partition
 }

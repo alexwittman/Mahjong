@@ -61,8 +61,8 @@ let _main = () => {
     //     //console.log("data: ", data.split('\n'));
     // });
     // console.log(NineVectors);
-    
-    
+
+
     // let total = 0;
     // let n = 20;
     // for(let i = 0; i < n; i++){
@@ -113,7 +113,7 @@ let _main = () => {
 let RandomHand = () => {
     let set = new TileSet();
     let hand = new Hand();
-    for(let i = 0; i < 13; i++){
+    for (let i = 0; i < 13; i++) {
         hand.add(set.FirstTile())
     }
     return hand;
