@@ -51,22 +51,25 @@ class _Round {
     PlayerTurn(playerIndex){
         console.log('\n\n\n\n\n\n\nPlayer ' + playerIndex + '\'s turn:');
         this._set.DealTile(this._players[playerIndex]); //deal tile to first player
-        let didPlayerWin = this.PlayerAction(playerIndex);
-        if(!didPlayerWin){
+        this.PlayerAction(playerIndex);
+        if(!this._RoundOver){
             let newIndex = -1;
             for(let i = 1; i <= 3; i++){
                 newIndex = this.PlayerInterject((playerIndex + i) % 4);
                 if(newIndex != -1) break;
             }
-            if(newIndex != -2){
-                if(newIndex == -1) this.PlayerTurn((playerIndex + 1) % 4);
-                else didPlayerWin = this.PlayerAction(newIndex);
-                if(!didPlayerWin) this.PlayerTurn((newIndex + 1) % 4);
+            if(!this._RoundOver){
+                if(newIndex == -1) {
+                    if(!this._RoundOver) this.PlayerTurn((playerIndex + 1) % 4);
+                }
+                else if(!this._RoundOver) this.PlayerAction(newIndex);
+                if(!this._RoundOver) this.PlayerTurn((newIndex + 1) % 4);
             }
         }
     }
 
     PlayerAction(playerIndex) {
+        this._players[playerIndex].hand.Print();
         let playerAction = this._players[playerIndex].GetAction();
         switch(playerAction["action"]){
             case ActionType.Discard: break;
@@ -78,11 +81,10 @@ class _Round {
             case ActionType.Riichi: break;
             case ActionType.Tsumo: {
                 this.EndRound(playerAction['value']);
-                return true;
+                this._RoundOver = true;
             }
         }
         this.PostPlayerAction(playerAction["discard"]);
-        return false;
     }
 
     /**
@@ -109,7 +111,7 @@ class _Round {
                 }
                 case ActionType.Ron: {
                     this.EndRound(playerAction['value']);
-                    return -2;
+                    this._RoundOver = true;
                 }
             }
         }
