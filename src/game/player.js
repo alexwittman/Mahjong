@@ -180,7 +180,6 @@ class _Player {
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
-        this._hand.Print();
         if(this._drawnTile) TILE.PrintTileList([this._drawnTile]);
         let input = Number(prompt("Enter the tile to discard: "));
         let discard;
@@ -424,7 +423,7 @@ class _Player {
         if(availableTile == null){
             if(kong.is_open){ //Making kong with tile in closed tiles and open pong.
                 for(let meld of this._hand.melds){
-                    if(meld.type = MeldType.PONG){
+                    if(meld.type == MeldType.PONG){
                         if(meld.tiles[0].number == kong.tiles[0].number){
                             meld = kong;
                         }
