@@ -180,15 +180,15 @@ class Player {
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
-        if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
+        //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
         let input = Number(prompt("Enter the tile to discard: "));
         let discard;
-        if (input == -1) {
+        if (this._drawnTile != null && input == this._drawnTile.number) {
             discard = this._drawnTile;
             this._drawnTile = null;
         } else {
-            discard = this._hand.closedTiles[input];
-            this._hand.remove(this._hand.closedTiles[input]);
+            discard = new TILE.Tile(input);
+            this._hand.remove(discard);
             if (this._drawnTile) this._hand.add(this._drawnTile);
             this._drawnTile = null;
         }
