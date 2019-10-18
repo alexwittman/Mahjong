@@ -69,6 +69,7 @@ class Round {
 
     PlayerAction(playerIndex) {
         this._players[playerIndex].hand.Print();
+        if (this._players[playerIndex]._drawnTile) console.log(this._players[playerIndex]._drawnTile.unicode)
         let playerAction = this._players[playerIndex].GetAction();
         switch (playerAction["action"]) {
             case ActionType.Discard:
