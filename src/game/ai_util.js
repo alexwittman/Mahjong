@@ -143,6 +143,31 @@ class AI_Util {
         return vectors;
     }
 
+    HandStates() {
+        let states = [];
+        for (let singles = 0; singles <= 14; singles++) {
+            for (let pairs = 0; pairs <= 7; pairs++) {
+                for (let almostChows = 0; almostChows <= 7; almostChows++) {
+                    for (let chows = 0; chows <= 4; chows++) {
+                        for (let pongs = 0; pongs <= 4; pongs++) {
+                            for (let kongs = 0; kongs <= 4; kongs++) {
+                                if (singles + 2 * pairs + 2 * almostChows + 3 * chows + 3 * pongs + 4 * kongs == 14 + kongs) {
+                                    let isTerminalState = 0;
+                                    if ((pairs == 1 && chows + pongs + kongs == 4) || (pairs == 7)) isTerminalState = 1;
+                                    states.push([singles, pairs, almostChows, chows, pongs, kongs, isTerminalState]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.log(states);
+        console.log(states.length);
+        console.log(states.filter(state => state[6] == 1).length);
+        return states;
+    }
+
     /**
      * Converts a 9-vector into a hand of tiles.
      * 
