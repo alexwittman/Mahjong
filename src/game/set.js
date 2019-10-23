@@ -93,9 +93,15 @@ class TileSet {
      * Deals a tile to a player.
      * 
      * @param {Player} player The player to deal the tile to.
+     * @returns {boolean} True if a tile was dealt to the player, false otherwise.
      */
     DealTile(player) {
-        player.drawnTile = this.FirstTile();
+        if (this._set.length > 0) {
+            player.drawnTile = this.FirstTile();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

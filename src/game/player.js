@@ -188,8 +188,9 @@ class Player {
             this._drawnTile = null;
         } else {
             discard = new TILE.Tile(input);
-            this._hand.remove(discard);
-            if (this._drawnTile) this._hand.add(this._drawnTile);
+            if (this._hand.remove(discard)) {
+                if (this._drawnTile) this._hand.add(this._drawnTile);
+            }
             this._drawnTile = null;
         }
         //TILE.PrintTileList(this._hand.tiles);

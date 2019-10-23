@@ -49,10 +49,10 @@ class Round {
      * @param {number} playerIndex The player index of whose turn it is.
      */
     PlayerTurn(playerIndex) {
-        console.log('\n\n\n\n\n\n\nPlayer ' + playerIndex + '\'s turn:');
-        this._set.DealTile(this._players[playerIndex]); //deal tile to first player
-        this.PlayerAction(playerIndex);
+        this._RoundOver = !this._set.DealTile(this._players[playerIndex]); //deal tile to first player
         if (!this._RoundOver) {
+            console.log('\n\n\n\n\n\n\nPlayer ' + playerIndex + '\'s turn:');
+            this.PlayerAction(playerIndex);
             let newIndex = -1;
             for (let i = 1; i <= 3; i++) {
                 newIndex = this.PlayerInterject((playerIndex + i) % 4);
@@ -64,6 +64,8 @@ class Round {
                 } else if (!this._RoundOver) this.PlayerAction(newIndex);
                 if (!this._RoundOver) this.PlayerTurn((newIndex + 1) % 4);
             }
+        } else {
+            this.EndRound();
         }
     }
 
@@ -120,9 +122,13 @@ class Round {
         return -1;
     }
 
-    EndRound(WinningHand) {
-        console.log("CONGRATULATIONS!!!!!!!")
-        console.log(WinningHand);
+    EndRound(WinningHand = null) {
+        if (WinningHand != null) {
+            console.log("CONGRATULATIONS!!!!!!!")
+            console.log(WinningHand);
+        } else {
+            console.log("DRAW");
+        }
     }
 }
 
