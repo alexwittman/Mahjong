@@ -25,14 +25,16 @@ class _Game {
      */
     StartGame() {
         console.log("Game Started.")
-        this.StartRound();
+        for (let i = 1; i <= 4; i++) {
+            this.StartRound(i);
+        }
     }
 
     /**
      * Starts a round of the game.
      */
-    StartRound() {
-        console.log("Round Started.")
+    StartRound(roundNumber) {
+        console.log("Round " + roundNumber + " Started.")
         let round = new Round(this._players);
         round.StartRound();
     }
