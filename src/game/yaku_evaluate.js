@@ -118,6 +118,7 @@ class Yaku_Evaluate {
         yakuList.push(this.NineGates(partition, hand, winningTile));
         yakuList.push(this.DoubleNineGates(partition, hand, winningTile));
         yakuList.push(this.FourQuads(partition));
+        yakuList.push(this.SevenPairs(partition));
 
         yakuList = yakuList.filter(elem => elem != null);
 
@@ -942,6 +943,14 @@ class Yaku_Evaluate {
         } else {
             return null;
         }
+    }
+
+    SevenPairs(partition) {
+        if (partition.length == 7) {
+            let uniqueTiles = TileListRemoveDuplicates(this.PartitionTiles(partition));
+            if (uniqueTiles.length == 7) return new Yaku.SevenPairs;
+        }
+        return null;
     }
 }
 
