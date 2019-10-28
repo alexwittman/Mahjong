@@ -33,7 +33,7 @@ describe('Riichi', () => {
         let melds = [new Meld(TileList('a666'), true)];
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
-        player.hand = new Hand(tiles, melds);
+        player.hand = new Hand(tiles, melds, true);
         expect(player.CanRiichi()).to.eql(false);
     });
 
@@ -43,7 +43,7 @@ describe('Riichi', () => {
         let melds = [new Meld(TileList('a345'), true)];
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
-        player.hand = new Hand(tiles, melds);
+        player.hand = new Hand(tiles, melds, true);
         expect(player.CanRiichi()).to.eql(false);
     });
 
@@ -53,7 +53,7 @@ describe('Riichi', () => {
         let melds = [new Meld(TileList('a6666'), true)];
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
-        player.hand = new Hand(tiles, melds);
+        player.hand = new Hand(tiles, melds, true);
         expect(player.CanRiichi()).to.eql(false);
     });
 
@@ -63,7 +63,7 @@ describe('Riichi', () => {
         let melds = [new Meld(TileList('a6666'), true), new Meld(TileList('s222'), true)];
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
-        player.hand = new Hand(tiles, melds);
+        player.hand = new Hand(tiles, melds, true);
         expect(player.CanRiichi()).to.eql(false);
     });
 
