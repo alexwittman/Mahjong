@@ -42,6 +42,7 @@ class Player {
      */
     constructor(index) {
         this._index = index;
+        this._discards = [];
         this._score = 25000;
     }
 
@@ -92,9 +93,11 @@ class Player {
 
     /**
      * Promts the player for an action when it is their turn.
+     * 
+     * @param {Object} gameState The current state of the game visible to the player.
      */
-    GetAction() {
-        let actions = this.CalculateActions();
+    GetAction(gameState) {
+        let actions = this.CalculateActions(gameState);
         let action = '0';
         if (actions.length > 1) {
             console.log(this.GetActionStrings(actions));
@@ -132,10 +135,11 @@ class Player {
      * Promts the player for an action when they can do something
      * and it is not their turn.
      * 
-     * @param {TILE.Tile} availableTile The tile available on the table.
+     * @param {Object} gameState The current game state visible to the player.
      */
-    GetInterject(availableTile) {
-        let actions = this.CalculateInterject(availableTile);
+    GetInterject(gameState) {
+        let availableTile = gameState["availableTile"];
+        let actions = this.CalculateInterject(gameState);
         console.log(this.GetActionStrings(actions));
         let action = '0';
         if (actions.length > 0) {
@@ -195,6 +199,7 @@ class Player {
         }
         //TILE.PrintTileList(this._hand.tiles);
         this._hand.Print();
+        this._discards.push(discard);
         return discard;
     }
 
@@ -249,7 +254,7 @@ class Player {
     /**
      * Calculates all available actions for a player based on the current available tile.
      * 
-     * @param {TILE.Tile} availableTile The tile available on the table.
+     * @param {Object} gameState The current state of the game visible to the player.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
     CalculateActions() {
@@ -263,11 +268,12 @@ class Player {
     /**
      * Calculates all available actions for a player based on the current available tile.
      * 
-     * @param {TILE.Tile} availableTile The tile available on the table.
+     * @param {Object} gameState The current state of the game visible by the player.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
-    CalculateInterject(availableTile) {
+    CalculateInterject(gameState) {
         let actions = [];
+        let availableTile = gameState["availableTile"];
         if (this.CanChi(availableTile)) actions.push(ActionType.Chi);
         if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
         if (this.CanKan(availableTile)) actions.push(ActionType.Kan);
