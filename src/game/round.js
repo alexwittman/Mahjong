@@ -19,10 +19,12 @@ class Round {
      * 
      * @param {Player[]} players The list of 4 players to participate in the round.
      */
-    constructor(players) {
+    constructor(players, roundNumber, roundWind) {
         this._players = players;
         this._set = new TileSet();
         this._availableTile = null;
+        this._roundWind = roundWind;
+        this._roundNumber = roundNumber;
     }
 
     /**
@@ -41,6 +43,7 @@ class Round {
         console.log("Round Started.");
         this._set.DealHands(this._players);
         this.PlayerTurn(0);
+        //TODO: return the final result of the round back to the game class.
     }
 
     /**
@@ -69,10 +72,16 @@ class Round {
         }
     }
 
+    /**
+     * Prompts the player whose turn it is.
+     * Handles the action the player takes.
+     * 
+     * @param {number} playerIndex The index of player whose turn it is.
+     */
     PlayerAction(playerIndex) {
         this._players[playerIndex].hand.Print();
         if (this._players[playerIndex]._drawnTile) console.log(this._players[playerIndex]._drawnTile.unicode)
-        let playerAction = this._players[playerIndex].GetAction();
+        let playerAction = this._players[playerIndex].GetAction(this.GetGameState());
         switch (playerAction["action"]) {
             case ActionType.Discard:
                 break;
@@ -100,11 +109,17 @@ class Round {
         this._availableTile = availableTile;
     }
 
+    /**
+     * Propmts the player if they can interject with an action.
+     * Handles the player's interjection, if they execute one.
+     * 
+     * @param {number} playerIndex The player who might be able to interject.
+     */
     PlayerInterject(playerIndex) {
         console.log('\n\nPlayer ', playerIndex, '\'s interject:');
         console.log("Available Tile: ", this._availableTile.number);
         this._players[playerIndex].hand.Print();
-        let playerAction = this._players[playerIndex].GetInterject(this._availableTile);
+        let playerAction = this._players[playerIndex].GetInterject(this.GetGameState());
         if (playerAction != null) {
             switch (playerAction["action"]) {
                 case ActionType.Chi:
@@ -122,6 +137,11 @@ class Round {
         return -1;
     }
 
+    /**
+     * Ends the round when the set is empty or if a player wins.
+     * 
+     * @param {Object} WinningHand 
+     */
     EndRound(WinningHand = null) {
         if (WinningHand != null) {
             console.log("CONGRATULATIONS!!!!!!!")
@@ -129,6 +149,27 @@ class Round {
         } else {
             console.log("DRAW");
         }
+    }
+
+    /**
+     * Gets the game state that the current player can see.
+     */
+    GetGameState() {
+        return {
+            "roundWind": this._roundWind,
+            "roundNumber": this._roundNumber,
+            "dora": this._dora,
+            "discards": this.GetDiscards(),
+            "availableTile": this._availableTile
+        }
+    }
+
+    GetDiscards() {
+        let discards = [];
+        for (let i = 0; i < 4; i++) {
+            discards.concat(this._players._discards);
+        }
+        return discards;
     }
 }
 
