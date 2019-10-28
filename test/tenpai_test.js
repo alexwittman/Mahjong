@@ -24,8 +24,8 @@ describe('Tenpai', () => {
         let hand = new Hand(TileList('p123s123678a123w'));
         let tilesToComplete = TileList('w');
         let tenpai = new Tenpai(hand);
-        PrintTileList(hand.tiles);
-        tenpai.PrintTiles();
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
         expect(tenpai.tiles).to.eql(tilesToComplete);
     });
 
@@ -33,8 +33,8 @@ describe('Tenpai', () => {
         let hand = new Hand(TileList('p123s123678a14ww'));
         let tilesToComplete = [];
         let tenpai = new Tenpai(hand);
-        PrintTileList(hand.tiles);
-        tenpai.PrintTiles();
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
         expect(tenpai.tiles).to.eql(tilesToComplete);
     });
 
@@ -42,8 +42,8 @@ describe('Tenpai', () => {
         let hand = new Hand(TileList('p1112345678999'));
         let tilesToComplete = TileList('p123456789');
         let tenpai = new Tenpai(hand);
-        PrintTileList(hand.tiles);
-        tenpai.PrintTiles();
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
         expect(tenpai.tiles).to.eql(tilesToComplete);
     });
 
@@ -61,45 +61,45 @@ describe('Tenpai', () => {
 
     it('Testing Speed', () => {
         //let t0 = performance.now();
-        
+
         let hand = new Hand(TileList('p123s123678a123w'));
         let tenpai = new Tenpai(hand);
 
         //let t1 = performance.now();
-        PrintTileList(hand.tiles);
+        // PrintTileList(hand.tiles);
         //console.log("Took " + (t1 - t0) + " milliseconds.")
     });
 
     it('Testing Speed', () => {
         //let t0 = performance.now();
-        
+
         let hand = new Hand(TileList('p1112223334445'));
         let tenpai = new Tenpai(hand);
 
         //let t1 = performance.now();
-        PrintTileList(hand.tiles);
+        // PrintTileList(hand.tiles);
         //console.log("Took " + (t1 - t0) + " milliseconds.")
     });
 
     it('Testing Speed', () => {
         //let t0 = performance.now();
-        
+
         let hand = new Hand(TileList('p1112345678999'));
         let tenpai = new Tenpai(hand);
 
         //let t1 = performance.now();
-        PrintTileList(hand.tiles);
+        // PrintTileList(hand.tiles);
         //console.log("Took " + (t1 - t0) + " milliseconds.")
     });
 
     it('Testing Speed', () => {
         //let t0 = performance.now();
-        
+
         let hand = new Hand(TileList('p123s123678a14ww'));
         let tenpai = new Tenpai(hand);
 
         //let t1 = performance.now();
-        PrintTileList(hand.tiles);
+        // PrintTileList(hand.tiles);
         //console.log("Took " + (t1 - t0) + " milliseconds.")
     });
 });
