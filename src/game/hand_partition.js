@@ -38,7 +38,7 @@ class Hand_Partition {
                 if (meld instanceof Meld) MeldCount++;
                 if (meld instanceof Pair) PairCount++;
             }
-            if (PairCount == 1 && MeldCount == 4) {
+            if ((PairCount == 1 && MeldCount == 4) || PairCount == 7) {
                 cleanPartitions.push(partition);
             }
         }
@@ -109,15 +109,6 @@ class Hand_Partition {
      */
     recurPartition(tiles) {
         let partition = [];
-        // if(tiles.length >= 4){
-        //     let kongTiles = CopyTileList(tiles);
-        //     let kongPartition = this.KongPartition(kongTiles);
-        //     if(kongPartition != null){
-        //         if(kongPartition.length > 0){
-        //             partition = partition.concat(kongPartition);
-        //         }
-        //     }
-        // }
         if (tiles.length >= 3) {
             let pongTiles = CopyTileList(tiles);
             let pongPartition = this.PongPartition(pongTiles);
@@ -322,13 +313,21 @@ class Hand_Partition {
             for (let i = 0; i < partition.length - 1; i++) {
                 let a = partition[i];
                 let b = partition[i + 1];
-                if (a instanceof Pair) {
+                if (a instanceof Pair && b instanceof Pair) {
+                    if (a.tiles[0].number > b.tiles[0].number) {
+                        let temp = partition[i];
+                        partition[i] = partition[i + 1];
+                        partition[i + 1] = temp;
+                        swaps = true;
+                    }
+                }
+                if (a instanceof Pair && !(b instanceof Pair)) {
                     let temp = partition[i];
                     partition[i] = partition[i + 1];
                     partition[i + 1] = temp;
                     swaps = true;
                 }
-                if (b instanceof Pair) {
+                if (b instanceof Pair && !(a instanceof Pair)) {
                     continue;
                 }
                 if (a instanceof Meld && b instanceof Meld) {
