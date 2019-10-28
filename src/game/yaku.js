@@ -603,6 +603,15 @@ class HandOfMan extends Yaku {
     }
 }
 
+/**
+ * A hand composed of seven distinct pairs of tiles.
+ */
+class SevenPairs extends Yaku {
+    constructor() {
+        super(48, "Seven Pairs", "Chiitoitsu", NaN, 2, false);
+    }
+}
+
 module.exports.Yaku = Yaku;
 module.exports.NoPointsHand = NoPointsHand;
 module.exports.IdenticalSequences = IdenticalSequences;
@@ -651,3 +660,4 @@ module.exports.DoubleReady = DoubleReady;
 module.exports.HeavenlyHand = HeavenlyHand;
 module.exports.HandOfEarth = HandOfEarth;
 module.exports.HandOfMan = HandOfMan;
+module.exports.SevenPairs = SevenPairs;
