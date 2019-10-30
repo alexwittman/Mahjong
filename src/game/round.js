@@ -25,6 +25,7 @@ class Round {
         this._availableTile = null;
         this._roundWind = roundWind;
         this._roundNumber = roundNumber;
+        this._doraIndicators = this._set.GetDoraIndicator();
     }
 
     /**
@@ -86,8 +87,11 @@ class Round {
             case ActionType.Discard:
                 break;
             case ActionType.Kan: {
-                //draw tile from dead wall
-                this._set.DealTile(this._players[playerIndex]); //TODO: change this to draw from dead wall.
+                this._doraIndicators.concat(this._set.GetDoraIndicator());
+                if (!this._set.DealDeadWall(this._players[playerIndex])) {
+                    console.log("5 kongs declared => draw");
+                    this.EndRound();
+                }
                 this.PlayerAction(playerIndex);
             }
             case ActionType.Riichi:
@@ -125,7 +129,7 @@ class Round {
                 case ActionType.Chi:
                 case ActionType.Pon:
                 case ActionType.Kan: {
-                    //draw tile from dead wall
+                    //draw tile from dead wall // TODO
                     return playerIndex;
                 }
                 case ActionType.Ron: {
@@ -158,7 +162,7 @@ class Round {
         return {
             "roundWind": this._roundWind,
             "roundNumber": this._roundNumber,
-            "dora": this._dora,
+            "doraIndicators": this._doraIndicators,
             "discards": this.GetDiscards(),
             "availableTile": this._availableTile
         }
