@@ -8,6 +8,8 @@ let TileSet = require('./set').TileSet;
 let Action = require('./actions').Action;
 let ActionType = require('./actions').ActionType;
 let Tile = require('./tile').Tile;
+let Discard = require('./discard').Discard;
+let Value_Calculator = require('./value_calculator').Value_Calculator;
 
 /**
  * Class to hold round information.
@@ -31,7 +33,7 @@ class Round {
     /**
      * Getter method for the currently available tile to steal.
      * 
-     * @returns {Tile} The currently available tile.
+     * @returns {Discard} The currently available tile.
      */
     get availableTile() {
         return this._availableTile;
@@ -97,7 +99,7 @@ class Round {
             case ActionType.Riichi:
                 break;
             case ActionType.Tsumo: {
-                this.EndRound(playerAction['value']);
+                this.EndRound(playerAction);
                 this._RoundOver = true;
             }
         }
@@ -109,8 +111,8 @@ class Round {
      * 
      * @param {*} playerIndex 
      */
-    PostPlayerAction(availableTile) {
-        this._availableTile = availableTile;
+    PostPlayerAction(discard) {
+        this._availableTile = discard;
     }
 
     /**
@@ -121,7 +123,7 @@ class Round {
      */
     PlayerInterject(playerIndex) {
         console.log('\n\nPlayer ', playerIndex, '\'s interject:');
-        console.log("Available Tile: ", this._availableTile.number);
+        console.log("Available Tile: ", this._availableTile.tile.number);
         this._players[playerIndex].hand.Print();
         let playerAction = this._players[playerIndex].GetInterject(this.GetGameState());
         if (playerAction != null) {
@@ -133,7 +135,7 @@ class Round {
                     return playerIndex;
                 }
                 case ActionType.Ron: {
-                    this.EndRound(playerAction['value']);
+                    this.EndRound(playerAction);
                     this._RoundOver = true;
                 }
             }
@@ -144,14 +146,17 @@ class Round {
     /**
      * Ends the round when the set is empty or if a player wins.
      * 
-     * @param {Object} WinningHand 
+     * @param {Object} EndRoundObject
      */
-    EndRound(WinningHand = null) {
-        if (WinningHand != null) {
+    EndRound(EndRoundObject = null) {
+        let valueCalculator = new Value_Calculator();
+        if (EndRoundObject != null) {
             console.log("CONGRATULATIONS!!!!!!!")
             console.log(WinningHand);
+            let points = valueCalculator.CalculateWinPoints(EndRoundObject);
         } else {
             console.log("DRAW");
+            let points = valueCalculator.CalculateDrawPoints(this.GetPlayerHands());
         }
     }
 
@@ -174,6 +179,14 @@ class Round {
             discards.concat(this._players._discards);
         }
         return discards;
+    }
+
+    GetPlayerHands() {
+        let hands = [];
+        for (let i = 0; i < 4, i++) {
+            hands.push(this._players[i].hand);
+        }
+        return hands;
     }
 }
 
