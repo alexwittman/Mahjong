@@ -19,6 +19,7 @@ class TileSet {
      */
     constructor() {
         this._set = this.ConstructSet();
+        this._deadWall = this.ConstructDeadWall();
     }
 
     /**
@@ -60,6 +61,22 @@ class TileSet {
     }
 
     /**
+     * Constructs the dead wall with the last 14 tiles of the set.
+     */
+    ConstructDeadWall() {
+        this._deadWall = this._set.splice(this._set.length - 14, 14);
+    }
+
+    /**
+     * Removes a tile from the dead wall and returns it.
+     * 
+     * @returns {Tile} The dora indicator tile.
+     */
+    GetDoraIndicator() {
+        return this._deadWall.splice(0, 1);
+    }
+
+    /**
      * Gets the first tile from the set and removes it from the list.
      * 
      * @returns {Tile} The first tile in the set.
@@ -98,6 +115,15 @@ class TileSet {
     DealTile(player) {
         if (this._set.length > 0) {
             player.drawnTile = this.FirstTile();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    DealDeadWall(player) {
+        if (this._deadWall.length > 4) {
+            player.drawnTile = this._deadWall.splice(this._deadWall.splice.length - 1, 0);
             return true;
         } else {
             return false;
