@@ -23,6 +23,7 @@ let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
 let Hand_Partition = require('./hand_partition').Hand_Partition;
 let Pair = require('./pair').Pair;
 let Value_Calculator = require('./value_calculator').Value_Calculator;
+let Discard = require('./discard').Discard;
 
 let prompt = require('prompt-sync')();
 
@@ -95,6 +96,7 @@ class Player {
      * Promts the player for an action when it is their turn.
      * 
      * @param {Object} gameState The current state of the game visible to the player.
+     * @returns {Object} The object containing their action.
      */
     GetAction(gameState) {
         let actions = this.CalculateActions(gameState);
@@ -138,7 +140,7 @@ class Player {
      * @param {Object} gameState The current game state visible to the player.
      */
     GetInterject(gameState) {
-        let availableTile = gameState["availableTile"];
+        let availableTile = gameState["availableTile"].tile;
         let actions = this.CalculateInterject(gameState);
         console.log(this.GetActionStrings(actions));
         let action = '0';
@@ -168,7 +170,8 @@ class Player {
                 let value = this.Ron(availableTile);
                 return {
                     'action': ActionType.Ron,
-                    'value': value
+                    'value': value,
+                    'discard': gameState["availableTile"],
                 }
             }
         }
@@ -180,7 +183,7 @@ class Player {
      * Adds the drawn tile to the player's hand.
      * Removes that tile from the player's hand.
      * 
-     * @returns {TILE.Tile} The tile the player discarded.
+     * @returns {Discard} The tile the player discarded.
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
@@ -203,7 +206,7 @@ class Player {
         //TILE.PrintTileList(this._hand.tiles);
         this._hand.Print();
         this._discards.push(discard);
-        return discard;
+        return new Discard(discard, this._index);
     }
 
     /**
@@ -260,7 +263,7 @@ class Player {
      * @param {Object} gameState The current state of the game visible to the player.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
-    CalculateActions() {
+    CalculateActions(gameState) {
         let actions = [ActionType.Discard];
         if (this.CanKan()) actions.push(ActionType.Kan);
         if (this.CanRiichi()) actions.push(ActionType.Riichi);
@@ -561,7 +564,8 @@ class Player {
         let highestValue = {
             'han': 0,
             'partition': null,
-            'yakuList': []
+            'yakuList': [],
+            'isOpen': this.hand.isOpen()
         };
         this._hand.add(availableTile);
         for (let meld of ronMelds) {
@@ -578,7 +582,8 @@ class Player {
                     highestValue = {
                         'han': partitionHan,
                         'partition': partition,
-                        'yakuList': yakuList
+                        'yakuList': yakuList,
+                        'isOpen': this.hand.isOpen()
                     };
                 }
             }
