@@ -64,7 +64,7 @@ class TileSet {
      * Constructs the dead wall with the last 14 tiles of the set.
      */
     ConstructDeadWall() {
-        this._deadWall = this._set.splice(this._set.length - 14, 14);
+        return this._set.splice(this._set.length - 14, 14);
     }
 
     /**
