@@ -185,7 +185,10 @@ class Player {
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
         //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
-        let input = Number(prompt("Enter the tile to discard: "));
+        let rawInput = prompt("Enter the tile to discard: ");
+        let input;
+        if (rawInput == '') input = this._drawnTile.number;
+        else input = Number(rawInput);
         let discard;
         if (this._drawnTile != null && input == this._drawnTile.number) {
             discard = this._drawnTile;
