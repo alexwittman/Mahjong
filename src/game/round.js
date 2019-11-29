@@ -107,9 +107,10 @@ class Round {
     }
 
     /**
+     * Sets the available discard on the table for other players
+     * to take.
      * 
-     * 
-     * @param {*} playerIndex 
+     * @param {Discard} discard The discard available.
      */
     PostPlayerAction(discard) {
         this._availableTile = discard;
@@ -173,6 +174,11 @@ class Round {
         }
     }
 
+    /**
+     * Gets all the discards on the table.
+     * 
+     * @returns {Tile[]} A list of the discards.
+     */
     GetDiscards() {
         let discards = [];
         for (let i = 0; i < 4; i++) {
@@ -181,9 +187,14 @@ class Round {
         return discards;
     }
 
+    /**
+     * Gets each of the player's hands.
+     * 
+     * @returns {Hand[]} The list of the player's hands.
+     */
     GetPlayerHands() {
         let hands = [];
-        for (let i = 0; i < 4, i++) {
+        for (let i = 0; i < 4; i++) {
             hands.push(this._players[i].hand);
         }
         return hands;
