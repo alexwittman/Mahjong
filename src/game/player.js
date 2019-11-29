@@ -1,6 +1,6 @@
-// import { Hand } from "./hand";
-// import { Tile, PrintTileList } from "./tile";
-// import { Action, ActionType } from "./actions";
+// import { Hand } from './hand';
+// import { Tile, PrintTileList } from './tile';
+// import { Action, ActionType } from './actions';
 
 let readline = require('readline');
 //let Hand = require('./hand').Hand;
@@ -103,13 +103,13 @@ class Player {
         let action = '0';
         if (actions.length > 1) {
             console.log(this.GetActionStrings(actions));
-            action = prompt(">> ");
+            action = prompt('>> ');
         }
         switch (action) {
             case '3': { //Kan
                 this.GetKan();
                 return {
-                    "action": ActionType.Kan
+                    'action': ActionType.Kan
                 };
             }
             case '4': { //Riichi
@@ -126,8 +126,8 @@ class Player {
             default: { //Discard
                 let discard = this.GetDiscard();
                 return {
-                    "action": ActionType.Discard,
-                    "discard": discard
+                    'action': ActionType.Discard,
+                    'discard': discard
                 };
             }
         }
@@ -140,12 +140,12 @@ class Player {
      * @param {Object} gameState The current game state visible to the player.
      */
     GetInterject(gameState) {
-        let availableTile = gameState["availableTile"].tile;
+        let availableTile = gameState['availableTile'].tile;
         let actions = this.CalculateInterject(gameState);
         console.log(this.GetActionStrings(actions));
         let action = '0';
         if (actions.length > 0) {
-            action = prompt(">> ");
+            action = prompt('>> ');
         }
         switch (action) {
             case '1': { //Chi
@@ -171,7 +171,7 @@ class Player {
                 return {
                     'action': ActionType.Ron,
                     'value': value,
-                    'discard': gameState["availableTile"],
+                    'discard': gameState['availableTile'],
                 }
             }
         }
@@ -188,7 +188,7 @@ class Player {
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
         //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
-        let rawInput = prompt("Enter the tile to discard: ");
+        let rawInput = prompt('Enter the tile to discard: ');
         let input;
         if (rawInput == '') input = this._drawnTile.number;
         else input = Number(rawInput);
@@ -279,8 +279,8 @@ class Player {
      */
     CalculateInterject(gameState) {
         let actions = [];
-        let availableTile = gameState["availableTile"];
-        if (this.CanChi(availableTile)) actions.push(ActionType.Chi);
+        let availableTile = gameState['availableTile'];
+        if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
         if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
         if (this.CanKan(availableTile)) actions.push(ActionType.Kan);
         if (this.CanRon(availableTile)) actions.push(ActionType.Ron);
@@ -309,14 +309,16 @@ class Player {
     /**
      * Determines if a player can chi given the current game state.
      * 
-     * @param {TILE.Tile} availableTile The tile available to take.
+     * @param {Discard} availableDiscard The discard object available to take.
      * @returns {boolean} True if the player is able to chi, false otherwise.
      */
-    CanChi(availableTile) {
-        //if player is the one to the left.
-        let possibleChows = this.ChiMelds(availableTile);
-        if (possibleChows.length > 0) return true;
-        else return false;
+    CanChi(availableDiscard) {
+        if (availableDiscard.playerIndex == (this._index - 1) % 4) {
+            let availableTile = availableDiscard.tile;
+            let possibleChows = this.ChiMelds(availableTile);
+            if (possibleChows.length > 0) return true;
+            else return false;
+        }
         return false;
     }
 
