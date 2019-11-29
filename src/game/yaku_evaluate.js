@@ -945,6 +945,11 @@ class Yaku_Evaluate {
         }
     }
 
+    /**
+     * Checks if a partition satisfies a hand with seven pairs
+     * @param {(Meld | Pair)[]} partition The partition to check for seven pairs.
+     * @returns {Yaku.SevenPairs} The seven pairs yaku. 
+     */
     SevenPairs(partition) {
         if (partition.length == 7) {
             let uniqueTiles = TileListRemoveDuplicates(this.PartitionTiles(partition));
