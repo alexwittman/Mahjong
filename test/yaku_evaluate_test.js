@@ -1409,6 +1409,48 @@ describe('Yaku Evaluate', () => {
         expect(yakuEvaluate.FourQuads(partition)).to.eql(null);
     });
 
+    it('SevenPairs() returns correct for hand with 7 pairs', () => {
+        let partition = [ new Pair(TileList('p11')),
+                            new Pair(TileList('p22')),
+                            new Pair(TileList('p33')),
+                            new Pair(TileList('p44')),
+                            new Pair(TileList('p66')),
+                            new Pair(TileList('ww')),
+                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SevenPairs(partition)).to.eql(new yaku.SevenPairs);
+    });
+
+    it('SevenPairs() returns correct for hand without 7 pairs', () => {
+        let partition = [ new Meld(TileList('NNN')),
+                                            new Meld(TileList('EEE')),
+                                            new Meld(TileList('SSS')),
+                                            new Meld(TileList('WWW')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SevenPairs(partition)).to.eql(null);
+    });
+
+    it('SevenPairs() returns correct for hand with 7 pairs but two the same', () => {
+        let partition = [ new Pair(TileList('p11')),
+                            new Pair(TileList('p11')),
+                            new Pair(TileList('p33')),
+                            new Pair(TileList('p44')),
+                            new Pair(TileList('p66')),
+                            new Pair(TileList('ww')),
+                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SevenPairs(partition)).to.eql(null);
+    });
+
+    it('SevenPairs() returns correct for hand with 7 pairs but many the same', () => {
+        let partition = [ new Pair(TileList('p11')),
+                            new Pair(TileList('p11')),
+                            new Pair(TileList('p33')),
+                            new Pair(TileList('p33')),
+                            new Pair(TileList('p66')),
+                            new Pair(TileList('ww')),
+                            new Pair(TileList('ww'))];
+        expect(yakuEvaluate.SevenPairs(partition)).to.eql(null);
+    });
+
     // it('ReadyHand() returns correct for hand with ReadyHand', () => {
     // needs if player declared riichi
     // });
