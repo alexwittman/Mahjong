@@ -1504,7 +1504,7 @@ describe('Yaku Evaluate', () => {
     // });
 
     it('EvaluateYaku() returns correct for partition with 1 yaku', () => {
-        let yakuList = [new yaku.NoPointsHand];
+        let yakuList = [new yaku.NoPointsHand, new yaku.Tsumo];
         let partition = [ new Meld(TileList('p123')),
                                             new Meld(TileList('p345')),
                                             new Meld(TileList('s234')),
@@ -1515,7 +1515,7 @@ describe('Yaku Evaluate', () => {
     });
 
     it('EvaluateYaku() returns correct for partition with 3 yaku', () => {
-        let yakuList = [new yaku.ThreeClosedTriplets, new yaku.HalfFlush, new yaku.AllGreen];
+        let yakuList = [new yaku.ThreeClosedTriplets, new yaku.HalfFlush, new yaku.AllGreen, new yaku.Tsumo];
         let partition = [ new Meld(TileList('s222')),
                                             new Meld(TileList('s234')),
                                             new Meld(TileList('s333')),
@@ -1535,7 +1535,8 @@ describe('Yaku Evaluate', () => {
                                         new yaku.DoubleFourConcealedTriplets(),
                                         new yaku.BigFourWinds(),
                                         new yaku.AllHonors(),
-                                        new yaku.FourQuads()];
+                                        new yaku.FourQuads(),
+                                        new yaku.Tsumo()];
         let partition = [ new Meld(TileList('NNNN')),
                                             new Meld(TileList('EEEE')),
                                             new Meld(TileList('SSSS')),
