@@ -97,6 +97,10 @@ class Round {
                 this.PlayerAction(playerIndex);
             }
             case ActionType.Riichi:
+                if (this._players.filter((player) => player._hasRiichid).every((hasRiichid) => hasRiichid)) {
+                    console.log('4 riichis declared => draw');
+                    this.EndRound();
+                }
                 break;
             case ActionType.Tsumo: {
                 this.EndRound(playerAction);
