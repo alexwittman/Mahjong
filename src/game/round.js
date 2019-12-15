@@ -44,6 +44,9 @@ class Round {
      */
     StartRound() {
         console.log("Round Started.");
+        for (let player of this._players) {
+            player.Reset();
+        }
         this._set.DealHands(this._players);
         this.PlayerTurn(0);
         //TODO: return the final result of the round back to the game class.
@@ -57,7 +60,8 @@ class Round {
     PlayerTurn(playerIndex) {
         this._RoundOver = !this._set.DealTile(this._players[playerIndex]); //deal tile to first player
         if (!this._RoundOver) {
-            console.log('\n\n\n\n\n\n\nPlayer ' + playerIndex + '\'s turn:');
+            console.log('\n\n\n\n\n\n\nTiles Left: ', this._set._set.length);
+            console.log('Player ' + playerIndex + '\'s turn:');
             this.PlayerAction(playerIndex);
             let newIndex = -1;
             for (let i = 1; i <= 3; i++) {
@@ -157,7 +161,7 @@ class Round {
         let valueCalculator = new Value_Calculator();
         if (EndRoundObject != null) {
             console.log("CONGRATULATIONS!!!!!!!")
-            console.log(WinningHand);
+            console.log(EndRoundObject);
             let points = valueCalculator.CalculateWinPoints(EndRoundObject);
         } else {
             console.log("DRAW");
