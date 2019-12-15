@@ -10,12 +10,26 @@ let Hand = require('./hand').Hand;
 let Tile = require('./tile').Tile;
 let CopyTileList = require('./tile').CopyTileList;
 let PrintTileList = require('./tile').PrintTileList;
-let DRAGON_WHITE = require('./constants').DRAGON_WHITE;
 let Hand_Partition = require('./hand_partition').Hand_Partition;
 let Meld = require('./meld').Meld;
 let Pair = require('./pair').Pair;
 let Yaku_Evaluate = require('./yaku_evaluate').Yaku_Evaluate;
 let CopyHand = require('./hand').CopyHand;
+let RemoveFromTileList = require('./tile').RemoveFromTileList;
+let TileListContains = require('./tile').TileListContains;
+let PIN_ONE = require('./constants').PIN_ONE;
+let PIN_NINE = require('./constants').PIN_NINE;
+let SOU_ONE = require('./constants').SOU_ONE;
+let SOU_NINE = require('./constants').SOU_NINE;
+let WAN_ONE = require('./constants').WAN_ONE;
+let WAN_NINE = require('./constants').WAN_NINE;
+let NORTH = require('./constants').NORTH;
+let EAST = require('./constants').EAST;
+let SOUTH = require('./constants').SOUTH;
+let WEST = require('./constants').WEST;
+let DRAGON_GREEN = require('./constants').DRAGON_GREEN;
+let DRAGON_RED = require('./constants').DRAGON_RED;
+let DRAGON_WHITE = require('./constants').DRAGON_WHITE;
 
 
 /**
@@ -72,7 +86,33 @@ class Tenpai {
             }
             handCopy.remove(tile);
         }
+        tilesToComplete = tilesToComplete.concat(this.GetThirteenOrphanTiles(hand.closedTiles));
         return tilesToComplete;
+    }
+
+    GetThirteenOrphanTiles(tiles) {
+        let tenpaiTiles = [];
+        let orphans = [new Tile(PIN_ONE), new Tile(PIN_NINE), new Tile(SOU_ONE), new Tile(SOU_NINE),
+            new Tile(WAN_ONE), new Tile(WAN_NINE), new Tile(EAST), new Tile(SOUTH),
+            new Tile(WEST), new Tile(NORTH), new Tile(DRAGON_GREEN), new Tile(DRAGON_RED),
+            new Tile(DRAGON_WHITE)
+        ];
+        let tilesCopy = CopyTileList(tiles);
+        for (let orphan of orphans) {
+            tilesCopy = RemoveFromTileList(tilesCopy, orphan);
+        }
+        if (tilesCopy.length > 1) tenpaiTiles = []; //contains less than 13 orphans
+        if (tilesCopy.length == 0) tenpaiTiles = orphans; //contains all 13 orphans, but missing pair.
+        if (tilesCopy.length == 1) { //contains 12 orphans and a pair.
+            if (TileListContains(orphans, tilesCopy[0])) {
+                let orphansCopy = CopyTileList(orphans);
+                for (let tile of tiles) {
+                    orphansCopy = RemoveFromTileList(orphansCopy, tile);
+                }
+                if (orphansCopy.length == 1) tenpaiTiles = orphansCopy;
+            }
+        }
+        return tenpaiTiles;
     }
 
     /**
