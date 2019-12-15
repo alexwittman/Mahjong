@@ -94,6 +94,14 @@ class Player {
     }
 
     /**
+     * Resets player attributes to start a new round.
+     */
+    Reset() {
+        this._discards = [];
+        this._hasRiichid = false;
+    }
+
+    /**
      * Promts the player for an action when it is their turn.
      * 
      * @param {Object} gameState The current state of the game visible to the player.
@@ -192,23 +200,27 @@ class Player {
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
-        //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);
-        let rawInput = prompt('Enter the tile to discard: ');
-        let input;
-        if (rawInput == '') input = this._drawnTile.number;
-        else input = Number(rawInput);
+        //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);\
         let discard;
-        if (this._drawnTile != null && input == this._drawnTile.number) {
+        if (!this._hasRiichid) {
+            let rawInput = prompt('Enter the tile to discard: ');
+            let input;
+            if (rawInput == '') input = this._drawnTile.number;
+            else input = Number(rawInput);
+            if (this._drawnTile != null && input == this._drawnTile.number) {
+                discard = this._drawnTile;
+                this._drawnTile = null;
+            } else {
+                discard = new TILE.Tile(input);
+                if (this._hand.remove(discard)) {
+                    if (this._drawnTile) this._hand.add(this._drawnTile);
+                }
+                this._drawnTile = null;
+            }
+        } else {
             discard = this._drawnTile;
             this._drawnTile = null;
-        } else {
-            discard = new TILE.Tile(input);
-            if (this._hand.remove(discard)) {
-                if (this._drawnTile) this._hand.add(this._drawnTile);
-            }
-            this._drawnTile = null;
         }
-        //TILE.PrintTileList(this._hand.tiles);
         this._hand.Print();
         this._discards.push(discard);
         return new Discard(discard, this._index);
@@ -300,7 +312,7 @@ class Player {
         }
         if (this.CanKan()) actions.push(ActionType.Kan);
         if (this.CanTsumo()) actions.push(ActionType.Tsumo);
-        return this.FilterActions(actions);
+        return actions;
     }
 
     /**
@@ -314,24 +326,10 @@ class Player {
         let availableTile = gameState['availableTile'];
         if (!this._hasRiichid) {
             if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
-            if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
+            if (this.CanPon(gameState['availableTile'].tile)) actions.push(ActionType.Pon);
         }
-        if (this.CanKan(availableTile)) actions.push(ActionType.Kan);
-        if (this.CanRon(availableTile)) actions.push(ActionType.Ron);
-        return this.FilterActions(actions, availableTile);
-    }
-
-    /**
-     * Filters actions based on if the player has riichid or not.
-     * 
-     * @param {ActionType[]} actions The possible actions for the player.
-     * @returns {ActionType[]} The filtered list of possible actions for the player.
-     */
-    FilterActions(actions) {
-        if (this._hasRiichid) {
-            actions.remove(ActionType.Chi);
-            actions.remove(ActionType.Pon);
-        }
+        if (this.CanKan(availableTile.tile)) actions.push(ActionType.Kan);
+        if (this.CanRon(availableTile.tile)) actions.push(ActionType.Ron);
         return actions;
     }
 
