@@ -99,7 +99,8 @@ describe('Ron', () => {
                 new Meld(TileList('s888'), true),
                 new Pair(TileList('EE'))
             ],
-            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets]
+            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets],
+            'isOpen': true
         };
         expect(player.Ron(availableTile)).to.eql(value);
     });
@@ -118,8 +119,19 @@ describe('Ron', () => {
                 new Meld(TileList('p444'), true),
                 new Pair(TileList('EE'))
             ],
-            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush]
+            'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush],
+            'isOpen': false
         };
         expect(player.Ron(availableTile)).to.eql(value);
+    });
+
+    it('A player can still ron after declaring riichi.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p123s123a123555E');
+        let melds = [];
+        let availableTile = TileList('E')[0];
+        player.hand = new Hand(tiles, melds);
+        player._hasRiichid = true;
+        expect(player.CanRon(availableTile)).to.eql(true);
     });
 });

@@ -29,10 +29,6 @@ describe('Tsumo', () => {
         expect(player.CanTsumo()).to.eql(false);
     });
 
-    // it('A player cannot tsumo if the drawn tile completes their hand with >= 1 han, but the player had already discarded the tile.', () => {
-
-    // });
-
     it('A player cannot tsumo if the drawn tile does not complete their hand.', () => {
         let player = new Player(0);
         let tiles = TileList('p123s123a234666E');
@@ -82,5 +78,36 @@ describe('Tsumo', () => {
             'yakuList': [new yaku.AllTripletHand, new yaku.ThreeClosedTriplets, new yaku.HalfFlush]
         };
         expect(player.Tsumo()).to.eql(value);
+    });
+
+    it('A player can still tsumo after declaring riichi.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p111s111a111NNNE');
+        let melds = [];
+        let dealtTile = TileList('E')[0];
+        player.drawnTile = dealtTile;
+        player._hasRiichid = true;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanTsumo()).to.eql(true);
+    });
+
+    it('A player can tsumo if the tile discarded makes their hand complete with seven pairs.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1144s1144a1144E');
+        let melds = [];
+        let dealtTile = TileList('E')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanTsumo()).to.eql(true);
+    });
+
+    it('A player can tsumo if the tile discarded makes their hand complete with thirteen orphans.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p19s19a19NESWgrw');
+        let melds = [];
+        let dealtTile = TileList('w')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanTsumo()).to.eql(true);
     });
 });

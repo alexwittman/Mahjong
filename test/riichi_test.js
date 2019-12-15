@@ -77,10 +77,27 @@ describe('Riichi', () => {
         expect(player.CanRiichi()).to.eql(false);
     });
 
-    // it('A player cannot riichi if they don\'t have enough points', () => {
+    it('A player cannot riichi if they don\'t have enough points', () => {
+        let player = new Player(0);
+        let tiles = TileList('p123s111222a666N');
+        let melds = [];
+        let dealtTile = new Tile(12);
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        player._points = 0;
+        expect(player.CanRiichi()).to.eql(false);
+    });
 
-    //     expect().to.eql();
-    // });
+    it('A player can riichi if they have enough points', () => {
+        let player = new Player(0);
+        let tiles = TileList('p123s111222a666N');
+        let melds = [];
+        let dealtTile = new Tile(12);
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        player._points = 25000;
+        expect(player.CanRiichi()).to.eql(true);
+    });
 
     it('RiichiTiles returns the correct tiles for a hand needing to discard only 1 tile.', () => {
         let player = new Player(0);
@@ -113,5 +130,35 @@ describe('Riichi', () => {
         player.hand = new Hand(tiles, melds);
         let riichiTiles = TileList('');
         expect(player.RiichiTiles()).to.eql(riichiTiles);
+    });
+
+    it('A player can riichi with thirteen orphans missing the pair.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p19s19a19NESWrgw');
+        let melds = [];
+        let dealtTile = TileList('p4')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRiichi()).to.eql(true);
+    });
+
+    it('A player can riichi with twelve orphans and a pair.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p119s19a19NESWrg');
+        let melds = [];
+        let dealtTile = TileList('p4')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRiichi()).to.eql(true);
+    });
+
+    it('A player can riichi with hand encountered when testing.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p44s124567a12344');
+        let melds = [];
+        let dealtTile = TileList('s3')[0];
+        player.drawnTile = dealtTile;
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanRiichi()).to.eql(true);
     });
 });

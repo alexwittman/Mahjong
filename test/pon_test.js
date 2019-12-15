@@ -63,4 +63,14 @@ describe('Pon', () => {
         player.hand = player.Pon(player.hand, availableTile);
         expect(TileListCount(player.hand.closedTiles, TileList('p1')[0])).to.eql(0);
     });
+
+    it('A player cannot pon after declaring riichi.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p112223334445');
+        let melds = [];
+        let availableTile = TileList('p1')[0];
+        player.hand = new Hand(tiles, melds);
+        player._hasRiichid = true;
+        expect(player.CanPon(availableTile)).to.eql(false);
+    });
 });

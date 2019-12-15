@@ -19,9 +19,9 @@ describe('Kan', () => {
 
     it('A player can kan with open pong and have fourth tile in hand.', () => {
         let player = new Player(0);
-        let tiles = TileList('p1112223334445');
-        let melds = [];
-        let availableTile = TileList('p1')[0];
+        let tiles = TileList('p12223334445');
+        let melds = [new Meld(TileList('p111'), true)];
+        let availableTile = null;
         player.hand = new Hand(tiles, melds);
         expect(player.CanKan(availableTile)).to.eql(true);
     });
@@ -60,6 +60,15 @@ describe('Kan', () => {
         let tiles = TileList('p4445');
         let melds = [new Meld(TileList('p123'), true), new Meld(TileList('p123'), true), new Meld(TileList('p123'), true)];
         let availableTile = TileList('p1')[0];
+        player.hand = new Hand(tiles, melds);
+        expect(player.CanKan(availableTile)).to.eql(false);
+    });
+
+    it('A player cannot kan with a kong in hand, but it is not their turn.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1111223344556');
+        let melds = [];
+        let availableTile = TileList('E')[0];
         player.hand = new Hand(tiles, melds);
         expect(player.CanKan(availableTile)).to.eql(false);
     });
@@ -171,5 +180,39 @@ describe('Kan', () => {
         player.hand = new Hand(tiles, melds);
         player.GetKan(null);
         expect(TileListCount(player.hand.closedTiles, TileList('p1')[0])).to.eql(0);
+    });
+
+    it('A player who has riichid cannot declare an open kan.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1112223334445');
+        let melds = [];
+        let availableTile = TileList('p1')[0];
+        player.hand = new Hand(tiles, melds);
+        player._hasRiichid = true;
+        expect(player.KanMelds(availableTile)).to.eql([]);
+    });
+
+    it('A player who has riichid can declare a closed kan from hand if it does not alter the riichi wait.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p111s333444WWWE'); //Wait is for E
+        let melds = [];
+        let drawnTile = TileList('p1')[0];
+        player._drawnTile = drawnTile;
+        player._hasRiichid = true;
+        player.hand = new Hand(tiles, melds);
+        let kongs = [new Meld(TileList('p1111'))];
+        expect(player.KanMelds(null)).to.eql(kongs);
+    });
+
+    it('A player who has riichid cannot declare a closed kan from hand if it alters the riichi wait.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p3444s778899WWW'); //Wait is for p2, p3, or p5
+        let melds = [];
+        let drawnTile = TileList('p4')[0];
+        player._drawnTile = drawnTile;
+        player._hasRiichid = true;
+        player.hand = new Hand(tiles, melds);
+        let kongs = [];
+        expect(player.KanMelds(null)).to.eql(kongs);
     });
 });
