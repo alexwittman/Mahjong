@@ -44,7 +44,8 @@ class Player {
     constructor(index) {
         this._index = index;
         this._discards = [];
-        this._score = 25000;
+        this._points = 25000;
+        this._hasRiichid = false;
     }
 
     /**
@@ -66,12 +67,12 @@ class Player {
     }
 
     /**
-     * Getter method for the player's score.
+     * Getter method for the player's points.
      * 
-     * @returns {number} The player's score.
+     * @returns {number} The player's points.
      */
-    get score() {
-        return this._score;
+    get points() {
+        return this._points;
     }
 
     /**
@@ -114,7 +115,11 @@ class Player {
             }
             case '4': { //Riichi
                 //TODO
-                return ActionType.Riichi;
+                let riichiTile = this.GetRiichi();
+                return {
+                    'action': ActionType.Riichi,
+                    'discard': riichiTile
+                };
             }
             case '6': { //Tsumo
                 let value = this.Tsumo();
@@ -210,6 +215,31 @@ class Player {
     }
 
     /**
+     * Prompts the player for which tile they want to
+     * discard to declare riichi.
+     */
+    GetRiichi() {
+        this._hand.Print();
+        console.log('Possible tiles to discard for riichi:');
+        TILE.PrintTileList(this.RiichiTiles());
+        let input = Number(prompt('Enter the tile to discard: '));
+        let discard;
+        if (input == this._drawnTile.number) {
+            discard = this._drawnTile;
+            this._drawnTile = null;
+        } else {
+            discard = new TILE.Tile(input);
+            if (this._hand.remove(discard)) {
+                if (this._drawnTile) this._hand.add(this._drawnTile);
+            }
+            this._drawnTile = null;
+        }
+        this._hasRiichid = true;
+        this._points -= 1000;
+        return new Discard(discard, this._index);
+    }
+
+    /**
      * Prompts the player for which chow they want to make
      * if there is more than one, otherwise chi the only
      * possible chow.
@@ -265,10 +295,12 @@ class Player {
      */
     CalculateActions(gameState) {
         let actions = [ActionType.Discard];
+        if (!this._hasRiichid) {
+            if (this.CanRiichi()) actions.push(ActionType.Riichi);
+        }
         if (this.CanKan()) actions.push(ActionType.Kan);
-        if (this.CanRiichi()) actions.push(ActionType.Riichi);
         if (this.CanTsumo()) actions.push(ActionType.Tsumo);
-        return actions;
+        return this.FilterActions(actions);
     }
 
     /**
@@ -280,10 +312,26 @@ class Player {
     CalculateInterject(gameState) {
         let actions = [];
         let availableTile = gameState['availableTile'];
-        if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
-        if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
+        if (!this._hasRiichid) {
+            if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
+            if (this.CanPon(availableTile)) actions.push(ActionType.Pon);
+        }
         if (this.CanKan(availableTile)) actions.push(ActionType.Kan);
         if (this.CanRon(availableTile)) actions.push(ActionType.Ron);
+        return this.FilterActions(actions, availableTile);
+    }
+
+    /**
+     * Filters actions based on if the player has riichid or not.
+     * 
+     * @param {ActionType[]} actions The possible actions for the player.
+     * @returns {ActionType[]} The filtered list of possible actions for the player.
+     */
+    FilterActions(actions) {
+        if (this._hasRiichid) {
+            actions.remove(ActionType.Chi);
+            actions.remove(ActionType.Pon);
+        }
         return actions;
     }
 
@@ -313,11 +361,13 @@ class Player {
      * @returns {boolean} True if the player is able to chi, false otherwise.
      */
     CanChi(availableDiscard) {
-        if (availableDiscard.playerIndex == (this._index - 1) % 4) {
-            let availableTile = availableDiscard.tile;
-            let possibleChows = this.ChiMelds(availableTile);
-            if (possibleChows.length > 0) return true;
-            else return false;
+        if (!this._hasRiichid) {
+            if (availableDiscard.playerIndex == (this._index - 1) % 4) {
+                let availableTile = availableDiscard.tile;
+                let possibleChows = this.ChiMelds(availableTile);
+                if (possibleChows.length > 0) return true;
+                else return false;
+            }
         }
         return false;
     }
@@ -328,8 +378,10 @@ class Player {
      * @returns {boolean} True if the player can pon, false otherwise.
      */
     CanPon(availableTile) {
-        if (TILE.TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
-        else return false;
+        if (!this._hasRiichid) {
+            if (TILE.TileListCount(this._hand.closedTiles, availableTile) >= 2) return true;
+        }
+        return false;
     }
 
     /**
@@ -355,8 +407,8 @@ class Player {
      * @returns {Meld[]} The list of possible kongs.
      */
     KanMelds(availableTile) {
+        let kongs = [];
         if (availableTile == null) {
-            let kongs = [];
             let handTilesCopy = TILE.CopyTileList(this._hand._closedTiles);
             if (this._drawnTile) handTilesCopy.push(this._drawnTile);
             let uniqueTiles = TILE.TileListRemoveDuplicates(handTilesCopy);
@@ -377,14 +429,23 @@ class Player {
                     }
                 }
             }
-            return kongs;
         } else {
-            let kongs = [];
             if (TILE.TileListCount(this._hand.closedTiles, availableTile) == 3) {
                 kongs.push(new Meld([availableTile, availableTile, availableTile, availableTile], true));
             }
-            return kongs;
         }
+        if (this._hasRiichid) {
+            let waitTiles = (new Tenpai(this._hand)).tiles;
+            for (let i = 0; i < kongs.length; i++) {
+                let handCopy = HAND.CopyHand(this._hand);
+                handCopy = this.Kan(handCopy, kongs[i], availableTile);
+                let tenpai = new Tenpai(handCopy);
+                if (!TILE.TileListEqual(waitTiles, tenpai.tiles)) {
+                    kongs.splice(i, 1);
+                }
+            }
+        }
+        return kongs;
     }
 
     /**
@@ -422,19 +483,22 @@ class Player {
         } else {
             kong = possibleKongs[0];
         }
-        this.Kan(kong, availableTile);
+        this._hand = this.Kan(this._hand, kong, availableTile);
     }
 
     /**
      * Calls kan and makes the meld in the player's hand.
      * 
+     * @param {HAND.Hand} hand The hand to make the kong in.
      * @param {Meld} kong The kong to make in the player's hand.
-     * @param {*} availableTile The tile to take to make the meld.
+     * @param {TILE.Tile} availableTile The tile to take to make the meld.
+     * @param {boolean} makeHandOpen Whether or not declaring the kong will make the hand open.
+     * @returns {HAND.Hand} The hand with the new meld.
      */
-    Kan(kong, availableTile = null, makeHandOpen = true) {
+    Kan(hand, kong, availableTile = null, makeHandOpen = true) {
         if (availableTile == null) {
             if (kong.is_open) { //Making kong with tile in closed tiles and open pong.
-                for (let meld of this._hand.melds) {
+                for (let meld of hand.melds) {
                     if (meld.type == MeldType.PONG) {
                         if (meld.tiles[0].number == kong.tiles[0].number) {
                             meld = kong;
@@ -443,17 +507,18 @@ class Player {
                 }
             } else { //Making kong with 4 tiles in closed tiles.
                 for (let i = 0; i < 4; i++) {
-                    this._hand.remove(kong.tiles[0]);
+                    hand.remove(kong.tiles[0]);
                 }
-                this._hand.makeMeld(kong);
+                hand.makeMeld(kong);
             }
         } else { //Making kong with 3 tiles in closed tiles and other player's discarded tile.
             for (let i = 0; i < 3; i++) {
-                this._hand.remove(availableTile);
+                hand.remove(availableTile);
             }
             this._hand.makeMeld(kong);
-            if (makeHandOpen) this._hand.isOpen = true;
+            if (makeHandOpen) hand.isOpen = true;
         }
+        return hand;
     }
 
     /**
@@ -480,6 +545,7 @@ class Player {
             //add the tile back to the hand.
             handCopy.add(tile);
         }
+
         return riichiTiles;
     }
 
@@ -489,8 +555,12 @@ class Player {
      * @returns {boolean} True if the player can riichi, false otherwise.
      */
     CanRiichi() {
-        if (this._hand.isOpen) return false;
-        else return this.RiichiTiles().length > 0;
+        if (this._points >= 1000) {
+            if (this._hand.isOpen) return false;
+            else return this.RiichiTiles().length > 0;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -549,6 +619,16 @@ class Player {
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
+        let yakuEvaluator = new Yaku_Evaluate();
+        let handPartitioner = new Hand_Partition();
+        let handCopy = HAND.CopyHand(this._hand);
+        handCopy.add(availableTile);
+        let partitions = handPartitioner.partition(handCopy);
+        if (partitions.length == 0) {
+            if (yakuEvaluator.EvaluateYaku(null, handCopy, availableTile).length > 0) {
+                return true;
+            }
+        }
         return this.RonMelds(availableTile).length > 0;
     }
 
@@ -567,7 +647,7 @@ class Player {
             'han': 0,
             'partition': null,
             'yakuList': [],
-            'isOpen': this.hand.isOpen()
+            'isOpen': this.hand.isOpen
         };
         this._hand.add(availableTile);
         for (let meld of ronMelds) {
@@ -585,7 +665,7 @@ class Player {
                         'han': partitionHan,
                         'partition': partition,
                         'yakuList': yakuList,
-                        'isOpen': this.hand.isOpen()
+                        'isOpen': this.hand.isOpen
                     };
                 }
             }
@@ -635,8 +715,14 @@ class Player {
             let handCopy = HAND.CopyHand(this._hand);
             handCopy.add(this._drawnTile);
             let partitions = handPartitioner.partition(handCopy);
-            for (let partition of partitions) {
-                if (yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0) {
+            if (partitions.length > 0) {
+                for (let partition of partitions) {
+                    if (yakuEvaluator.EvaluateYaku(partition, handCopy, this._drawnTile).length > 0) {
+                        return true;
+                    }
+                }
+            } else {
+                if (yakuEvaluator.EvaluateYaku(null, handCopy, this._drawnTile).length > 0) {
                     return true;
                 }
             }
