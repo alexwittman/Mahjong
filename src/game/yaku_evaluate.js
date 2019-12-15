@@ -83,45 +83,47 @@ class Yaku_Evaluate {
      */
     EvaluateYaku(partition, hand, winningTile) {
         let yakuList = [];
-        yakuList.push(this.NoPointsHand(partition));
-        yakuList.push(this.IdenticalSequences(partition));
-        yakuList.push(this.ThreeColorStraight(partition));
-        yakuList.push(this.Straight(partition));
-        yakuList.push(this.DoubleIdenticalSequences(partition));
-        yakuList.push(this.AllTripletHand(partition));
-        yakuList.push(this.ThreeClosedTriplets(partition));
-        yakuList.push(this.ThreeColorTriplets(partition));
-        yakuList.push(this.ThreeQuads(partition));
-        yakuList.push(this.AllSimples(partition));
-        yakuList.push(this.RedDragon(partition));
-        yakuList.push(this.GreenDragon(partition));
-        yakuList.push(this.WhiteDragon(partition));
-        yakuList.push(this.NorthWind(partition));
-        yakuList.push(this.EastWind(partition));
-        yakuList.push(this.SouthWind(partition));
-        yakuList.push(this.WestWind(partition));
-        yakuList.push(this.MixedOutsideHand(partition));
-        yakuList.push(this.PureOutsideHand(partition));
-        yakuList.push(this.LittleThreeDragons(partition));
-        yakuList.push(this.HalfFlush(partition));
-        yakuList.push(this.Flush(partition));
-        yakuList.push(this.ThirteenOrphans(hand, winningTile));
-        yakuList.push(this.DoubleThirteenOrphans(hand, winningTile));
-        yakuList.push(this.FourConcealedTriplets(partition, hand, winningTile));
-        yakuList.push(this.DoubleFourConcealedTriplets(partition, hand, winningTile));
-        yakuList.push(this.BigThreeDragons(partition));
-        yakuList.push(this.LittleFourWinds(partition));
-        yakuList.push(this.BigFourWinds(partition));
-        yakuList.push(this.AllHonors(partition));
-        yakuList.push(this.AllTerminals(partition));
-        yakuList.push(this.AllGreen(partition));
-        yakuList.push(this.NineGates(partition, hand, winningTile));
-        yakuList.push(this.DoubleNineGates(partition, hand, winningTile));
-        yakuList.push(this.FourQuads(partition));
-        yakuList.push(this.SevenPairs(partition));
+        if (partition != null) {
+            yakuList.push(this.NoPointsHand(partition));
+            yakuList.push(this.IdenticalSequences(partition));
+            yakuList.push(this.ThreeColorStraight(partition));
+            yakuList.push(this.Straight(partition));
+            yakuList.push(this.DoubleIdenticalSequences(partition));
+            yakuList.push(this.AllTripletHand(partition));
+            yakuList.push(this.ThreeClosedTriplets(partition));
+            yakuList.push(this.ThreeColorTriplets(partition));
+            yakuList.push(this.ThreeQuads(partition));
+            yakuList.push(this.AllSimples(partition));
+            yakuList.push(this.RedDragon(partition));
+            yakuList.push(this.GreenDragon(partition));
+            yakuList.push(this.WhiteDragon(partition));
+            yakuList.push(this.NorthWind(partition));
+            yakuList.push(this.EastWind(partition));
+            yakuList.push(this.SouthWind(partition));
+            yakuList.push(this.WestWind(partition));
+            yakuList.push(this.MixedOutsideHand(partition));
+            yakuList.push(this.PureOutsideHand(partition));
+            yakuList.push(this.LittleThreeDragons(partition));
+            yakuList.push(this.HalfFlush(partition));
+            yakuList.push(this.Flush(partition));
+            yakuList.push(this.FourConcealedTriplets(partition, hand, winningTile));
+            yakuList.push(this.DoubleFourConcealedTriplets(partition, hand, winningTile));
+            yakuList.push(this.BigThreeDragons(partition));
+            yakuList.push(this.LittleFourWinds(partition));
+            yakuList.push(this.BigFourWinds(partition));
+            yakuList.push(this.AllHonors(partition));
+            yakuList.push(this.AllTerminals(partition));
+            yakuList.push(this.AllGreen(partition));
+            yakuList.push(this.NineGates(partition, hand, winningTile));
+            yakuList.push(this.DoubleNineGates(partition, hand, winningTile));
+            yakuList.push(this.FourQuads(partition));
+            yakuList.push(this.SevenPairs(partition));
+        } else {
+            yakuList.push(this.ThirteenOrphans(hand, winningTile));
+            yakuList.push(this.DoubleThirteenOrphans(hand, winningTile));
+        }
 
         yakuList = yakuList.filter(elem => elem != null);
-
         return yakuList;
     }
 
