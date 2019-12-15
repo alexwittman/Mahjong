@@ -118,6 +118,7 @@ class Yaku_Evaluate {
             yakuList.push(this.DoubleNineGates(partition, hand, winningTile));
             yakuList.push(this.FourQuads(partition));
             yakuList.push(this.SevenPairs(partition));
+            yakuList.push(this.Tsumo(partition, winningTile));
         } else {
             yakuList.push(this.ThirteenOrphans(hand, winningTile));
             yakuList.push(this.DoubleThirteenOrphans(hand, winningTile));
@@ -958,6 +959,24 @@ class Yaku_Evaluate {
             if (uniqueTiles.length == 7) return new Yaku.SevenPairs;
         }
         return null;
+    }
+
+    /**
+     * Checks if a partition satisfies a hand that tsumoed.
+     * @param {(Meld | Pair)[]} partition The partition to check for tsumo.
+     * @returns {Yaku.Tsumo} The tsumo yaku. 
+     */
+    Tsumo(partition) {
+        let allMeldsClosed = true;
+        let quads = this.MeldsOfType(partition, MeldType.KONG);
+        let pongs = this.MeldsOfType(partition, MeldType.PONG);
+        let chows = this.MeldsOfType(partition, MeldType.CHOW);
+        let melds = quads.concat(pongs).concat(chows);
+        for (let meld of melds) {
+            if (meld.is_open) allMeldsClosed = false;
+        }
+        if (allMeldsClosed) return new Yaku.Tsumo;
+        else return null;
     }
 }
 

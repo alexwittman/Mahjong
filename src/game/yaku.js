@@ -612,6 +612,15 @@ class SevenPairs extends Yaku {
     }
 }
 
+/**
+ * A hand that is fully concealed.
+ */
+class Tsumo extends Yaku {
+    constructor() {
+        super(49, "Self-Draw", "Tsumo", NaN, 1, false);
+    }
+}
+
 module.exports.Yaku = Yaku;
 module.exports.NoPointsHand = NoPointsHand;
 module.exports.IdenticalSequences = IdenticalSequences;
@@ -661,3 +670,4 @@ module.exports.HeavenlyHand = HeavenlyHand;
 module.exports.HandOfEarth = HandOfEarth;
 module.exports.HandOfMan = HandOfMan;
 module.exports.SevenPairs = SevenPairs;
+module.exports.Tsumo = Tsumo;
