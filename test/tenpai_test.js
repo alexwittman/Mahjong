@@ -102,4 +102,31 @@ describe('Tenpai', () => {
         // PrintTileList(hand.tiles);
         //console.log("Took " + (t1 - t0) + " milliseconds.")
     });
+
+    it('.tiles returns the tiles required to complete a hand with 13 orphans', () => {
+        let hand = new Hand(TileList('p19s19a19NESWrgw'));
+        let tilesToComplete = TileList('p19s19a19ESWNgrw');
+        let tenpai = new Tenpai(hand);
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
+        expect(tenpai.tiles).to.eql(tilesToComplete);
+    });
+
+    it('.tiles returns the tiles required to complete a hand with 12 orphans and a pair', () => {
+        let hand = new Hand(TileList('p199s19a19NSWrgw'));
+        let tilesToComplete = TileList('E');
+        let tenpai = new Tenpai(hand);
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
+        expect(tenpai.tiles).to.eql(tilesToComplete);
+    });
+
+    it('.tiles returns the tiles required to complete a hand with 12 orphans and no pair', () => {
+        let hand = new Hand(TileList('p149s19a19NSWrgw'));
+        let tilesToComplete = TileList('');
+        let tenpai = new Tenpai(hand);
+        // PrintTileList(hand.tiles);
+        // tenpai.PrintTiles();
+        expect(tenpai.tiles).to.eql(tilesToComplete);
+    });
 });
