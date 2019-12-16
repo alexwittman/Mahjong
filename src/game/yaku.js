@@ -231,12 +231,32 @@ class NorthWind extends Yaku {
 }
 
 /**
+ * A triplet or quad composed of north wind tiles if
+ * north is the round wind AND the player's seat wind.
+ */
+class DoubleNorthWind extends Yaku {
+    constructor() {
+        super(53, 'Double North Wind', '', 2, 2, false);
+    }
+}
+
+/**
  * A triplet or quad composed of east wind tiles if
  * east is the round wind or the player's seat wind.
  */
 class EastWind extends Yaku {
     constructor() {
         super(15, 'East Wind', '', 1, 1, false);
+    }
+}
+
+/**
+ * A triplet or quad composed of east wind tiles if
+ * east is the round wind AND the player's seat wind.
+ */
+class DoubleEastWind extends Yaku {
+    constructor() {
+        super(50, 'Double East Wind', '', 2, 2, false);
     }
 }
 
@@ -251,12 +271,32 @@ class SouthWind extends Yaku {
 }
 
 /**
+ * A triplet or quad composed of south wind tiles if
+ * south is the round wind AND the player's seat wind.
+ */
+class DoubleSouthWind extends Yaku {
+    constructor() {
+        super(51, 'Double South Wind', '', 2, 2, false);
+    }
+}
+
+/**
  * A triplet or quad composed of west wind tiles if
  * west is the round wind or the player's seat wind.
  */
 class WestWind extends Yaku {
     constructor() {
         super(17, 'West Wind', '', 1, 1, false);
+    }
+}
+
+/**
+ * A triplet or quad composed of west wind tiles if
+ * west is the round wind AND the player's seat wind.
+ */
+class DoubleWestWind extends Yaku {
+    constructor() {
+        super(52, 'Double West Wind', '', 2, 2, false);
     }
 }
 
@@ -639,6 +679,10 @@ module.exports.NorthWind = NorthWind;
 module.exports.EastWind = EastWind;
 module.exports.SouthWind = SouthWind;
 module.exports.WestWind = WestWind;
+module.exports.DoubleNorthWind = DoubleNorthWind;
+module.exports.DoubleEastWind = DoubleEastWind;
+module.exports.DoubleSouthWind = DoubleSouthWind;
+module.exports.DoubleWestWind = DoubleWestWind;
 module.exports.MixedOutsideHand = MixedOutsideHand;
 module.exports.PureOutsideHand = PureOutsideHand;
 module.exports.LittleThreeDragons = LittleThreeDragons;
