@@ -41,11 +41,12 @@ class Player {
      * 
      * @param {number} index The player number for the game.
      */
-    constructor(index) {
+    constructor(index, seatWind) {
         this._index = index;
         this._discards = [];
         this._points = 25000;
         this._hasRiichid = false;
+        this._seatWind = seatWind;
     }
 
     /**
@@ -85,6 +86,15 @@ class Player {
     }
 
     /**
+     * Getter method for the player's seat wind.
+     * 
+     * @returns {number} The player's seat wind.
+     */
+    get seatWind() {
+        return this._seatWind;
+    }
+
+    /**
      * Setter method for the player's drawn tile.
      * 
      * @param {TILE.Tile} tile The tile the player drew.
@@ -116,14 +126,14 @@ class Player {
         }
         switch (action) {
             case '3': { //Kan
-                this.GetKan();
+                this.GetKan(null, gameState['roundWind']);
                 return {
                     'action': ActionType.Kan
                 };
             }
             case '4': { //Riichi
                 //TODO
-                let riichiTile = this.GetRiichi();
+                let riichiTile = this.GetRiichi(gameState['roundWind']);
                 return {
                     'action': ActionType.Riichi,
                     'discard': riichiTile
@@ -174,7 +184,7 @@ class Player {
                 };
             }
             case '3': { //Kan
-                this.GetKan(availableTile);
+                this.GetKan(availableTile, gameState['roundWind']);
                 return {
                     'action': ActionType.Kan
                 }
@@ -230,10 +240,10 @@ class Player {
      * Prompts the player for which tile they want to
      * discard to declare riichi.
      */
-    GetRiichi() {
+    GetRiichi(roundWind) {
         this._hand.Print();
         console.log('Possible tiles to discard for riichi:');
-        TILE.PrintTileList(this.RiichiTiles());
+        TILE.PrintTileList(this.RiichiTiles(roundWind));
         let input = Number(prompt('Enter the tile to discard: '));
         let discard;
         if (input == this._drawnTile.number) {
@@ -308,9 +318,9 @@ class Player {
     CalculateActions(gameState) {
         let actions = [ActionType.Discard];
         if (!this._hasRiichid) {
-            if (this.CanRiichi()) actions.push(ActionType.Riichi);
+            if (this.CanRiichi(gameState['roundWind'])) actions.push(ActionType.Riichi);
         }
-        if (this.CanKan()) actions.push(ActionType.Kan);
+        if (this.CanKan(null, gameState['roundWind'])) actions.push(ActionType.Kan);
         if (this.CanTsumo()) actions.push(ActionType.Tsumo);
         return actions;
     }
@@ -325,10 +335,14 @@ class Player {
         let actions = [];
         let availableTile = gameState['availableTile'];
         if (!this._hasRiichid) {
-            if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
-            if (this.CanPon(gameState['availableTile'].tile)) actions.push(ActionType.Pon);
+            if (gameState['tilesRemaining'] > 0) {
+                if (this.CanChi(gameState['availableTile'])) actions.push(ActionType.Chi);
+                if (this.CanPon(gameState['availableTile'].tile)) actions.push(ActionType.Pon);
+            }
         }
-        if (this.CanKan(availableTile.tile)) actions.push(ActionType.Kan);
+        if (gameState['tilesRemaining'] > 0) {
+            if (this.CanKan(availableTile.tile, gameState['roundWind'])) actions.push(ActionType.Kan);
+        }
         if (this.CanRon(availableTile.tile)) actions.push(ActionType.Ron);
         return actions;
     }
@@ -404,7 +418,7 @@ class Player {
      * @param {TILE.Tile} availableTile The tile available to take.
      * @returns {Meld[]} The list of possible kongs.
      */
-    KanMelds(availableTile) {
+    KanMelds(availableTile, roundWind) {
         let kongs = [];
         if (availableTile == null) {
             let handTilesCopy = TILE.CopyTileList(this._hand._closedTiles);
@@ -433,11 +447,11 @@ class Player {
             }
         }
         if (this._hasRiichid) {
-            let waitTiles = (new Tenpai(this._hand)).tiles;
+            let waitTiles = (new Tenpai(this._hand, roundWind, this._seatWind)).tiles;
             for (let i = 0; i < kongs.length; i++) {
                 let handCopy = HAND.CopyHand(this._hand);
                 handCopy = this.Kan(handCopy, kongs[i], availableTile);
-                let tenpai = new Tenpai(handCopy);
+                let tenpai = new Tenpai(handCopy, roundWind, this._seatWind);
                 if (!TILE.TileListEqual(waitTiles, tenpai.tiles)) {
                     kongs.splice(i, 1);
                 }
@@ -451,8 +465,8 @@ class Player {
      * 
      * @returns {boolean} True if the player can kan, false otherwise.
      */
-    CanKan(availableTile = null) {
-        return this.KanMelds(availableTile).length > 0;
+    CanKan(availableTile = null, roundWind) {
+        return this.KanMelds(availableTile, roundWind).length > 0;
     }
 
     /**
@@ -462,8 +476,8 @@ class Player {
      * 
      * @param {Tile} availableTile The tile available for the player to take.
      */
-    GetKan(availableTile = null) {
-        let possibleKongs = this.KanMelds(availableTile);
+    GetKan(availableTile = null, roundWind) {
+        let possibleKongs = this.KanMelds(availableTile, roundWind);
         let kong;
         if (possibleKongs.length > 1) {
             let kongPrompt = '';
@@ -524,7 +538,7 @@ class Player {
      * 
      * @returns {Tile[]} The tiles a player can discard and declare riichi.
      */
-    RiichiTiles() {
+    RiichiTiles(roundWind) {
         let riichiTiles = [];
         //copy the hand add the available tile
         let handCopy = HAND.CopyHand(this._hand);
@@ -535,7 +549,7 @@ class Player {
             //remove it from the hand
             handCopy.remove(tile);
             //test if there are any tenpai tiles
-            let tenpai = new Tenpai(handCopy);
+            let tenpai = new Tenpai(handCopy, roundWind, this._seatWind);
             //if so add them to array and return the array
             if (tenpai.tiles.length > 0) {
                 riichiTiles.push(new TILE.Tile(tile.number));
@@ -552,10 +566,10 @@ class Player {
      * 
      * @returns {boolean} True if the player can riichi, false otherwise.
      */
-    CanRiichi() {
+    CanRiichi(roundWind) {
         if (this._points >= 1000) {
             if (this._hand.isOpen) return false;
-            else return this.RiichiTiles().length > 0;
+            else return this.RiichiTiles(roundWind).length > 0;
         } else {
             return false;
         }
