@@ -4,6 +4,10 @@ let Meld = require('../src/game/meld').Meld;
 let Tile = require('../src/game/tile').Tile;
 let Hand = require('../src/game/hand').Hand;
 let expect = require('chai').expect;
+let NORTH = require('../src/game/constants').NORTH;
+let EAST = require('../src/game/constants').EAST;
+let SOUTH = require('../src/game/constants').SOUTH;
+let WEST = require('../src/game/constants').WEST;
 
 describe('Riichi', () => {
 
@@ -14,7 +18,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 
     it('A player can riichi with a hand with a closed kong one tile from a complete hand', () => {
@@ -24,7 +28,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 
     it('A player cannot riichi with a hand with an open pong', () => {
@@ -34,7 +38,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds, true);
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player cannot riichi with a hand with an open chow', () => {
@@ -44,7 +48,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds, true);
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player cannot riichi with a hand with an open kan', () => {
@@ -54,7 +58,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds, true);
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player cannot riichi with multiple open melds', () => {
@@ -64,7 +68,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds, true);
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player cannot riichi with a hand not one tile from a complete hand', () => {
@@ -74,7 +78,7 @@ describe('Riichi', () => {
         let dealtTile = new Tile(12);
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player cannot riichi if they don\'t have enough points', () => {
@@ -85,7 +89,7 @@ describe('Riichi', () => {
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
         player._points = 0;
-        expect(player.CanRiichi()).to.eql(false);
+        expect(player.CanRiichi(EAST)).to.eql(false);
     });
 
     it('A player can riichi if they have enough points', () => {
@@ -96,7 +100,7 @@ describe('Riichi', () => {
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
         player._points = 25000;
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 
     it('RiichiTiles returns the correct tiles for a hand needing to discard only 1 tile.', () => {
@@ -107,7 +111,7 @@ describe('Riichi', () => {
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
         let riichiTiles = TileList('p5');
-        expect(player.RiichiTiles()).to.eql(riichiTiles);
+        expect(player.RiichiTiles(EAST)).to.eql(riichiTiles);
     });
 
     it('RiichiTiles returns the correct tiles for a hand needing to discard one of many tiles.', () => {
@@ -118,7 +122,7 @@ describe('Riichi', () => {
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
         let riichiTiles = TileList('p25E');
-        expect(player.RiichiTiles()).to.eql(riichiTiles);
+        expect(player.RiichiTiles(EAST)).to.eql(riichiTiles);
     });
 
     it('RiichiTiles returns the correct tiles for a hand not in tenpai.', () => {
@@ -129,7 +133,7 @@ describe('Riichi', () => {
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
         let riichiTiles = TileList('');
-        expect(player.RiichiTiles()).to.eql(riichiTiles);
+        expect(player.RiichiTiles(EAST)).to.eql(riichiTiles);
     });
 
     it('A player can riichi with thirteen orphans missing the pair.', () => {
@@ -139,7 +143,7 @@ describe('Riichi', () => {
         let dealtTile = TileList('p4')[0];
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 
     it('A player can riichi with twelve orphans and a pair.', () => {
@@ -149,7 +153,7 @@ describe('Riichi', () => {
         let dealtTile = TileList('p4')[0];
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 
     it('A player can riichi with hand encountered when testing.', () => {
@@ -159,6 +163,6 @@ describe('Riichi', () => {
         let dealtTile = TileList('s3')[0];
         player.drawnTile = dealtTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanRiichi()).to.eql(true);
+        expect(player.CanRiichi(EAST)).to.eql(true);
     });
 });
