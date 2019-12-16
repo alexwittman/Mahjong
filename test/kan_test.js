@@ -5,6 +5,10 @@ let Tile = require('../src/game/tile').Tile;
 let Hand = require('../src/game/hand').Hand;
 let expect = require('chai').expect;
 let TileListCount = require('../src/game/tile').TileListCount;
+let NORTH = require('../src/game/constants').NORTH;
+let EAST = require('../src/game/constants').EAST;
+let SOUTH = require('../src/game/constants').SOUTH;
+let WEST = require('../src/game/constants').WEST;
 
 describe('Kan', () => {
 
@@ -14,7 +18,7 @@ describe('Kan', () => {
         let melds = [];
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan(availableTile)).to.eql(true);
+        expect(player.CanKan(availableTile, EAST)).to.eql(true);
     });
 
     it('A player can kan with open pong and have fourth tile in hand.', () => {
@@ -23,7 +27,7 @@ describe('Kan', () => {
         let melds = [new Meld(TileList('p111'), true)];
         let availableTile = null;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan(availableTile)).to.eql(true);
+        expect(player.CanKan(availableTile, EAST)).to.eql(true);
     });
 
     it('A player cannot kan with two tiles the same as the tile discarded.', () => {
@@ -33,7 +37,7 @@ describe('Kan', () => {
         let drawnTile = TileList('E')[0];
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan()).to.eql(true);
+        expect(player.CanKan(null, EAST)).to.eql(true);
     });
 
     it('A player can kan with an open pong and draw the fourth tile.', () => {
@@ -43,7 +47,7 @@ describe('Kan', () => {
         let drawnTile = TileList('p1')[0];
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan()).to.eql(true);
+        expect(player.CanKan(null, EAST)).to.eql(true);
     });
 
     it('A player cannot kan with an open pong the same as the tile discarded.', () => {
@@ -52,7 +56,7 @@ describe('Kan', () => {
         let melds = [new Meld(TileList('p111'), true)];
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan(availableTile)).to.eql(false);
+        expect(player.CanKan(availableTile, EAST)).to.eql(false);
     });
 
     it('A player cannot kan with three tiles the same as drawn but in open melds.', () => {
@@ -61,7 +65,7 @@ describe('Kan', () => {
         let melds = [new Meld(TileList('p123'), true), new Meld(TileList('p123'), true), new Meld(TileList('p123'), true)];
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan(availableTile)).to.eql(false);
+        expect(player.CanKan(availableTile, EAST)).to.eql(false);
     });
 
     it('A player cannot kan with a kong in hand, but it is not their turn.', () => {
@@ -70,7 +74,7 @@ describe('Kan', () => {
         let melds = [];
         let availableTile = TileList('E')[0];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan(availableTile)).to.eql(false);
+        expect(player.CanKan(availableTile, EAST)).to.eql(false);
     });
 
     it('A player can kan with four identical tiles.', () => {
@@ -78,7 +82,7 @@ describe('Kan', () => {
         let tiles = TileList('p1111222333444');
         let melds = [];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan()).to.eql(true);
+        expect(player.CanKan(null, EAST)).to.eql(true);
     });
 
     it('A player can kan with multiple sets of four identical tiles.', () => {
@@ -86,7 +90,7 @@ describe('Kan', () => {
         let tiles = TileList('p1111222234444');
         let melds = [];
         player.hand = new Hand(tiles, melds);
-        expect(player.CanKan()).to.eql(true);
+        expect(player.CanKan(null, EAST)).to.eql(true);
     });
 
     it('KanMelds returns the correct value for a player who can form one closed kong with closed tiles.', () => {
@@ -95,7 +99,7 @@ describe('Kan', () => {
         let melds = [];
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111'))];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('KanMelds returns the correct value for a player who can form one closed kong from drawn tile.', () => {
@@ -106,7 +110,7 @@ describe('Kan', () => {
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111'))];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('KanMelds returns the correct value for a player who can form one closed kong from other\'s discard.', () => {
@@ -118,7 +122,7 @@ describe('Kan', () => {
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111'), true)];
-        expect(player.KanMelds(availableTile)).to.eql(kongs);
+        expect(player.KanMelds(availableTile, EAST)).to.eql(kongs);
     });
 
     it('KanMelds returns the correct value for a player who can form two kongs.', () => {
@@ -129,7 +133,7 @@ describe('Kan', () => {
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111')), new Meld(TileList('p2222'))];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('KanMelds returns the correct value for a player who can form three kongs.', () => {
@@ -140,7 +144,7 @@ describe('Kan', () => {
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111')), new Meld(TileList('p2222')), new Meld(TileList('p4444'), true)];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('KanMelds returns the correct value for a player who can form no kongs.', () => {
@@ -151,7 +155,7 @@ describe('Kan', () => {
         player._drawnTile = drawnTile;
         player.hand = new Hand(tiles, melds);
         let kongs = [];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('When a player kans, the hand now contains a meld with the kong.', () => {
@@ -160,7 +164,7 @@ describe('Kan', () => {
         let melds = [];
         player.hand = new Hand(tiles, melds);
         let kong = new Meld(TileList('p1111'));
-        player.GetKan(null);
+        player.GetKan(null, EAST);
         expect(player.hand.melds).to.eql([kong]);
     });
 
@@ -170,7 +174,7 @@ describe('Kan', () => {
         let melds = [];
         player.hand = new Hand(tiles, melds);
         let kong = new Meld(TileList('p1111'));
-        player.GetKan(null);
+        player.GetKan(null, EAST);
     });
 
     it('When a player makes a kong, the count of the kong tiles in the hand is 0.', () => {
@@ -178,7 +182,7 @@ describe('Kan', () => {
         let tiles = TileList('p1111222333444');
         let melds = [];
         player.hand = new Hand(tiles, melds);
-        player.GetKan(null);
+        player.GetKan(null, EAST);
         expect(TileListCount(player.hand.closedTiles, TileList('p1')[0])).to.eql(0);
     });
 
@@ -189,7 +193,7 @@ describe('Kan', () => {
         let availableTile = TileList('p1')[0];
         player.hand = new Hand(tiles, melds);
         player._hasRiichid = true;
-        expect(player.KanMelds(availableTile)).to.eql([]);
+        expect(player.KanMelds(availableTile, EAST)).to.eql([]);
     });
 
     it('A player who has riichid can declare a closed kan from hand if it does not alter the riichi wait.', () => {
@@ -201,7 +205,7 @@ describe('Kan', () => {
         player._hasRiichid = true;
         player.hand = new Hand(tiles, melds);
         let kongs = [new Meld(TileList('p1111'))];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
     it('A player who has riichid cannot declare a closed kan from hand if it alters the riichi wait.', () => {
@@ -213,6 +217,6 @@ describe('Kan', () => {
         player._hasRiichid = true;
         player.hand = new Hand(tiles, melds);
         let kongs = [];
-        expect(player.KanMelds(null)).to.eql(kongs);
+        expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 });
