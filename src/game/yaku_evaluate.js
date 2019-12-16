@@ -81,7 +81,7 @@ class Yaku_Evaluate {
      * @param {Tile} winningTile The tile used to complete the hand.
      * @returns {Yaku.Yaku[]} List of yaku the partition satisfies.
      */
-    EvaluateYaku(partition, hand, winningTile) {
+    EvaluateYaku(partition, hand, winningTile, roundWind, seatWind) {
         let yakuList = [];
         if (partition != null) {
             yakuList.push(this.NoPointsHand(partition));
@@ -97,10 +97,10 @@ class Yaku_Evaluate {
             yakuList.push(this.RedDragon(partition));
             yakuList.push(this.GreenDragon(partition));
             yakuList.push(this.WhiteDragon(partition));
-            yakuList.push(this.NorthWind(partition));
-            yakuList.push(this.EastWind(partition));
-            yakuList.push(this.SouthWind(partition));
-            yakuList.push(this.WestWind(partition));
+            yakuList.push(this.NorthWind(partition, roundWind, seatWind));
+            yakuList.push(this.EastWind(partition, roundWind, seatWind));
+            yakuList.push(this.SouthWind(partition, roundWind, seatWind));
+            yakuList.push(this.WestWind(partition, roundWind, seatWind));
             yakuList.push(this.MixedOutsideHand(partition));
             yakuList.push(this.PureOutsideHand(partition));
             yakuList.push(this.LittleThreeDragons(partition));
@@ -405,15 +405,22 @@ class Yaku_Evaluate {
      * Checks if a partition satisfies a hand with north wind.
      * 
      * @param {(Meld | Pair)[]} partition The partition to check for north wind.
+     * @param {number} roundWind The round wind worth a yaku.
+     * @param {number} seatWind The seat wind of the player worth a yaku.
      * @returns {Yaku.NorthWind} The north wind yaku.
      */
-    NorthWind(partition) {
-        let pongs = this.MeldsOfType(partition, MeldType.PONG);
-        let kongs = this.MeldsOfType(partition, MeldType.KONG);
-        let melds = pongs.concat(kongs);
-        for (let meld of melds) {
-            if (meld.tiles[0].value == TileValue.NORTH) {
-                return new Yaku.NorthWind;
+    NorthWind(partition, roundWind, seatWind) {
+        if (roundWind == NORTH || seatWind == NORTH) {
+            let pongs = this.MeldsOfType(partition, MeldType.PONG);
+            let kongs = this.MeldsOfType(partition, MeldType.KONG);
+            let melds = pongs.concat(kongs);
+            for (let meld of melds) {
+                if (meld.tiles[0].value == TileValue.NORTH) {
+                    if (roundWind == NORTH && seatWind == NORTH)
+                        return new Yaku.DoubleNorthWind;
+                    else if (roundWind == NORTH || seatWind == NORTH)
+                        return new Yaku.NorthWind;
+                }
             }
         }
         return null;
@@ -423,15 +430,22 @@ class Yaku_Evaluate {
      * Checks if a partition satisfies a hand with east wind.
      * 
      * @param {(Meld | Pair)[]} partition The partition to check for east wind.
+     * @param {number} roundWind The round wind worth a yaku.
+     * @param {number} seatWind The seat wind of the player worth a yaku.
      * @returns {Yaku.EastWind} The east wind yaku.
      */
-    EastWind(partition) {
-        let pongs = this.MeldsOfType(partition, MeldType.PONG);
-        let kongs = this.MeldsOfType(partition, MeldType.KONG);
-        let melds = pongs.concat(kongs);
-        for (let meld of melds) {
-            if (meld.tiles[0].value == TileValue.EAST) {
-                return new Yaku.EastWind;
+    EastWind(partition, roundWind, seatWind) {
+        if (roundWind == EAST || seatWind == EAST) {
+            let pongs = this.MeldsOfType(partition, MeldType.PONG);
+            let kongs = this.MeldsOfType(partition, MeldType.KONG);
+            let melds = pongs.concat(kongs);
+            for (let meld of melds) {
+                if (meld.tiles[0].value == TileValue.EAST) {
+                    if (roundWind == EAST && seatWind == EAST)
+                        return new Yaku.DoubleEastWind;
+                    else if (roundWind == EAST || seatWind == EAST)
+                        return new Yaku.EastWind;
+                }
             }
         }
         return null;
@@ -441,15 +455,22 @@ class Yaku_Evaluate {
      * Checks if a partition satisfies a hand with south wind.
      * 
      * @param {(Meld | Pair)[]} partition The partition to check for south wind.
+     * @param {number} roundWind The round wind worth a yaku.
+     * @param {number} seatWind The seat wind of the player worth a yaku.
      * @returns {Yaku.SouthWind} The south wind yaku.
      */
-    SouthWind(partition) {
-        let pongs = this.MeldsOfType(partition, MeldType.PONG);
-        let kongs = this.MeldsOfType(partition, MeldType.KONG);
-        let melds = pongs.concat(kongs);
-        for (let meld of melds) {
-            if (meld.tiles[0].value == TileValue.SOUTH) {
-                return new Yaku.SouthWind;
+    SouthWind(partition, roundWind, seatWind) {
+        if (roundWind == SOUTH || seatWind == SOUTH) {
+            let pongs = this.MeldsOfType(partition, MeldType.PONG);
+            let kongs = this.MeldsOfType(partition, MeldType.KONG);
+            let melds = pongs.concat(kongs);
+            for (let meld of melds) {
+                if (meld.tiles[0].value == TileValue.SOUTH) {
+                    if (roundWind == SOUTH && seatWind == SOUTH)
+                        return new Yaku.DoubleSouthWind;
+                    else if (roundWind == SOUTH || seatWind == SOUTH)
+                        return new Yaku.SouthWind;
+                }
             }
         }
         return null;
@@ -459,15 +480,22 @@ class Yaku_Evaluate {
      * Checks if a partition satisfies a hand with west wind.
      * 
      * @param {(Meld | Pair)[]} partition The partition to check for west wind.
+     * @param {number} roundWind The round wind worth a yaku.
+     * @param {number} seatWind The seat wind of the player worth a yaku.
      * @returns {Yaku.WestWind} The west wind yaku.
      */
-    WestWind(partition) {
-        let pongs = this.MeldsOfType(partition, MeldType.PONG);
-        let kongs = this.MeldsOfType(partition, MeldType.KONG);
-        let melds = pongs.concat(kongs);
-        for (let meld of melds) {
-            if (meld.tiles[0].value == TileValue.WEST) {
-                return new Yaku.WestWind;
+    WestWind(partition, roundWind, seatWind) {
+        if (roundWind == WEST || seatWind == WEST) {
+            let pongs = this.MeldsOfType(partition, MeldType.PONG);
+            let kongs = this.MeldsOfType(partition, MeldType.KONG);
+            let melds = pongs.concat(kongs);
+            for (let meld of melds) {
+                if (meld.tiles[0].value == TileValue.WEST) {
+                    if (roundWind == WEST && seatWind == WEST)
+                        return new Yaku.DoubleWestWind;
+                    else if (roundWind == WEST || seatWind == WEST)
+                        return new Yaku.WestWind;
+                }
             }
         }
         return null;
