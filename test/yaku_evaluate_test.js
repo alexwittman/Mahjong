@@ -18,6 +18,9 @@ let yaku = require('../src/game/yaku');
 let Hand = require('../src/game/hand').Hand;
 let DRAGON_WHITE = require('../src/game/constants').DRAGON_WHITE;
 let DRAGON_RED = require('../src/game/constants').DRAGON_RED;
+let NORTH = require('../src/game/constants').NORTH;
+let EAST = require('../src/game/constants').EAST;
+let SOUTH = require('../src/game/constants').SOUTH;
 let WEST = require('../src/game/constants').WEST;
 let WAN_NINE = require('../src/game/constants').WAN_NINE;
 let PIN_NINE = require('../src/game/constants').PIN_NINE;
@@ -622,7 +625,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('NNN')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.NorthWind(partition)).to.eql(new yaku.NorthWind);
+        expect(yakuEvaluate.NorthWind(partition, EAST, NORTH)).to.eql(new yaku.NorthWind);
     });
 
     it('NorthWind() returns correct for hand with NorthWind kong', () => {
@@ -631,7 +634,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('NNNN')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.NorthWind(partition)).to.eql(new yaku.NorthWind);
+        expect(yakuEvaluate.NorthWind(partition, EAST, NORTH)).to.eql(new yaku.NorthWind);
     });
 
     it('NorthWind() returns correct for hand without NorthWind', () => {
@@ -640,7 +643,34 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('EEE')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.NorthWind(partition)).to.eql(null);
+        expect(yakuEvaluate.NorthWind(partition, EAST, NORTH)).to.eql(null);
+    });
+
+    it('NorthWind() returns correct for hand with DoubleNorthWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('NNN')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.NorthWind(partition, NORTH, NORTH)).to.eql(new yaku.DoubleNorthWind);
+    });
+
+    it('NorthWind() returns correct for hand with DoubleNorthWind kong', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('NNNN')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.NorthWind(partition, NORTH, NORTH)).to.eql(new yaku.DoubleNorthWind);
+    });
+
+    it('NorthWind() returns correct for hand without DoubleNorthWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('EEE')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.NorthWind(partition, NORTH, NORTH)).to.eql(null);
     });
 
     it('EastWind() returns correct for hand with EastWind', () => {
@@ -649,7 +679,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('EEE')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.EastWind(partition)).to.eql(new yaku.EastWind);
+        expect(yakuEvaluate.EastWind(partition, EAST, SOUTH)).to.eql(new yaku.EastWind);
     });
 
     it('EastWind() returns correct for hand with EastWind kong', () => {
@@ -658,7 +688,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('EEEE')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.EastWind(partition)).to.eql(new yaku.EastWind);
+        expect(yakuEvaluate.EastWind(partition, EAST, NORTH)).to.eql(new yaku.EastWind);
     });
 
     it('EastWind() returns correct for hand without EastWind', () => {
@@ -667,7 +697,34 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('SSS')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.EastWind(partition)).to.eql(null);
+        expect(yakuEvaluate.EastWind(partition, EAST, SOUTH)).to.eql(null);
+    });
+
+    it('EastWind() returns correct for hand with DoubleEastWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('EEE')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.EastWind(partition, EAST, EAST)).to.eql(new yaku.DoubleEastWind);
+    });
+
+    it('EastWind() returns correct for hand with DoubleEastWind kong', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('EEEE')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.EastWind(partition, EAST, EAST)).to.eql(new yaku.DoubleEastWind);
+    });
+
+    it('EastWind() returns correct for hand without DoubleEastWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('SSS')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.EastWind(partition, EAST, EAST)).to.eql(null);
     });
 
     it('SouthWind() returns correct for hand with SouthWind', () => {
@@ -676,7 +733,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('SSS')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.SouthWind(partition)).to.eql(new yaku.SouthWind);
+        expect(yakuEvaluate.SouthWind(partition, EAST, SOUTH)).to.eql(new yaku.SouthWind);
     });
 
     it('SouthWind() returns correct for hand with SouthWind kong', () => {
@@ -685,7 +742,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('SSSS')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.SouthWind(partition)).to.eql(new yaku.SouthWind);
+        expect(yakuEvaluate.SouthWind(partition, EAST, SOUTH)).to.eql(new yaku.SouthWind);
     });
 
     it('SouthWind() returns correct for hand without SouthWind', () => {
@@ -694,7 +751,34 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('WWW')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.SouthWind(partition)).to.eql(null);
+        expect(yakuEvaluate.SouthWind(partition, EAST, SOUTH)).to.eql(null);
+    });
+
+    it('SouthWind() returns correct for hand with DoubleSouthWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('SSS')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SouthWind(partition, SOUTH, SOUTH)).to.eql(new yaku.DoubleSouthWind);
+    });
+
+    it('SouthWind() returns correct for hand with DoubleSouthWind kong', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('SSSS')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SouthWind(partition, SOUTH, SOUTH)).to.eql(new yaku.DoubleSouthWind);
+    });
+
+    it('SouthWind() returns correct for hand without DoubleSouthWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('WWW')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.SouthWind(partition, SOUTH, SOUTH)).to.eql(null);
     });
 
     it('WestWind() returns correct for hand with WestWind', () => {
@@ -703,7 +787,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('WWW')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.WestWind(partition)).to.eql(new yaku.WestWind);
+        expect(yakuEvaluate.WestWind(partition, EAST, WEST)).to.eql(new yaku.WestWind);
     });
 
     it('WestWind() returns correct for hand with WestWind kong', () => {
@@ -712,7 +796,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('WWWW')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.WestWind(partition)).to.eql(new yaku.WestWind);
+        expect(yakuEvaluate.WestWind(partition, EAST, WEST)).to.eql(new yaku.WestWind);
     });
 
     it('WestWind() returns correct for hand without WestWind', () => {
@@ -721,7 +805,34 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a111')),
                                             new Meld(TileList('SSS')),
                                             new Pair(TileList('gg'))];
-        expect(yakuEvaluate.WestWind(partition)).to.eql(null);
+        expect(yakuEvaluate.WestWind(partition, EAST, WEST)).to.eql(null);
+    });
+
+    it('WestWind() returns correct for hand with DoubleWestWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('WWW')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.WestWind(partition, WEST, WEST)).to.eql(new yaku.DoubleWestWind);
+    });
+
+    it('WestWind() returns correct for hand with DoubleWestWind kong', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('WWWW')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.WestWind(partition, WEST, WEST)).to.eql(new yaku.DoubleWestWind);
+    });
+
+    it('WestWind() returns correct for hand without DoubleWestWind', () => {
+        let partition = [ new Meld(TileList('p111')),
+                                            new Meld(TileList('s444')),
+                                            new Meld(TileList('a111')),
+                                            new Meld(TileList('SSS')),
+                                            new Pair(TileList('gg'))];
+        expect(yakuEvaluate.WestWind(partition, WEST, WEST)).to.eql(null);
     });
 
     it('MixedOutsideHand() returns correct for hand with MixedOutsideHand all outside', () => {
@@ -1511,7 +1622,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a789')),
                                             new Pair(TileList('ww'))];
         let hand = new Hand(TileList('p123345s234a789ww'));
-        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('s4')[0])).to.eql(yakuList);
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('s4')[0], EAST, EAST)).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with 3 yaku', () => {
@@ -1522,14 +1633,12 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('s444')),
                                             new Pair(TileList('gg'))];
         let hand = new Hand(TileList('s222233334444gg'));
-        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0])).to.eql(yakuList);
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0], EAST, EAST)).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with many yaku', () => {
-        let yakuList = [  new yaku.NorthWind(),
-                                        new yaku.EastWind(),
+        let yakuList = [                new yaku.EastWind(),
                                         new yaku.SouthWind(),
-                                        new yaku.WestWind(),
                                         new yaku.MixedOutsideHand(),
                                         new yaku.PureOutsideHand(),
                                         new yaku.DoubleFourConcealedTriplets(),
@@ -1543,7 +1652,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('WWWW')),
                                             new Pair(TileList('gg'))];
         let hand = new Hand(TileList('NNNNEEEESSSSWWWWgg'));
-        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0])).to.eql(yakuList);
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('g')[0], EAST, SOUTH)).to.eql(yakuList);
     });
 
     it('EvaluateYaku() returns correct for partition with no yaku', () => {
@@ -1554,7 +1663,7 @@ describe('Yaku Evaluate', () => {
                                             new Meld(TileList('a789')),
                                             new Pair(TileList('ww'))];
         let hand = new Hand(TileList('p123345s222a789ww'));
-        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('w')[0])).to.eql(yakuList);
+        expect(yakuEvaluate.EvaluateYaku(partition, hand, TileList('w')[0], EAST, EAST)).to.eql(yakuList);
     });
 
     //need to add EvaluateYaku for functions that need parameter other than partition.
