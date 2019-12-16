@@ -41,9 +41,11 @@ class Tenpai {
      * Constructor to create tenpai class for a hand.
      * 
      * @param {Hand} hand The hand to evaluate.
+     * @param {number} roundWind The round wind that has value.
+     * @param {number} seatWind The seat wind of the player that has value.
      */
-    constructor(hand) {
-        this._tiles = this.GetTiles(hand);
+    constructor(hand, roundWind, seatWind) {
+        this._tiles = this.GetTiles(hand, roundWind, seatWind);
     }
 
     /**
@@ -69,8 +71,10 @@ class Tenpai {
      * 
      * @param {Hand} hand The hand to try and complete.
      * @returns {Tile[]} A list of tiles that will complete the hand.
+     * @param {number} roundWind The round wind that has value.
+     * @param {number} seatWind The seat wind of the player that has value.
      */
-    GetTiles(hand) {
+    GetTiles(hand, roundWind, seatWind) {
         let handPartitioner = new Hand_Partition();
         let yakuEvaluator = new Yaku_Evaluate();
         let handCopy = CopyHand(hand);
@@ -80,7 +84,7 @@ class Tenpai {
             handCopy.add(tile);
             let partitions = handPartitioner.partition(handCopy);
             for (let partition of partitions) {
-                if (yakuEvaluator.EvaluateYaku(partition, handCopy, tile).length > 0) {
+                if (yakuEvaluator.EvaluateYaku(partition, handCopy, tile, roundWind, seatWind).length > 0) {
                     tilesToComplete.push(tile);
                 }
             }
