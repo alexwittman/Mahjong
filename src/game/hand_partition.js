@@ -19,12 +19,11 @@ let MeldType = require('./meld').MeldType;
  * Class to compute a partition of a hand.
  */
 class Hand_Partition {
-
     /**
      * Removes invalid partitions from the list of partitions.
-     * 
+     *
      * Valid partitions contain one pair and four melds.
-     * 
+     *
      * @param {(Meld | Pair)[][]} partitions List of partitions to clean up.
      * @returns {(Meld | Pair}[][])} List of valid and unique partitions.
      */
@@ -38,8 +37,21 @@ class Hand_Partition {
                 if (meld instanceof Meld) MeldCount++;
                 if (meld instanceof Pair) PairCount++;
             }
-            if ((PairCount == 1 && MeldCount == 4) || PairCount == 7) {
+            if (PairCount == 1 && MeldCount == 4) {
                 cleanPartitions.push(partition);
+            }
+            if (PairCount == 7) {
+                let duplicatePairs = false;
+                for (let i = 0; i < partition.length - 2; i++) {
+                    if (partition[i].type == partition[i + 1].type) {
+                        if (partition[i].value == partition[i + 1].value) {
+                            duplicatePairs = true;
+                        }
+                    }
+                }
+                if (!duplicatePairs) {
+                    cleanPartitions.push(partition);
+                }
             }
         }
 
@@ -59,7 +71,7 @@ class Hand_Partition {
 
     /**
      * Checks if the given partition list contains the given partition.
-     * 
+     *
      * @param {(Meld | Pair)[][]} partitions List of partitions.
      * @param {(Meld | Pair)[]} partitionToCheck Partition to check if it is contained in the list.
      * @returns {boolean} Whether or not the partition was in the list.
@@ -74,7 +86,7 @@ class Hand_Partition {
     /**
      * Adds the declared melds of a hand to the partitions of
      * the closed tiles.
-     * 
+     *
      * @param {(Meld | Pair)[][]} partitions The partitions of the hand's closed tiles.
      * @param {Meld[]} handMelds The declared melds of the hand.
      * @returns {(Meld | Pair)[][]} The complete partitions of the hand.
@@ -85,12 +97,13 @@ class Hand_Partition {
                 partition.push(meld);
             }
         }
-        return partitions;
+        if (partitions.length == 0) return [handMelds];
+        else return partitions;
     }
 
     /**
      * Partitions the hand into a list of melds and pairs.
-     * 
+     *
      * @param {Hand} hand Hand to partition into melds and pairs.
      * @returns {(Meld | Pair)[][]} List of valid and unique partitions of the hand.
      */
@@ -100,10 +113,10 @@ class Hand_Partition {
 
     /**
      * Recursively and parallely removes melds from a list of tiles.
-     * 
+     *
      * If a hand contains a kong and a pong, this function will start two
      * different "threads" to partition the tiles separately.
-     * 
+     *
      * @param {[Tile]} tiles Tiles of the hand to partition.
      * @returns {(Meld | Pair)[][]} All possible partitions of the tiles.
      */
@@ -141,14 +154,14 @@ class Hand_Partition {
     /**
      * Expands a tree-like structure of partitions
      * into a list of flat partitions.
-     * 
+     *
      * @param {(Meld | Pair)} firstElement First meld or pair to expand the partitions with.
-     * @param {(Meld | Pair)[][]} restOfPartition Nested list of melds and or pairs to be 
+     * @param {(Meld | Pair)[][]} restOfPartition Nested list of melds and or pairs to be
      *                                            combined with the first meld.
      * @returns {(Meld | Pair)[][]} Combined list of partitions.
      */
     CombinePartitions(firstElement, restOfPartition) {
-        restOfPartition = restOfPartition.filter((part) => part != null);
+        restOfPartition = restOfPartition.filter(part => part != null);
         let numberOfPartitions = restOfPartition.length;
         let partitions = [];
         for (let i = 0; i < numberOfPartitions; i++) {
@@ -163,7 +176,7 @@ class Hand_Partition {
     /**
      * Pulls all possible kongs out of a list of tiles
      * and partitions the rest of the tiles.
-     * 
+     *
      * @param {Tile[]} tiles The tiles to have checked for kong partitions.
      * @returns {(Meld | Pair)[][]} List of all possible partitions with a kong.
      */
@@ -183,9 +196,7 @@ class Hand_Partition {
             if (tiles.length > 0) {
                 return this.CombinePartitions([new Meld(kong)], this.recurPartition(tiles));
             } else {
-                return [
-                    [new Meld(kong)]
-                ];
+                return [[new Meld(kong)]];
             }
         } else {
             return null;
@@ -195,7 +206,7 @@ class Hand_Partition {
     /**
      * Pulls all possible pongs out of a list of tiles
      * and partitions the rest of the tiles.
-     * 
+     *
      * @param {Tile[]} tiles The tiles to have checked for pong partitions.
      * @returns {(Meld | Pair)[][]} List of all possible partitions with a pong.
      */
@@ -215,9 +226,7 @@ class Hand_Partition {
             if (tiles.length > 0) {
                 return this.CombinePartitions([new Meld(pong)], this.recurPartition(tiles));
             } else {
-                return [
-                    [new Meld(pong)]
-                ];
+                return [[new Meld(pong)]];
             }
         } else {
             return null;
@@ -227,7 +236,7 @@ class Hand_Partition {
     /**
      * Pulls all possible chows out of a list of tiles
      * and partitions the rest of the tiles.
-     * 
+     *
      * @param {Tile[]} tiles The tiles to have checked for chow partitions.
      * @returns {(Meld | Pair)[][]} List of all possible partitions with a chow.
      */
@@ -242,7 +251,7 @@ class Hand_Partition {
         }
 
         for (let i = 0; i < tempTiles.length - 2; i++) {
-            if ((new Meld(tempTiles.slice(i, i + 3)).type == MeldType.CHOW)) {
+            if (new Meld(tempTiles.slice(i, i + 3)).type == MeldType.CHOW) {
                 chow = tempTiles.slice(i, i + 3);
                 if (chow.length > 0) {
                     for (let tile of chow) {
@@ -251,9 +260,7 @@ class Hand_Partition {
                     if (tiles.length > 0) {
                         return this.CombinePartitions([new Meld(chow)], this.recurPartition(tiles));
                     } else {
-                        return [
-                            [new Meld(chow)]
-                        ];
+                        return [[new Meld(chow)]];
                     }
                 }
             }
@@ -261,13 +268,12 @@ class Hand_Partition {
         if (chow.length == 0) {
             return null;
         }
-
     }
 
     /**
      * Pulls all possible pairs out of a list of tiles
      * and partitions the rest of the tiles.
-     * 
+     *
      * @param {Tile[]} tiles The tiles to have checked for pair partitions.
      * @returns {(Meld | Pair)[][]} List of all possible partitions with a pair.
      */
@@ -287,9 +293,7 @@ class Hand_Partition {
             if (tiles.length > 0) {
                 return this.CombinePartitions([new Pair(pair)], this.recurPartition(tiles));
             } else {
-                return [
-                    [new Pair(pair)]
-                ];
+                return [[new Pair(pair)]];
             }
         } else {
             return null;
@@ -298,11 +302,11 @@ class Hand_Partition {
 
     /**
      * Sorts a parition:
-     * 
+     *
      *      pair goes last,
-     * 
+     *
      *      melds are ordered by tile value.
-     * 
+     *
      * @param {(Meld | Pair)[]} partition The partition to sort.
      * @returns {(Meld | Pair)[]} The sorted partition.
      */
@@ -354,7 +358,7 @@ class Hand_Partition {
 
     /**
      * Prints a list of partitions with proper spacing.
-     * 
+     *
      * @param {(Meld | Pair)[][]} partitions The list of partitions to print.
      */
     PrintPartitions(partitions) {
@@ -375,4 +379,4 @@ class Hand_Partition {
 
 module.exports = {
     Hand_Partition: Hand_Partition
-}
+};
