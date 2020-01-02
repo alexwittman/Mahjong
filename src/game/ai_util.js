@@ -143,6 +143,11 @@ class AI_Util {
         return vectors;
     }
 
+    /**
+     * Creates a list of all possible hand states.
+     * 
+     * This will be used for alphaZero algorithm to get to a final state.
+     */
     HandStates() {
         let states = [];
         for (let singles = 0; singles <= 14; singles++) {
