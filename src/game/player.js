@@ -27,31 +27,27 @@ let Discard = require('./discard').Discard;
 
 let prompt = require('prompt-sync')();
 
-let rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 /**
  * Class to hold player information.
  */
 class Player {
     /**
      * Constructor for player class.
-     * 
+     *
      * @param {number} index The player number for the game.
      */
-    constructor(index, seatWind) {
+    constructor(index, seatWind, ai = null) {
         this._index = index;
         this._discards = [];
         this._points = 25000;
         this._hasRiichid = false;
         this._seatWind = seatWind;
+        this._ai = ai;
     }
 
     /**
      * Getter method for the player's hand.
-     * 
+     *
      * @returns {HAND.Hand} The player's hand.
      */
     get hand() {
@@ -60,7 +56,7 @@ class Player {
 
     /**
      * Setter method for the player's hand.
-     * 
+     *
      * @param {HAND.Hand} hand The hand to set as the player's hand.
      */
     set hand(hand) {
@@ -69,7 +65,7 @@ class Player {
 
     /**
      * Getter method for the player's points.
-     * 
+     *
      * @returns {number} The player's points.
      */
     get points() {
@@ -78,7 +74,7 @@ class Player {
 
     /**
      * Getter method for the player's index.
-     * 
+     *
      * @returns {number} The player's index.
      */
     get index() {
@@ -87,7 +83,7 @@ class Player {
 
     /**
      * Getter method for the player's seat wind.
-     * 
+     *
      * @returns {number} The player's seat wind.
      */
     get seatWind() {
@@ -96,7 +92,7 @@ class Player {
 
     /**
      * Setter method for the player's drawn tile.
-     * 
+     *
      * @param {TILE.Tile} tile The tile the player drew.
      */
     set drawnTile(tile) {
@@ -113,7 +109,7 @@ class Player {
 
     /**
      * Promts the player for an action when it is their turn.
-     * 
+     *
      * @param {Object} gameState The current state of the game visible to the player.
      * @returns {Object} The object containing their action.
      */
@@ -121,36 +117,44 @@ class Player {
         let actions = this.CalculateActions(gameState);
         let action = '0';
         if (actions.length > 1) {
-            console.log(this.GetActionStrings(actions));
-            action = prompt('>> ');
+            if (this._ai != null) {
+                action = this._ai.PickAction(gameState, actions);
+            } else {
+                console.log(this.GetActionStrings(actions));
+                action = prompt('>> ');
+            }
         }
         switch (action) {
-            case '3': { //Kan
+            case '3': {
+                //Kan
                 this.GetKan(null, gameState['roundWind']);
                 return {
-                    'action': ActionType.Kan
+                    action: ActionType.Kan
                 };
             }
-            case '4': { //Riichi
+            case '4': {
+                //Riichi
                 //TODO
                 let riichiTile = this.GetRiichi(gameState['roundWind']);
                 return {
-                    'action': ActionType.Riichi,
-                    'discard': riichiTile
+                    action: ActionType.Riichi,
+                    discard: riichiTile
                 };
             }
-            case '6': { //Tsumo
+            case '6': {
+                //Tsumo
                 let value = this.Tsumo();
                 return {
-                    'action': ActionType.Tsumo,
-                    'value': value
-                }
+                    action: ActionType.Tsumo,
+                    value: value
+                };
             }
-            default: { //Discard
+            default: {
+                //Discard
                 let discard = this.GetDiscard();
                 return {
-                    'action': ActionType.Discard,
-                    'discard': discard
+                    action: ActionType.Discard,
+                    discard: discard
                 };
             }
         }
@@ -159,43 +163,51 @@ class Player {
     /**
      * Promts the player for an action when they can do something
      * and it is not their turn.
-     * 
+     *
      * @param {Object} gameState The current game state visible to the player.
      */
     GetInterject(gameState) {
         let availableTile = gameState['availableTile'].tile;
         let actions = this.CalculateInterject(gameState);
-        console.log(this.GetActionStrings(actions));
         let action = '0';
         if (actions.length > 0) {
-            action = prompt('>> ');
+            if (this._ai != null) {
+                action = this._ai.PickInterject(gameState, actions);
+            } else {
+                console.log(this.GetActionStrings(actions));
+                action = prompt('>> ');
+            }
         }
         switch (action) {
-            case '1': { //Chi
+            case '1': {
+                //Chi
                 this.GetChi(availableTile);
                 return {
-                    'action': ActionType.Chi
-                }
-            }
-            case '2': { //Pon
-                this._hand = this.Pon(this._hand, availableTile);
-                return {
-                    'action': ActionType.Pon
+                    action: ActionType.Chi
                 };
             }
-            case '3': { //Kan
+            case '2': {
+                //Pon
+                this._hand = this.Pon(this._hand, availableTile);
+                return {
+                    action: ActionType.Pon
+                };
+            }
+            case '3': {
+                //Kan
                 this.GetKan(availableTile, gameState['roundWind']);
                 return {
-                    'action': ActionType.Kan
-                }
+                    action: ActionType.Kan
+                };
             }
-            case '5': { //Ron
+            case '5': {
+                //Ron
                 let value = this.Ron(availableTile);
                 return {
-                    'action': ActionType.Ron,
-                    'value': value,
-                    'discard': gameState['availableTile'],
-                }
+                    action: ActionType.Ron,
+                    value: value,
+                    discard: gameState['availableTile']
+                };
             }
         }
         return null;
@@ -205,18 +217,23 @@ class Player {
      * Gets the tile the player wants to discard.
      * Adds the drawn tile to the player's hand.
      * Removes that tile from the player's hand.
-     * 
+     *
      * @returns {Discard} The tile the player discarded.
      */
     GetDiscard() {
         //TILE.PrintTileList(this._hand.tiles, this._drawnTile);
         //if (this._drawnTile) TILE.PrintTileList([this._drawnTile]);\
+        let gameState = null;
         let discard;
         if (!this._hasRiichid) {
-            let rawInput = prompt('Enter the tile to discard: ');
             let input;
-            if (rawInput == '') input = this._drawnTile.number;
-            else input = Number(rawInput);
+            if (this._ai != null) {
+                input = this._ai.PickDiscard(gameState, this._hand, this._drawnTile);
+            } else {
+                let rawInput = prompt('Enter the tile to discard: ');
+                if (rawInput == '') input = this._drawnTile.number;
+                else input = Number(rawInput);
+            }
             if (this._drawnTile != null && input == this._drawnTile.number) {
                 discard = this._drawnTile;
                 this._drawnTile = null;
@@ -231,7 +248,9 @@ class Player {
             discard = this._drawnTile;
             this._drawnTile = null;
         }
-        this._hand.Print();
+        if (this._ai == null) {
+            this._hand.Print();
+        }
         this._discards.push(discard);
         return new Discard(discard, this._index);
     }
@@ -241,10 +260,15 @@ class Player {
      * discard to declare riichi.
      */
     GetRiichi(roundWind) {
-        this._hand.Print();
-        console.log('Possible tiles to discard for riichi:');
-        TILE.PrintTileList(this.RiichiTiles(roundWind));
-        let input = Number(prompt('Enter the tile to discard: '));
+        let input;
+        if (this._ai != null) {
+            input = this._ai.PickRiichi(this.RiichiTiles(roundWind));
+        } else {
+            this._hand.Print();
+            console.log('Possible tiles to discard for riichi:');
+            TILE.PrintTileList(this.RiichiTiles(roundWind));
+            input = Number(prompt('Enter the tile to discard: '));
+        }
         let discard;
         if (input == this._drawnTile.number) {
             discard = this._drawnTile;
@@ -265,7 +289,7 @@ class Player {
      * Prompts the player for which chow they want to make
      * if there is more than one, otherwise chi the only
      * possible chow.
-     * 
+     *
      * @param {Tile} availableTile The tile available for the player to take.
      */
     GetChi(availableTile) {
@@ -275,15 +299,19 @@ class Player {
             let chowPrompt = '';
             for (let possibleChow of possibleChows) {
                 for (let chowTile of possibleChow.tiles) {
-                    chowPrompt += (chowTile.unicode);
+                    chowPrompt += chowTile.unicode;
                     chowPrompt += '|';
                 }
                 chowPrompt += '  ';
             }
-            console.log('Possible Chows:');
-            console.log(chowPrompt);
-            let pickedChow = prompt('>> ');
-            chow = possibleChows[pickedChow];
+            if (this._ai != null) {
+                chow = this._ai.PickChow(possibleChows);
+            } else {
+                console.log('Possible Chows:');
+                console.log(chowPrompt);
+                let pickedChow = prompt('>> ');
+                chow = possibleChows[pickedChow];
+            }
         } else {
             chow = possibleChows[0];
         }
@@ -292,7 +320,7 @@ class Player {
 
     /**
      * Calls chi and makes the meld in the player's hand.
-     * 
+     *
      * @param {HAND.Hand} hand The hand to add the chow to.
      * @param {Meld} chow The chow to make when calling chi.
      * @param {Tile} availableTile The tile available for the player to call chi on.
@@ -311,7 +339,7 @@ class Player {
 
     /**
      * Calculates all available actions for a player based on the current available tile.
-     * 
+     *
      * @param {Object} gameState The current state of the game visible to the player.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
@@ -327,7 +355,7 @@ class Player {
 
     /**
      * Calculates all available actions for a player based on the current available tile.
-     * 
+     *
      * @param {Object} gameState The current state of the game visible by the player.
      * @returns {ActionType[]} A list of all possible actions for the player.
      */
@@ -349,7 +377,7 @@ class Player {
 
     /**
      * Calculates the chows possible with the current available tile.
-     * 
+     *
      * @param {TILE.Tile} availableTile The tile available to take.
      * @returns {Meld[]} The list of possible chows.
      */
@@ -368,7 +396,7 @@ class Player {
 
     /**
      * Determines if a player can chi given the current game state.
-     * 
+     *
      * @param {Discard} availableDiscard The discard object available to take.
      * @returns {boolean} True if the player is able to chi, false otherwise.
      */
@@ -386,7 +414,7 @@ class Player {
 
     /**
      * Determines if a player can pon given the current game state.
-     * 
+     *
      * @returns {boolean} True if the player can pon, false otherwise.
      */
     CanPon(availableTile) {
@@ -398,7 +426,7 @@ class Player {
 
     /**
      * Calls pon and makes the meld in the player's hand.
-     * 
+     *
      * @param {HAND.Hand} hand The hand to add the pong to.
      * @param {TILE.Tile} availableTile The tile available for the player to take.
      * @returns {HAND.Hand} The hand with the pong added to it.
@@ -414,7 +442,7 @@ class Player {
 
     /**
      * Calculates the kongs possible in the current state.
-     * 
+     *
      * @param {TILE.Tile} availableTile The tile available to take.
      * @returns {Meld[]} The list of possible kongs.
      */
@@ -426,8 +454,7 @@ class Player {
             let uniqueTiles = TILE.TileListRemoveDuplicates(handTilesCopy);
             for (let tile of uniqueTiles) {
                 let tileCount = TILE.TileListCount(this._hand.closedTiles, tile);
-                if (this._drawnTile)
-                    if (this._drawnTile.number == tile.number) tileCount++;
+                if (this._drawnTile) if (this._drawnTile.number == tile.number) tileCount++;
                 if (tileCount == 4) {
                     kongs.push(new Meld([tile, tile, tile, tile]));
                 }
@@ -447,7 +474,7 @@ class Player {
             }
         }
         if (this._hasRiichid) {
-            let waitTiles = (new Tenpai(this._hand, roundWind, this._seatWind)).tiles;
+            let waitTiles = new Tenpai(this._hand, roundWind, this._seatWind).tiles;
             for (let i = 0; i < kongs.length; i++) {
                 let handCopy = HAND.CopyHand(this._hand);
                 handCopy = this.Kan(handCopy, kongs[i], availableTile);
@@ -462,7 +489,7 @@ class Player {
 
     /**
      * Determines if a player can kan given the current game state.
-     * 
+     *
      * @returns {boolean} True if the player can kan, false otherwise.
      */
     CanKan(availableTile = null, roundWind) {
@@ -473,7 +500,7 @@ class Player {
      * Prompts the player for which kong they want to make
      * if there is more than one, otherwise kan the only
      * possible kong.
-     * 
+     *
      * @param {Tile} availableTile The tile available for the player to take.
      */
     GetKan(availableTile = null, roundWind) {
@@ -488,10 +515,14 @@ class Player {
                 }
                 kongPrompt.push('  ');
             }
-            console.log('Possible Kongs:');
-            console.log(kongPrompt);
-            let pickedKong = prompt('>> ');
-            chow = possibleKongs[pickedKong];
+            if (this._ai != null) {
+                kong = this._ai.PickKong(possibleKongs);
+            } else {
+                console.log('Possible Kongs:');
+                console.log(kongPrompt);
+                let pickedKong = prompt('>> ');
+                kong = possibleKongs[pickedKong];
+            }
         } else {
             kong = possibleKongs[0];
         }
@@ -500,7 +531,7 @@ class Player {
 
     /**
      * Calls kan and makes the meld in the player's hand.
-     * 
+     *
      * @param {HAND.Hand} hand The hand to make the kong in.
      * @param {Meld} kong The kong to make in the player's hand.
      * @param {TILE.Tile} availableTile The tile to take to make the meld.
@@ -509,21 +540,25 @@ class Player {
      */
     Kan(hand, kong, availableTile = null, makeHandOpen = true) {
         if (availableTile == null) {
-            if (kong.is_open) { //Making kong with tile in closed tiles and open pong.
-                for (let meld of hand.melds) {
-                    if (meld.type == MeldType.PONG) {
-                        if (meld.tiles[0].number == kong.tiles[0].number) {
-                            meld = kong;
+            if (kong.is_open) {
+                //Making kong with tile in closed tiles and open pong.
+                for (let i = 0; i < hand.melds.length; i++) {
+                    if (hand.melds[i].type == MeldType.PONG) {
+                        if (hand.melds[i].tiles[0].number == kong.tiles[0].number) {
+                            hand.tiles.push(kong.tiles[0]);
+                            hand.melds[i] = kong;
                         }
                     }
                 }
-            } else { //Making kong with 4 tiles in closed tiles.
+            } else {
+                //Making kong with 4 tiles in closed tiles.
                 for (let i = 0; i < 4; i++) {
                     hand.remove(kong.tiles[0]);
                 }
                 hand.makeMeld(kong);
             }
-        } else { //Making kong with 3 tiles in closed tiles and other player's discarded tile.
+        } else {
+            //Making kong with 3 tiles in closed tiles and other player's discarded tile.
             for (let i = 0; i < 3; i++) {
                 hand.remove(availableTile);
             }
@@ -535,7 +570,7 @@ class Player {
 
     /**
      * Calculates the tiles a player can discard and declare riichi.
-     * 
+     *
      * @returns {Tile[]} The tiles a player can discard and declare riichi.
      */
     RiichiTiles(roundWind) {
@@ -563,7 +598,7 @@ class Player {
 
     /**
      * Determines if a player can riichi given the current game state.
-     * 
+     *
      * @returns {boolean} True if the player can riichi, false otherwise.
      */
     CanRiichi(roundWind) {
@@ -578,7 +613,7 @@ class Player {
     /**
      * Calculates the available melds to make that
      * complete the player's hand and has value.
-     * 
+     *
      * @param {TILE.Tile} availableTile The tile available to make the melds.
      * @returns {Meld[]} The list of melds that a player can make to complete their hand.
      */
@@ -597,7 +632,7 @@ class Player {
             if (possibleMeld.type == MeldType.PONG) {
                 handCopy = this.Pon(handCopy, availableTile, false);
             } else if (possibleMeld.type == MeldType.CHOW) {
-                handCopy = this.Chi(handCopy, possibleMeld, availableTile, false)
+                handCopy = this.Chi(handCopy, possibleMeld, availableTile, false);
             }
             let partitions = handPartitioner.partition(handCopy);
             for (let partition of partitions) {
@@ -627,7 +662,7 @@ class Player {
 
     /**
      * Determines if a player can ron given the current game state.
-     * 
+     *
      * @returns {boolean} True if the player can ron, false otherwise.
      */
     CanRon(availableTile) {
@@ -646,7 +681,7 @@ class Player {
 
     /**
      * Calls ron and takes the discard available to complete the player's hand.
-     * 
+     *
      * @param {TILE.Tile} availableTile The tile available for the player to take.
      * @returns {{han: number, partition: (Meld | Pair)[], yakuList: Yaku[]}} The highest value of all possible winning hands.
      */
@@ -656,10 +691,10 @@ class Player {
         let valueCalculator = new Value_Calculator();
         let ronMelds = this.RonMelds(availableTile);
         let highestValue = {
-            'han': 0,
-            'partition': null,
-            'yakuList': [],
-            'isOpen': this.hand.isOpen
+            han: 0,
+            partition: null,
+            yakuList: [],
+            isOpen: this.hand.isOpen
         };
         this._hand.add(availableTile);
         for (let meld of ronMelds) {
@@ -674,10 +709,10 @@ class Player {
                 let partitionHan = valueCalculator.CalculateHan(yakuList, handCopy.isOpen);
                 if (partitionHan > highestValue['han']) {
                     highestValue = {
-                        'han': partitionHan,
-                        'partition': partition,
-                        'yakuList': yakuList,
-                        'isOpen': this.hand.isOpen
+                        han: partitionHan,
+                        partition: partition,
+                        yakuList: yakuList,
+                        isOpen: this.hand.isOpen
                     };
                 }
             }
@@ -687,7 +722,7 @@ class Player {
 
     /**
      * Calls tsumo and uses drawn tile to complete the player's hand.
-     * 
+     *
      * @returns {{han: number, partition: (Meld | Pair)[], yakuList: Yaku[]}} The highest value of all possible winning hands.
      */
     Tsumo() {
@@ -695,9 +730,9 @@ class Player {
         let yakuEvaluator = new Yaku_Evaluate();
         let valueCalculator = new Value_Calculator();
         let highestValue = {
-            'han': 0,
-            'partition': null,
-            'yakuList': []
+            han: 0,
+            partition: null,
+            yakuList: []
         };
         this._hand.add(this._drawnTile);
         let partitions = handPartitioner.partition(this._hand);
@@ -706,9 +741,9 @@ class Player {
             let partitionHan = valueCalculator.CalculateHan(yakuList, this._hand.isOpen);
             if (partitionHan > highestValue['han']) {
                 highestValue = {
-                    'han': partitionHan,
-                    'partition': partition,
-                    'yakuList': yakuList
+                    han: partitionHan,
+                    partition: partition,
+                    yakuList: yakuList
                 };
             }
         }
@@ -717,7 +752,7 @@ class Player {
 
     /**
      * Determines if a player can tsumo given the current game state.
-     * 
+     *
      * @returns {boolean} True if the player can tsumo, false otherwise.
      */
     CanTsumo() {
@@ -744,7 +779,7 @@ class Player {
 
     /**
      * Gets a string representation of all available actions.
-     * 
+     *
      * @param {ActionType[]} actions List of all possible actions.
      * @returns {string} The string of all actions.
      */
@@ -789,4 +824,4 @@ class Player {
 
 module.exports = {
     Player: Player
-}
+};
