@@ -31,15 +31,13 @@ let DRAGON_GREEN = require('./constants').DRAGON_GREEN;
 let DRAGON_RED = require('./constants').DRAGON_RED;
 let DRAGON_WHITE = require('./constants').DRAGON_WHITE;
 
-
 /**
  * Class to see if a hand is in tenpai.
  */
 class Tenpai {
-
     /**
      * Constructor to create tenpai class for a hand.
-     * 
+     *
      * @param {Hand} hand The hand to evaluate.
      * @param {number} roundWind The round wind that has value.
      * @param {number} seatWind The seat wind of the player that has value.
@@ -50,7 +48,7 @@ class Tenpai {
 
     /**
      * Getter method for tiles to complete the hand.
-     * 
+     *
      * @returns {Tile[]} A list of tiles that will complete the hand.
      */
     get tiles() {
@@ -59,7 +57,7 @@ class Tenpai {
 
     /**
      * Getter method for if the hand is in tenpai.
-     * 
+     *
      * @returns {boolean} True if there are tiles that will complete the hand, false otherwise.
      */
     get isTenpai() {
@@ -68,7 +66,7 @@ class Tenpai {
 
     /**
      * Gets all tiles that will complete a hand.
-     * 
+     *
      * @param {Hand} hand The hand to try and complete.
      * @returns {Tile[]} A list of tiles that will complete the hand.
      * @param {number} roundWind The round wind that has value.
@@ -90,24 +88,24 @@ class Tenpai {
             }
             handCopy.remove(tile);
         }
-        tilesToComplete = tilesToComplete.concat(this.GetThirteenOrphanTiles(hand.closedTiles));
+        let thirteenOrphanTiles = this.GetThirteenOrphanTiles(hand.closedTiles);
+        if (!hand.isOpen) {
+            tilesToComplete = tilesToComplete.concat(thirteenOrphanTiles);
+        }
         return tilesToComplete;
     }
 
     GetThirteenOrphanTiles(tiles) {
         let tenpaiTiles = [];
-        let orphans = [new Tile(PIN_ONE), new Tile(PIN_NINE), new Tile(SOU_ONE), new Tile(SOU_NINE),
-            new Tile(WAN_ONE), new Tile(WAN_NINE), new Tile(EAST), new Tile(SOUTH),
-            new Tile(WEST), new Tile(NORTH), new Tile(DRAGON_GREEN), new Tile(DRAGON_RED),
-            new Tile(DRAGON_WHITE)
-        ];
+        let orphans = [new Tile(PIN_ONE), new Tile(PIN_NINE), new Tile(SOU_ONE), new Tile(SOU_NINE), new Tile(WAN_ONE), new Tile(WAN_NINE), new Tile(EAST), new Tile(SOUTH), new Tile(WEST), new Tile(NORTH), new Tile(DRAGON_GREEN), new Tile(DRAGON_RED), new Tile(DRAGON_WHITE)];
         let tilesCopy = CopyTileList(tiles);
         for (let orphan of orphans) {
             tilesCopy = RemoveFromTileList(tilesCopy, orphan);
         }
         if (tilesCopy.length > 1) tenpaiTiles = []; //contains less than 13 orphans
         if (tilesCopy.length == 0) tenpaiTiles = orphans; //contains all 13 orphans, but missing pair.
-        if (tilesCopy.length == 1) { //contains 12 orphans and a pair.
+        if (tilesCopy.length == 1) {
+            //contains 12 orphans and a pair.
             if (TileListContains(orphans, tilesCopy[0])) {
                 let orphansCopy = CopyTileList(orphans);
                 for (let tile of tiles) {
