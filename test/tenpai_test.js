@@ -14,9 +14,9 @@ let NORTH = require('../src/game/constants').NORTH;
 let EAST = require('../src/game/constants').EAST;
 let SOUTH = require('../src/game/constants').SOUTH;
 let WEST = require('../src/game/constants').WEST;
+let Meld = require('../src/game/meld').Meld;
 
 describe('Tenpai', () => {
-
     it('Tenpai can be constructed with a hand', () => {
         let hand = new Hand(TileList('p1112223334445'));
         let tenpai = new Tenpai(hand, EAST, EAST);
@@ -130,6 +130,14 @@ describe('Tenpai', () => {
         let tenpai = new Tenpai(hand, EAST, EAST);
         // PrintTileList(hand.tiles);
         // tenpai.PrintTiles();
+        expect(tenpai.tiles).to.eql(tilesToComplete);
+    });
+
+    it('Tenpai works for hand encountered while developing.', () => {
+        let hand = new Hand(TileList('p9a9EW'), [new Meld(TileList('NNN'), true), new Meld(TileList('p444'), true), new Meld(TileList('p666'), true)]);
+        hand.isOpen = true;
+        let tilesToComplete = TileList('');
+        let tenpai = new Tenpai(hand, EAST, EAST);
         expect(tenpai.tiles).to.eql(tilesToComplete);
     });
 });
