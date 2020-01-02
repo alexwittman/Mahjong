@@ -11,7 +11,6 @@ let SOUTH = require('../src/game/constants').SOUTH;
 let WEST = require('../src/game/constants').WEST;
 
 describe('Kan', () => {
-
     it('A player can kan with three tiles the same as the tile discarded.', () => {
         let player = new Player(0);
         let tiles = TileList('p1112223334445');
@@ -113,7 +112,7 @@ describe('Kan', () => {
         expect(player.KanMelds(null, EAST)).to.eql(kongs);
     });
 
-    it('KanMelds returns the correct value for a player who can form one closed kong from other\'s discard.', () => {
+    it("KanMelds returns the correct value for a player who can form one closed kong from other's discard.", () => {
         let player = new Player(0);
         let tiles = TileList('p111222333444');
         let melds = [];
@@ -218,5 +217,27 @@ describe('Kan', () => {
         player.hand = new Hand(tiles, melds);
         let kongs = [];
         expect(player.KanMelds(null, EAST)).to.eql(kongs);
+    });
+
+    it('Kan works for upgrading an open pong to a kong.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1234567899');
+        let melds = [new Meld(TileList('WWW'), true)];
+        player.hand = new Hand(tiles, melds);
+        let kong = new Meld(TileList('WWWW'), true);
+        let handAfterKong = new Hand(tiles, [kong]);
+        expect(player.Kan(player.hand, kong)).to.eql(handAfterKong);
+    });
+
+    it('Hand.Print() does not print undefined after making Kong.', () => {
+        let player = new Player(0);
+        let tiles = TileList('p1234567899WWW');
+        let melds = [];
+        player.hand = new Hand(tiles, melds);
+        let kong = new Meld(TileList('WWWW'));
+        let handAfterKong = new Hand(tiles, [kong]);
+        player.Kan(player.hand, kong);
+        player.hand.Print();
+        //expect(player.Kan(player.hand, kong)).to.eql(handAfterKong);
     });
 });
