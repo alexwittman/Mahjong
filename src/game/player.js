@@ -8,6 +8,7 @@ let readline = require('readline');
 //let PrintTileList = require('./tile').PrintTileList;
 let Action = require('./actions').Action;
 let ActionType = require('./actions').ActionType;
+let StringToAction = require('./actions').StringToAction;
 let Tenpai = require('./tenpai').Tenpai;
 //let TileListContains = require('./tile').TileListContains;
 //let TileListCount = require('./tile').TileListCount;
@@ -115,24 +116,24 @@ class Player {
      */
     GetAction(gameState) {
         let actions = this.CalculateActions(gameState);
-        let action = '0';
+        let action = ActionType.Discard;
         if (actions.length > 1) {
             if (this._ai != null) {
                 action = this._ai.PickAction(gameState, actions);
             } else {
                 console.log(this.GetActionStrings(actions));
-                action = prompt('>> ');
+                action = StringToAction(prompt('>> '));
             }
         }
         switch (action) {
-            case '3': {
+            case ActionType.Kan: {
                 //Kan
                 this.GetKan(null, gameState['roundWind']);
                 return {
                     action: ActionType.Kan
                 };
             }
-            case '4': {
+            case ActionType.Riichi: {
                 //Riichi
                 //TODO
                 let riichiTile = this.GetRiichi(gameState['roundWind']);
@@ -141,7 +142,7 @@ class Player {
                     discard: riichiTile
                 };
             }
-            case '6': {
+            case ActionType.Tsumo: {
                 //Tsumo
                 let value = this.Tsumo();
                 return {
@@ -169,38 +170,38 @@ class Player {
     GetInterject(gameState) {
         let availableTile = gameState['availableTile'].tile;
         let actions = this.CalculateInterject(gameState);
-        let action = '0';
+        let action = ActionType.None;
         if (actions.length > 0) {
             if (this._ai != null) {
                 action = this._ai.PickInterject(gameState, actions);
             } else {
                 console.log(this.GetActionStrings(actions));
-                action = prompt('>> ');
+                action = StringToAction(prompt('>> '));
             }
         }
         switch (action) {
-            case '1': {
+            case ActionType.Chi: {
                 //Chi
                 this.GetChi(availableTile);
                 return {
                     action: ActionType.Chi
                 };
             }
-            case '2': {
+            case ActionType.Pon: {
                 //Pon
                 this._hand = this.Pon(this._hand, availableTile);
                 return {
                     action: ActionType.Pon
                 };
             }
-            case '3': {
+            case ActionType.Kan: {
                 //Kan
                 this.GetKan(availableTile, gameState['roundWind']);
                 return {
                     action: ActionType.Kan
                 };
             }
-            case '5': {
+            case ActionType.Ron: {
                 //Ron
                 let value = this.Ron(availableTile);
                 return {
