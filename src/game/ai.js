@@ -4,17 +4,17 @@ class AI {
 
     PickInterject(gameState, actions) {
         for (let action of actions) {
-            if (action == ActionType.Ron) return '5';
-            if (action == ActionType.Pon) return '2';
+            if (action == ActionType.Ron) return ActionType.Ron;
+            if (action == ActionType.Pon) return ActionType.Pon;
         }
-        return '0';
+        return ActionType.None;
     }
 
     PickAction(gameState, actions) {
         for (let action of actions) {
-            if (action == ActionType.Tsumo) return '6';
+            if (action == ActionType.Tsumo) return ActionType.Tsumo;
         }
-        return '0';
+        return ActionType.Discard;
     }
 
     PickDiscard(gameState, hand, drawnTile) {
